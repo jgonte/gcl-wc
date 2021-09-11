@@ -1,3 +1,4 @@
+import classMetadataRegistry from "../helpers/classMetadataRegistry";
 import { CustomElementStateMetadata } from "../interfaces";
 import StateMetadataInitializerMixin from "./StateMetadataInitializerMixin";
 
@@ -34,13 +35,13 @@ const StateChangeHandlerMixin = Base =>
 
             super.connectedCallback?.();
 
-            this._initializeStateWithDefaultValues((this.constructor as any).metadata.state);
+            this._initializeStateWithDefaultValues(classMetadataRegistry.get(this.constructor).state);
         }
 
         setState(key: string, value: any): boolean {
 
             // Verify that the property of the state is one of the configured in the custom element
-            if ((this.constructor as any).metadata.state.get(key) === undefined) {
+            if (classMetadataRegistry.get(this.constructor).state.get(key) === undefined) {
 
                 throw Error(`There is no configured property for state: '${key}' in type: '${this.constructor.name}'`)
             }

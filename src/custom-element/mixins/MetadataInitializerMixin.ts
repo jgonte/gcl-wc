@@ -1,6 +1,6 @@
-
+import classMetadataRegistry from "../helpers/classMetadataRegistry";
+import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../interfaces";
 import AttributeChangeHandlerMixin from "./AttributeChangeHandlerMixin";
-import MetadataMergerMixin from "./MetadataMergerMixin";
 import StateChangeHandlerMixin from "./StateChangeHandlerMixin";
 
 /**
@@ -12,14 +12,13 @@ const MetadataInitializerMixin = Base =>
 
     //@ts-ignore
     class MetadataInitializer extends
-        MetadataMergerMixin(
-            StateChangeHandlerMixin( // This one extends from StateMetadataInitializer
-                AttributeChangeHandlerMixin( // This one extends from PropertyMetadataInitializer
-                    Base
-                )
+        StateChangeHandlerMixin( // This one extends from StateMetadataInitializer
+            AttributeChangeHandlerMixin( // This one extends from PropertyMetadataInitializer
+                Base
             )
         ) {
-            
+
+
         // /** 
         //  * The style attached to the class
         //  */
@@ -36,13 +35,25 @@ const MetadataInitializerMixin = Base =>
 
         static get observedAttributes(): string[] {
 
-            (this as any).initalizeProperties();
+            // Initialize the metadata
+            if (!classMetadataRegistry.has(this)) {
 
-            (this as any).initializeState();
+                classMetadataRegistry.set(this, {
+                    properties: new Map<string, CustomElementPropertyMetadata>(),
+                    observedAttributes: [],
+                    state: new Map<string, CustomElementStateMetadata>()
+                });
+            }
+
+            const metadata = classMetadataRegistry.get(this);
+
+            (this as any).initalizeProperties(metadata);
+
+            (this as any).initializeState(metadata);
 
             //this.mergedStyle = this.mergeStyles();
 
-            return this.metadata.observedAttributes;
+            return metadata.observedAttributes;
         }
 
     }

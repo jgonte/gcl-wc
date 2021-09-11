@@ -1,4 +1,5 @@
-import { CustomElementStateMetadata } from "../interfaces";
+import classMetadataRegistry from "../helpers/classMetadataRegistry";
+import { CustomElementMetadata, CustomElementStateMetadata } from "../interfaces";
 
 const StateMetadataInitializerMixin = Base =>
 
@@ -7,9 +8,9 @@ const StateMetadataInitializerMixin = Base =>
         /**
          * The state to track in the class
          */
-        static state: Record<string, CustomElementStateMetadata>;
+        static state: () => Record<string, CustomElementStateMetadata>;
 
-        protected static initializeState(): void {
+        protected static initializeState(metadata: CustomElementMetadata): void {
 
             const {
                 state
@@ -22,7 +23,7 @@ const StateMetadataInitializerMixin = Base =>
 
             Object.entries(state).forEach(([name, stateMetadata]) => {
 
-                (stateMetadata as CustomElementStateMetadata).name = name; // Set the name of the state property
+                stateMetadata.name = name; // Set the name of the state property
 
                 Object.defineProperty(
                     this.prototype,
@@ -40,7 +41,25 @@ const StateMetadataInitializerMixin = Base =>
                         enumerable: true,
                     }
                 );
+
+                // Add it to the metadata properties so the properties of the instances can be validated and initialized
+                metadata.state.set(name, stateMetadata);
+
             });
+
+            // Add the properties of the state base class if any so we can validate and initialize
+            // the values of the properties of the state of the base class in the instance
+            const baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
+
+            if (baseClass !== undefined) {
+
+                const baseClassMetadata = classMetadataRegistry.get(baseClass);
+
+                if (baseClassMetadata !== undefined) {
+
+                    metadata.state = new Map([...metadata.state, ...baseClassMetadata.state]);
+                }
+            }
         }
     }
 

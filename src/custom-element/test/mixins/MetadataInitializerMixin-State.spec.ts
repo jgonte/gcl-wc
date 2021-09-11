@@ -14,12 +14,15 @@ describe("MetadataInitializerMixin tests of the functionality of the state prope
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static state = {
+            static get state() {
 
-                type: {
-                    value: "a" // Options: "a" | "b" | "c"
-                }
-            };
+                return {
+
+                    type: {
+                        value: "a" // Options: "a" | "b" | "c"
+                    }
+                };
+            } 
         }
 
         defineCustomElement('test-a', A);
