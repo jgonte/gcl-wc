@@ -2,6 +2,7 @@ import classMetadataRegistry from "../helpers/classMetadataRegistry";
 import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../interfaces";
 import AttributeChangeHandlerMixin from "./AttributeChangeHandlerMixin";
 import StateChangeHandlerMixin from "./StateChangeHandlerMixin";
+import StylesMetadataInitializerMixin from "./StylesMetadataInitializerMixin";
 
 /**
  * Initializes a web component type (not instance) from the metadata provided
@@ -12,26 +13,13 @@ const MetadataInitializerMixin = Base =>
 
     //@ts-ignore
     class MetadataInitializer extends
-        StateChangeHandlerMixin( // This one extends from StateMetadataInitializer
-            AttributeChangeHandlerMixin( // This one extends from PropertyMetadataInitializer
-                Base
+        StylesMetadataInitializerMixin(
+            StateChangeHandlerMixin( // This one extends from StateMetadataInitializer
+                AttributeChangeHandlerMixin( // This one extends from PropertyMetadataInitializer
+                    Base
+                )
             )
         ) {
-
-
-        // /** 
-        //  * The style attached to the class
-        //  */
-        // static style: string;
-
-        // // The style after merging the style of this one with the ones of the base classes
-        // // it will be used to style the custom element
-        // static mergedStyle: string;
-
-        // static mergeStyles() {
-
-        //     return '';
-        // }
 
         static get observedAttributes(): string[] {
 
@@ -41,19 +29,27 @@ const MetadataInitializerMixin = Base =>
                 classMetadataRegistry.set(this, {
                     properties: new Map<string, CustomElementPropertyMetadata>(),
                     observedAttributes: [],
-                    state: new Map<string, CustomElementStateMetadata>()
+                    state: new Map<string, CustomElementStateMetadata>(),
+                    styles: []
                 });
             }
 
-            const metadata = classMetadataRegistry.get(this);
+            const {
+                metadata
+            } = this;
 
             (this as any).initalizeProperties(metadata);
 
             (this as any).initializeState(metadata);
 
-            //this.mergedStyle = this.mergeStyles();
+            (this as any).initializeStyles(metadata);
 
             return metadata.observedAttributes;
+        }
+
+        static get metadata() {
+
+            return classMetadataRegistry.get(this);
         }
 
     }

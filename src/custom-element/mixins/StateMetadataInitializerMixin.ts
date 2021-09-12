@@ -1,4 +1,3 @@
-import classMetadataRegistry from "../helpers/classMetadataRegistry";
 import { CustomElementMetadata, CustomElementStateMetadata } from "../interfaces";
 
 const StateMetadataInitializerMixin = Base =>
@@ -53,7 +52,7 @@ const StateMetadataInitializerMixin = Base =>
 
             if (baseClass !== undefined) {
 
-                const baseClassMetadata = classMetadataRegistry.get(baseClass);
+                const baseClassMetadata = baseClass.metadata;
 
                 if (baseClassMetadata !== undefined) {
 

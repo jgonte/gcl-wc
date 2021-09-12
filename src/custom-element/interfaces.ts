@@ -87,9 +87,8 @@ export interface CustomElementMetadata {
      */
     state: Map<string, CustomElementStateMetadata>;
 
-    // /**
-    //  * The array with the name of the standard properties of the HTMLElement 
-    //  * so we can check that the name of the property does not conflict with an existing one 
-    //  */
-    //  htmlElementProperties: Set<string>;
+    /**
+     * The merged styles of the custom element
+     */
+    styles: string | string[];
 }

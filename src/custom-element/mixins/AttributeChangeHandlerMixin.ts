@@ -1,4 +1,3 @@
-import classMetadataRegistry from "../helpers/classMetadataRegistry";
 import valueConverter from "../helpers/valueConverter";
 import { CustomElementPropertyMetadata } from "../interfaces";
 import PropertyMetadataInitializerMixin from "./PropertyMetadataInitializerMixin";
@@ -65,7 +64,7 @@ const AttributeChangeHandlerMixin = Base =>
 
             const {
                 properties
-            } = classMetadataRegistry.get(this.constructor);
+            } = (this.constructor as any).metadata;
 
             this._validateRequiredProperties(properties);
 
