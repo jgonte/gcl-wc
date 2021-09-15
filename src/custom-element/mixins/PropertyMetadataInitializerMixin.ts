@@ -75,14 +75,7 @@ const PropertyMetadataInitializerMixin = Base =>
                     },
                     set(this: any, value: unknown) {
 
-                        const {
-                            attribute,
-                            reflect
-                        } = propertyMetadata;
-
-                        const reflectOnAttribute = reflect === true ? attribute : undefined;
-
-                        this.setProperty(name, value, reflectOnAttribute);
+                        this.setProperty(name, value);
                     },
                     configurable: true,
                     enumerable: true,

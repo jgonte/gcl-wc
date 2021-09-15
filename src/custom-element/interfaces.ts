@@ -1,4 +1,16 @@
 /**
+ * Describes the configurator of the component
+ */
+export interface CustomElementComponentMetadata {
+
+    /**
+     * Whether to create a shadow DOM for the component
+     * Defaults to true
+     */
+    shadow?: boolean;
+}
+
+/**
  * Describes the configurator of the properties
  */
 export interface CustomElementPropertyMetadata {
@@ -56,12 +68,12 @@ export interface CustomElementStateMetadata {
     /**
      * The name of the property in the state object
      */
-     name: string;
+    name: string;
 
-     /**
-      * The default value of the state
-      */
-     value: any;
+    /**
+     * The default value of the state
+     */
+    value: any;
 }
 
 /**
@@ -70,7 +82,10 @@ export interface CustomElementStateMetadata {
  */
 export interface CustomElementMetadata {
 
-    //component: CustomElementDescriptor;
+    /**
+     * Whether to create a shadow DOM for the component
+     */
+    shadow: boolean;
 
     /**
      * The merged properties configuration of the custom element mapped by its name

@@ -8,8 +8,14 @@ const StateChangeHandlerMixin = Base =>
         /**
          * The state of the instance
          */
-         private _state: Record<string, any> = {};
+        private _state: Record<string, any> = {};
 
+        constructor() {
+
+            super();
+            
+            this._initializeStateWithDefaultValues((this.constructor as any).metadata.state);
+        }
         /**
          * Initializes the state that have a default value
          * @param stateMetadata 
@@ -30,14 +36,7 @@ const StateChangeHandlerMixin = Base =>
             }
         }
 
-        connectedCallback() {
-
-            super.connectedCallback?.();
-
-            this._initializeStateWithDefaultValues((this.constructor as any).metadata.state);
-        }
-
-        setState(key: string, value: any): boolean {
+        protected setState(key: string, value: any): boolean {
 
             // Verify that the property of the state is one of the configured in the custom element
             if ((this.constructor as any).metadata.state.get(key) === undefined) {

@@ -9,51 +9,31 @@ const AttributeChangeHandlerMixin = Base =>
         /**
          * The properties of the instance
          */
-        private _properties: Record<string, any> = {};
+         private _properties: Record<string, any> = {};
 
-        /**
-         * Validates that all the required properties have been set
-         * @param propertiesMetadata 
-         */
-        private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
+        constructor() {
 
-            const missingValueAttributes: string[] = [];
+            super();
 
-            for (const [name, property] of propertiesMetadata) {
-
-                if (property.required === true &&
-                    this._properties[name] === undefined) { // No value set
-
-                    missingValueAttributes.push(property.attribute);
-                }
-            }
-
-            if (missingValueAttributes.length > 0) {
-
-                throw Error(`The attributes: [${missingValueAttributes.join(', ')}] must have a value`)
-            }
+            this._initializePropertiesWithDefaultValues((this.constructor as any).metadata.properties);
         }
 
         /**
          * Initializes the properties that have a default value
          * @param propertiesMetadata 
          */
-        private _initializePropertiesWithDefaultValues(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
+         private _initializePropertiesWithDefaultValues(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
 
             for (const [name, property] of propertiesMetadata) {
 
                 const {
-                    attribute,
-                    value,
-                    reflect
+                    value
                 } = property;
 
                 if (this._properties[name] === undefined &&
                     value !== undefined) {
 
-                    const reflectOnAttribute = reflect === true ? attribute : undefined;
-
-                    this.setProperty(name, value, reflectOnAttribute);
+                    this.setProperty(name, value);
                 }
             }
         }
@@ -67,8 +47,6 @@ const AttributeChangeHandlerMixin = Base =>
             } = (this.constructor as any).metadata;
 
             this._validateRequiredProperties(properties);
-
-            this._initializePropertiesWithDefaultValues(properties);
         }
 
         // Without defining this method, the observedAttributes getter will not be called
@@ -85,6 +63,29 @@ const AttributeChangeHandlerMixin = Base =>
             super.attributeChangedCallback?.(attributeName, oldValue, newValue);
 
             this._setAttribute(attributeName, newValue);
+        }
+
+        /**
+         * Validates that all the required properties have been set
+         * @param propertiesMetadata 
+         */
+         private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
+
+            const missingValueAttributes: string[] = [];
+
+            for (const [name, property] of propertiesMetadata) {
+
+                if (property.required === true &&
+                    this._properties[name] === undefined) { // No value set
+
+                    missingValueAttributes.push(property.attribute);
+                }
+            }
+
+            if (missingValueAttributes.length > 0) {
+
+                throw Error(`The attributes: [${missingValueAttributes.join(', ')}] must have a value`)
+            }
         }
 
         // /**
@@ -108,20 +109,18 @@ const AttributeChangeHandlerMixin = Base =>
 
             // Verify that the property is one of the configured in the custom element
             let propertyMetadata = (this.constructor as any)._propertiesByAttribute[attribute];
+
             const {
                 name,
-                type,
-                reflect
+                type
             } = propertyMetadata;
 
             value = valueConverter.toProperty(value, type); // Covert from the value returned by the parameter
 
-            const reflectOnAttribute = reflect === true ? attribute : undefined;
-
-            return this.setProperty(name, value, reflectOnAttribute);
+            return this.setProperty(name, value);
         }
 
-        setProperty(name: string, value: any, reflectOnAttribute: string): boolean {
+        protected setProperty(name: string, value: any): boolean {
 
             const oldValue = this._properties[name];
 
@@ -139,12 +138,28 @@ const AttributeChangeHandlerMixin = Base =>
                 this._properties[name] = value;
             }
 
+            // Verify that the property is one of the configured in the custom element
+            let propertyMetadata = (this.constructor as any).metadata.properties.get(name);
+            
+            const {
+                attribute,
+                reflect,
+                change
+            } = propertyMetadata;
+
+            const reflectOnAttribute = reflect === true ? attribute : undefined;
+
             if (reflectOnAttribute !== undefined) { // Synchronize with the attribute of the element
 
                 value = valueConverter.toAttribute(value);
 
                 // This will trigger the attributeChangedCallback
                 this.setAttribute(reflectOnAttribute, value);
+            }
+
+            if (change !== undefined) { // Call the change function if defined
+
+                change.call(this);
             }
 
             return true;

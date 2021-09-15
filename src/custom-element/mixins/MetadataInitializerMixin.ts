@@ -1,6 +1,7 @@
 import classMetadataRegistry from "../helpers/classMetadataRegistry";
 import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../interfaces";
 import AttributeChangeHandlerMixin from "./AttributeChangeHandlerMixin";
+import ComponentMetadataInitializerMixin from "./ComponentMetadataInitializerMixin";
 import StateChangeHandlerMixin from "./StateChangeHandlerMixin";
 import StylesMetadataInitializerMixin from "./StylesMetadataInitializerMixin";
 
@@ -16,7 +17,9 @@ const MetadataInitializerMixin = Base =>
         StylesMetadataInitializerMixin(
             StateChangeHandlerMixin( // This one extends from StateMetadataInitializer
                 AttributeChangeHandlerMixin( // This one extends from PropertyMetadataInitializer
-                    Base
+                    ComponentMetadataInitializerMixin(
+                        Base
+                    )      
                 )
             )
         ) {
@@ -30,13 +33,16 @@ const MetadataInitializerMixin = Base =>
                     properties: new Map<string, CustomElementPropertyMetadata>(),
                     observedAttributes: [],
                     state: new Map<string, CustomElementStateMetadata>(),
-                    styles: []
+                    styles: [],
+                    shadow: true
                 });
             }
 
             const {
                 metadata
             } = this;
+
+            (this as any).initializeComponent(metadata);
 
             (this as any).initalizeProperties(metadata);
 

@@ -159,7 +159,12 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
                     type: {
                         type: String,
-                        value: "a" // Options: "a" | "b" | "c"
+                        value: "a", // Options: "a" | "b" | "c"
+                        change: function() {
+
+                            this.refreshType(this.type);
+                        }
+                            
                     },
 
                     fcn: {
@@ -173,6 +178,10 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
                         type: Boolean
                     }
                 };
+            }
+
+            refreshType(type: string) {
+
             }
         };
 
@@ -189,6 +198,10 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
         // Test the element
         const component: any = document.querySelector('test-a');
+
+        const spyOnRefreshType = jest.spyOn(component, 'refreshType');
+
+        expect(spyOnRefreshType).toHaveBeenCalledTimes(0);
 
         expect(component.type).toBe('c');
 
@@ -212,9 +225,17 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
                     type: {
                         type: String,
-                        value: "a" // Options: "a" | "b" | "c"
+                        value: "a", // Options: "a" | "b" | "c"
+                        change: function() {
+
+                            this.refreshType(this.type);
+                        }
                     }
                 };
+            }
+
+            refreshType(type: string) {
+
             }
         }
 
@@ -251,11 +272,19 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         // Test the elements
         const componentA: any = document.querySelector('test-a');
 
+        const spyOnRefreshType = jest.spyOn(componentA, 'refreshType');
+
+        expect(spyOnRefreshType).toHaveBeenCalledTimes(0);
+
         expect(componentA.type).toBe('b');
 
         componentA.type = 'c'; // It should change the type
 
         expect(componentA.type).toBe('c');
+
+        expect(spyOnRefreshType).toHaveBeenCalledTimes(1);
+
+        expect(spyOnRefreshType).toHaveBeenCalledWith('c');
 
         expect(componentA.fcn).not.toBeDefined();
 
