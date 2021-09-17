@@ -1,26 +1,30 @@
 import { VirtualNode } from "../interfaces";
 
-export default function domNodeToVirtualNode(node?: Node, options: any = {}): VirtualNode | string | null {
+/**
+ * Creates a virtual node form a DOM one
+ * @param node 
+ * @param options 
+ * @returns 
+ */
+export default function nodeToVirtualNode(node?: Node, options: any = {}): VirtualNode | string | null {
 
     if (node === null) {
 
         return null;
     }
 
-    if ((node! as Node).nodeType === 1) { // TODO: Find a faster way of testing that
+    if (node instanceof HTMLElement) {
 
-        const element = node! as HTMLElement;
-
-        const tag = element.nodeName.toLowerCase();
+        const tag = node.nodeName.toLowerCase();
 
         if (tag === 'script' && !options.allowScripts) {
 
             throw Error('Script elements are not allowed unless the allowScripts option is set to true');
         }
 
-        const attributes = getAttributes(element.attributes);
+        const attributes = getAttributes(node.attributes);
 
-        const children = getChildren(element.childNodes, options);
+        const children = getChildren(node.childNodes, options);
 
         return {
             tag,
@@ -28,9 +32,9 @@ export default function domNodeToVirtualNode(node?: Node, options: any = {}): Vi
             children
         };
     }
-    else if ((node! as Text).splitText !== undefined) { // text node (fast way of determining)
+    else if (node instanceof Text) {
 
-        const content = (node! as Text).textContent || '';
+        const content = node.textContent || '';
 
         // Do not include text with white space characters ' ', '\t', '\r', '\n'
         if (options.excludeTextWithWhiteSpacesOnly &&
@@ -83,7 +87,7 @@ function getChildren(childNodes: NodeListOf<ChildNode>, options: any): (VirtualN
 
     childNodes.forEach(childNode => {
 
-        const vnode = domNodeToVirtualNode(childNode, options);
+        const vnode = nodeToVirtualNode(childNode, options);
 
         if (vnode != null) {
 

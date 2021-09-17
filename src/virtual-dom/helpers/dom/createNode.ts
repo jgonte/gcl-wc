@@ -1,4 +1,4 @@
-import { VirtualNode } from "../interfaces";
+import { VirtualNode } from "../../interfaces";
 
 const svgElements = ['svg', 'use', 'symbol', 'path', 'g', 'defs', 'title'];
 
@@ -6,7 +6,7 @@ const svgElements = ['svg', 'use', 'symbol', 'path', 'g', 'defs', 'title'];
  * Creates the DOM element from the virtual node
  * @param vnode The virtual node to create the element from
  */
-export function createDomElement(vnode: VirtualNode | string) {
+export default function createNode(vnode: VirtualNode | string) {
 
     if (typeof vnode === 'string') {
 
@@ -49,12 +49,10 @@ export function createDomElement(vnode: VirtualNode | string) {
 
     for (let i = 0; i < children.length; ++i) {
 
-        node.appendChild(createDomElement(children[i]));
+        node.appendChild(createNode(children[i]));
     }
 
     vnode.$node = node;
-
-    (node as any)._vnode = vnode;
 
     return node;
 }

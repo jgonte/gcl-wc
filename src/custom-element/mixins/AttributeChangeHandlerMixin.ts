@@ -9,7 +9,12 @@ const AttributeChangeHandlerMixin = Base =>
         /**
          * The properties of the instance
          */
-         private _properties: Record<string, any> = {};
+        private _properties: Record<string, any> = {};
+
+        /**
+         * Map of the metadata of the changed properties so that the "change" method can be called after the update of the DOM
+         */
+        private _changedProperties: Map<string, CustomElementPropertyMetadata> = new Map<string, CustomElementPropertyMetadata>();
 
         constructor() {
 
@@ -22,7 +27,7 @@ const AttributeChangeHandlerMixin = Base =>
          * Initializes the properties that have a default value
          * @param propertiesMetadata 
          */
-         private _initializePropertiesWithDefaultValues(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
+        private _initializePropertiesWithDefaultValues(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
 
             for (const [name, property] of propertiesMetadata) {
 
@@ -58,7 +63,7 @@ const AttributeChangeHandlerMixin = Base =>
          * @param oldValue 
          * @param newValue 
          */
-        attributeChangedCallback(attributeName: string, oldValue, newValue) {
+        attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null) {
 
             super.attributeChangedCallback?.(attributeName, oldValue, newValue);
 
@@ -69,7 +74,7 @@ const AttributeChangeHandlerMixin = Base =>
          * Validates that all the required properties have been set
          * @param propertiesMetadata 
          */
-         private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
+        private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
 
             const missingValueAttributes: string[] = [];
 
@@ -139,12 +144,12 @@ const AttributeChangeHandlerMixin = Base =>
             }
 
             // Verify that the property is one of the configured in the custom element
-            let propertyMetadata = (this.constructor as any).metadata.properties.get(name);
-            
+            let propertyMetadata: CustomElementPropertyMetadata = (this.constructor as any).metadata.properties.get(name);
+
             const {
                 attribute,
                 reflect,
-                change
+                //change We call change after the element was updated in the DOM
             } = propertyMetadata;
 
             const reflectOnAttribute = reflect === true ? attribute : undefined;
@@ -157,12 +162,25 @@ const AttributeChangeHandlerMixin = Base =>
                 this.setAttribute(reflectOnAttribute, value);
             }
 
-            if (change !== undefined) { // Call the change function if defined
-
-                change.call(this);
-            }
+            this._changedProperties.set(name, (this.constructor as any).metadata.properties.get(name));
 
             return true;
+        }
+
+        protected callAttributesChange() {
+
+            this._changedProperties.forEach((p, k) => {
+
+                if (p.afterUpdate !== undefined) { // Call the change function if defined
+
+                    p.afterUpdate.call(this);
+                }    
+            });
+        }
+
+        protected clearChangedProperties() {
+
+            this._changedProperties.clear();
         }
 
     }

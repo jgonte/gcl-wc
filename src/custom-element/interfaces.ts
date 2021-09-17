@@ -58,6 +58,12 @@ export interface CustomElementPropertyMetadata {
      * Whether the property must have a value by the time the connectedCallback method is called
      */
     required: boolean;
+
+    /**
+     * Called when the property has changed but after the DOM has been updated
+     * Used to perform modifications to the DOM after updating it
+     */
+    afterUpdate: Function;
 }
 
 /**

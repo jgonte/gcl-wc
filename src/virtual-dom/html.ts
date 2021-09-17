@@ -7,9 +7,13 @@ import { VirtualNode } from "./interfaces";
  */
 export default function html(strings: TemplateStringsArray, ...values: any): VirtualNode | string | null {
 
+    const packOptions = {
+        removeWhiteSpaces: false
+    };
+
     const markup = values.reduce(
-        (acc, val, idx) => [...acc, val, packText(strings[idx + 1])],
-        [packText(strings[0])]
+        (acc, val, idx) => [...acc, val, packText(strings[idx + 1], packOptions)],
+        [packText(strings[0], packOptions)]
     ).join('');
 
     return markupToVirtualNode(markup, 'html');

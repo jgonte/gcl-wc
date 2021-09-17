@@ -1,5 +1,5 @@
 import { VirtualNode } from "../interfaces";
-import domNodeToVirtualNode from "./domNodeToVirtualNode";
+import nodeToVirtualNode from "./nodeToVirtualNode";
 import parseFromString from "./parseFromString";
 
 export default function markupToVirtualNode(
@@ -20,8 +20,8 @@ export default function markupToVirtualNode(
             tag: null,
             attributes: null,
             children: Array.from(nodes)
-            .map(n => domNodeToVirtualNode(n, options))
+            .map(n => nodeToVirtualNode(n, options))
             .filter(n => n !== null)
         } :
-        domNodeToVirtualNode(nodes[0], options);
+        nodeToVirtualNode(nodes[0], options);
 }

@@ -20,3 +20,22 @@ export interface VirtualNode {
      */
     $node?: Node;
 }
+
+export enum DiffOperation {
+
+    None = 1,
+    Mount = 2,
+    Update = 3,
+    Unmount = 4
+}
+
+export interface LifecycleHooks {
+
+    didMountCallback?: () => void;
+
+    willUpdateCallback?: () => void;
+
+    didUpdateCallback?: () => void;
+
+    willUnmountCallback?: () => void;
+}

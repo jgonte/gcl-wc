@@ -6,11 +6,16 @@
 const ReactiveElementMixin = Base =>
 
     class ReactiveElement extends Base {
-        
+
         /**
-         * Flag to avoid re-requesting update if it is alaready requested
+         * Flag that tests if there is an update in progress so no other updates are requested
          */
-        private _isUpdating: boolean = false;
+        private _hasPendingUpdate: boolean = false;
+
+        /**
+         * Promise to schedule the updates
+         */
+        private _updatePromise: Promise<void> = new Promise<void>((resolve, reject) => resolve()); // Finished updating by default
 
         protected setProperty(name: string, value: any): void {
 
@@ -28,22 +33,63 @@ const ReactiveElementMixin = Base =>
             }
         }
 
-        protected update() {
+        /**
+         * Requests the custom element to be updated
+         */
+        protected update(): void {
 
-            if (this._isUpdating) {
+            if (this._hasPendingUpdate) {
 
                 return;
             }
 
-            this._isUpdating = true;
+            this._updatePromise = this._enqueueUpdate();
+        }
 
-            requestAnimationFrame(() => {
+        private async _enqueueUpdate(): Promise<void> {
 
-                this.doUpdate();
+            this._hasPendingUpdate = true;
 
-                this._isUpdating = false;
+            try {
+
+                await this._updatePromise; // Wait for the previous update to finish
+            }
+            catch (error) {
+
+                Promise.reject(error);
+            }
+
+            return new Promise<void>((resolve, reject) => {
+
+                this.updateDom();
+
+                this._markUpdated();
+
+                resolve();
             });
-        }  
+        }
+
+        private _markUpdated() {
+
+            this._hasPendingUpdate = false;
+
+            this.clearChangedProperties();
+        }
+
+        get updateComplete(): Promise<void> {
+
+            return this._updatePromise;
+        }
+
+        protected didMount() {
+
+            this.callAttributesChange();
+        }
+
+        protected didUpdate() {
+
+            this.callAttributesChange();
+        }
     }
 
 export default ReactiveElementMixin;

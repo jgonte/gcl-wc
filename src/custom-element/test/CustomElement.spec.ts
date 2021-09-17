@@ -3,13 +3,13 @@ import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
 
 beforeEach(() => {
-    
+
     clearCustomElements();
 });
 
 describe("custom element tests", () => {
 
-    it('should call update when a property changes', () => {
+    it('should set the default property value', () => {
 
         //@ts-ignore
         class A extends CustomElement {
@@ -20,7 +20,7 @@ describe("custom element tests", () => {
 
                     type: {
                         type: String,
-                        value: "a" // Options: "a" | "b" | "c"
+                        value: "a" // Options: "a" | "b" | "c",
                     }
                 };
             }
@@ -37,14 +37,14 @@ describe("custom element tests", () => {
 
         document.body.appendChild(root);
 
-        // // Test the element
-         const component: any = document.querySelector('test-a');
+        // Test the element
+        const component: any = document.querySelector('test-a');
 
         expect(component.type).toBe('a');
 
     });
 
-    it('should call update when the state changes', () => {
+    it('should set the default state value', () => {
 
         //@ts-ignore
         class A extends CustomElement {
@@ -57,7 +57,7 @@ describe("custom element tests", () => {
                         value: "a" // Options: "a" | "b" | "c"
                     }
                 };
-            } 
+            }
         }
 
         defineCustomElement('test-a', A);
