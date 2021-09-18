@@ -96,26 +96,33 @@ const VirtualDomMixin = Base =>
 
             if (styles.length > 0) { // Add a style element to the node
 
-                if (this.shadowRoot !== null) {
+                return this.addStyles(newVNode, styles);
+            }
 
-                    const styleNode = {
-                        tag: 'style',
+            return newVNode;
+        }
+
+        addStyles(newVNode: VirtualNode, styles: string[]) {
+
+            if (this.shadowRoot !== null) {
+
+                const styleNode = {
+                    tag: 'style',
+                    attributes: null,
+                    children: styles.join('')
+                }
+
+                if (newVNode.tag === null) { // It is a fragment node
+
+                    newVNode.children.push(styleNode); // Add it to the fragment
+                }
+                else { // Wrap it in a fragment
+
+                    newVNode = {
+                        tag: null,
                         attributes: null,
-                        children: styles.join('')
-                    }
-
-                    if (newVNode.tag === null) { // It is a fragment node
-
-                        newVNode.children.push(styleNode); // Add it to the fragment
-                    }
-                    else { // Wrap it in a fragment
-
-                        newVNode = {
-                            tag: null,
-                            attributes: null,
-                            children: [ newVNode, styleNode]
-                        };
-                    }
+                        children: [ newVNode, styleNode]
+                    };
                 }
             }
 
