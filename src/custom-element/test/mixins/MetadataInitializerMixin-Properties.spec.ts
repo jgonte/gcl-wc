@@ -49,12 +49,8 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         defineCustomElement('test-a', A);
 
         // Attach it to the DOM
-        const root = document.createElement('div');
-
-        root.innerHTML = '<test-a></test-a>';
-
-        document.body.appendChild(root);
-
+        document.body.innerHTML = '<test-a></test-a>';
+        
         // Test the element
         const component: any = document.querySelector('test-a');
 

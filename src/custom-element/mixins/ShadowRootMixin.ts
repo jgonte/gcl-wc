@@ -7,6 +7,16 @@ const ShadowRootMixin = Base =>
 
     class ShadowRoot extends Base {
 
+        constructor() {
+
+            super();
+
+            if ((this.constructor as any).metadata.shadow === true) {
+
+                this.attachShadow({ mode: 'open' });
+            }
+        }
+
         /** 
          * The DOM document in which this component is updated 
          */
@@ -16,6 +26,7 @@ const ShadowRootMixin = Base =>
                 this.shadowRoot :
                 this;
         }
+
     }
 
 export default ShadowRootMixin;

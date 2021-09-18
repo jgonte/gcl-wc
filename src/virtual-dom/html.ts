@@ -16,5 +16,5 @@ export default function html(strings: TemplateStringsArray, ...values: any): Vir
         [packText(strings[0], packOptions)]
     ).join('');
 
-    return markupToVirtualNode(markup, 'html');
+    return markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true });
 }

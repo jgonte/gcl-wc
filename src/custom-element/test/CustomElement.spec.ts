@@ -28,14 +28,10 @@ describe("custom element tests", () => {
 
         defineCustomElement('test-a', A);
 
-        // Attach it to the DOM
-        const root = document.createElement('div');
-
         (window as any).displayType = (element: A, text: string) => `Overriden ${text} ${(element as any).type}`;
 
-        root.innerHTML = '<test-a></test-a>"';
-
-        document.body.appendChild(root);
+        // Attach it to the DOM
+        document.body.innerHTML = '<test-a></test-a>"';
 
         // Test the element
         const component: any = document.querySelector('test-a');
@@ -63,11 +59,7 @@ describe("custom element tests", () => {
         defineCustomElement('test-a', A);
 
         // Attach it to the DOM
-        const root = document.createElement('div');
-
-        root.innerHTML = '<test-a></test-a>';
-
-        document.body.appendChild(root);
+        document.body.innerHTML = '<test-a></test-a>';
 
         // Test the element
         const component: any = document.querySelector('test-a');

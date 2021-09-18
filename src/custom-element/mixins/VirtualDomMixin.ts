@@ -27,10 +27,10 @@ const VirtualDomMixin = Base =>
 
         protected updateDom() {
 
-            const newVNode = this.render();
+            let newVNode = this.render();
 
             // Modify the original render if needed
-            this.beforeRender?.(newVNode);
+            newVNode = this.beforeRender(newVNode);
 
             const operation = this._getOperation(newVNode);
 
@@ -88,6 +88,38 @@ const VirtualDomMixin = Base =>
                     return DiffOperation.Update;
                 }
             }
+        }
+
+        beforeRender(newVNode: VirtualNode) : VirtualNode {
+            
+            const styles = (this.constructor as any).metadata.styles;
+
+            if (styles.length > 0) { // Add a style element to the node
+
+                if (this.shadowRoot !== null) {
+
+                    const styleNode = {
+                        tag: 'style',
+                        attributes: null,
+                        children: styles.join('')
+                    }
+
+                    if (newVNode.tag === null) { // It is a fragment node
+
+                        newVNode.children.push(styleNode); // Add it to the fragment
+                    }
+                    else { // Wrap it in a fragment
+
+                        newVNode = {
+                            tag: null,
+                            attributes: null,
+                            children: [ newVNode, styleNode]
+                        };
+                    }
+                }
+            }
+
+            return newVNode;
         }
 
     }

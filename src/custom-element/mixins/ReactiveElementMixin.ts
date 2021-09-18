@@ -61,11 +61,21 @@ const ReactiveElementMixin = Base =>
 
             return new Promise<void>((resolve, reject) => {
 
-                this.updateDom();
+                try {
 
-                this._markUpdated();
+                    this.updateDom();
 
-                resolve();
+                    this._markUpdated();
+    
+                    resolve();
+                }
+                catch(error) {
+
+                    this._markUpdated();
+
+                    reject();
+                }
+                
             });
         }
 

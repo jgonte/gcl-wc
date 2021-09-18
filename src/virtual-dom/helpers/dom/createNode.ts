@@ -24,7 +24,11 @@ export default function createNode(vnode: VirtualNode | string) {
     //let isSvg = false;
 
     // Create the element
-    if (svgElements.includes(tag) === true) {
+    if (tag === null) { // Fragment node
+
+        node = document.createDocumentFragment();
+    }
+    else if (svgElements.includes(tag) === true) {
 
         node = document.createElementNS('http://www.w3.org/2000/svg', tag);
 
