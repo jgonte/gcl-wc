@@ -66,16 +66,18 @@ const ReactiveElementMixin = Base =>
                     this.updateDom();
 
                     this._markUpdated();
-    
+
                     resolve();
                 }
-                catch(error) {
+                catch (error) {
 
                     this._markUpdated();
 
                     reject();
+
+                    throw error;
                 }
-                
+
             });
         }
 
@@ -91,15 +93,6 @@ const ReactiveElementMixin = Base =>
             return this._updatePromise;
         }
 
-        protected didMount() {
-
-            this.callAttributesChange();
-        }
-
-        protected didUpdate() {
-
-            this.callAttributesChange();
-        }
     }
 
 export default ReactiveElementMixin;

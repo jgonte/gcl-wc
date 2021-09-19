@@ -8,7 +8,10 @@ const ParentMixin = Base =>
 
     class Parent extends Base {
 
-        private adoptedChildren: Set<Node> = new Set<Node>();
+        /**
+         * The children elements of this one
+         */
+        protected adoptedChildren: Set<Node> = new Set<Node>();        
 
         protected addAdoptedChild(child: Node) {
 

@@ -10,35 +10,42 @@ const ChildMixin = Base =>
 
         static readonly _isCustomElement: boolean = true;
 
+        private _adoptingParent = null;
+
         connectedCallback(node: Node) {
 
             super.connectedCallback?.(node);
 
-            (this.getParent() as any)?.addAdoptedChild(this); // It might be null for the topmost custom element
+            (this.adoptingParent as any)?.addAdoptedChild(this); // It might be null for the topmost custom element
         }
-    
+
         disconnectedCallback(node: Node) {
-    
+
             super.disconnectedCallback?.(node);
 
-            (this.getParent() as any)?.removeAdoptedChild(this); // It might be null for the topmost custom element
+            (this.adoptingParent as any)?.removeAdoptedChild(this); // It might be null for the topmost custom element
         }
 
-        protected getParent() : Node {
+        protected get adoptingParent(): Node {
 
-            let parent = this.parentNode;
+            if (this._adoptingParent === null) {
 
-            while (parent !== null) {
+                let parent = this.parentNode;
 
-                if (parent.constructor._isCustomElement) {  // It is one of our custom elements
+                while (parent !== null) {
 
-                    break;
+                    if (parent.constructor._isCustomElement) {  // It is a custom element
+
+                        break;
+                    }
+
+                    parent = parent.parentNode;
                 }
 
-                parent = parent.parentNode;
+                this._adoptingParent = parent;
             }
 
-            return parent;
+            return this._adoptingParent;
         }
     }
 

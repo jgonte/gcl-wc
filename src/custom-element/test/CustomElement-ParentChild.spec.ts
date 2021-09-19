@@ -13,6 +13,11 @@ describe("custom element parent children relationship tests", () => {
 
     it('should set the children of the parent', async () => {
 
+        const callTester = {
+
+            didMountCallback: (element) => { }
+        };
+
         //@ts-ignore
         class Parent extends CustomElement {
 
@@ -41,6 +46,11 @@ describe("custom element parent children relationship tests", () => {
                 return html`
                     <span>Hello, my name is ${this.name}</span>
                 `;
+            }
+
+            didMountCallback() {
+
+                callTester.didMountCallback(this);
             }
         };
 
@@ -74,24 +84,43 @@ describe("custom element parent children relationship tests", () => {
                     <span>My age is ${this.age}</span>
                 `;
             }
+
+            didMountCallback() {
+
+                callTester.didMountCallback(this);
+            }
         };
+
+        const spyMountedCallback = jest.spyOn(callTester, 'didMountCallback');
 
         defineCustomElement('test-child', Child);
 
         // Attach it to the DOM
-        document.body.innerHTML = 
-        `
+        document.body.innerHTML =
+            `
             <test-parent>
                 <test-child></test-child>
             </test-parent>
         `;
 
         // Test the element
-        const component: any = document.querySelector('test-parent');
+        const parentComponent: any = document.querySelector('test-parent');
 
-        await component.updateComplete; // Wait for the component to render
+        await parentComponent.updateComplete; // Wait for the component to render
 
-        expect(component.adoptedChildren.size).toBe(1);
+        const childComponent: any = document.querySelector('test-child');
+
+        await childComponent.updateComplete; // Wait for the component to render
+
+        expect(parentComponent.adoptedChildren.size).toEqual(1);
+
+        expect(Array.from(parentComponent.adoptedChildren)[0]).toBe(childComponent);
+
+        expect(spyMountedCallback).toHaveBeenCalledTimes(2);
+
+        expect(spyMountedCallback).toHaveBeenNthCalledWith(1, childComponent); // Children should be called first
+
+        expect(spyMountedCallback).toHaveBeenNthCalledWith(2, parentComponent);
     });
 
 });
