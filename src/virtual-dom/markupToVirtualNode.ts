@@ -1,6 +1,7 @@
-import { VirtualNode } from "../interfaces";
-import nodeToVirtualNode from "./nodeToVirtualNode";
-import parseFromString from "./parseFromString";
+import { VirtualNode } from "./interfaces";
+import nodeToVirtualNode from "./helpers/nodeToVirtualNode";
+import parseFromString from "./helpers/parseFromString";
+import { EMPTY_OBJECT } from "../utils/shared";
 
 export default function markupToVirtualNode(
     markup: string,
@@ -24,7 +25,7 @@ export default function markupToVirtualNode(
     return nodes.length > 1 ?
         {
             tag: null,
-            attributes: null,
+            attributes: EMPTY_OBJECT,
             children: nodes
                 .map(n => nodeToVirtualNode(n, options))
                 .filter(n => n !== null)

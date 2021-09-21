@@ -1,7 +1,7 @@
 import { VirtualNode, DiffOperation, LifecycleHooks } from "../../virtual-dom/interfaces";
-import createNode from "../../virtual-dom/helpers/dom/createNode";
-import patchNode from "../../virtual-dom/helpers/dom/patchNode";
-import removeChildren from "../../virtual-dom/helpers/dom/removeChildren";
+import createNode from "../../virtual-dom/dom/createNode";
+import patchNode from "../../virtual-dom/dom/patchNode";
+import removeChildren from "../../virtual-dom/dom/removeChildren";
 
 /**
  * Updates the element using a virtual DOM approach
@@ -46,7 +46,7 @@ const VirtualDomMixin = Base =>
                     {
                         this.willMount();
 
-                        this.document.appendChild(createNode(newVNode));
+                        this.document.insertBefore(createNode(newVNode), null); // Faster than appendChild
 
                         this.didMount(); // Protected method to ensure the children are mounted first before calling didMountCallback on the parent
                     }

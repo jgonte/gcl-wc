@@ -1,3 +1,4 @@
+import { EMPTY_ARRAY, EMPTY_OBJECT } from "../../utils/shared";
 import { VirtualNode } from "../interfaces";
 
 /**
@@ -55,7 +56,7 @@ function getAttributes(attributes: NamedNodeMap) {
 
     if (attributes === null) {
 
-        return null;
+        return EMPTY_OBJECT;
     }
 
     const count = attributes.length;
@@ -82,6 +83,11 @@ function getAttributes(attributes: NamedNodeMap) {
 }
 
 function getChildren(childNodes: NodeListOf<ChildNode>, options: any): (VirtualNode | string)[] {
+
+    if (childNodes === undefined) {
+
+        return EMPTY_ARRAY;
+    }
 
     var vnodes: (VirtualNode | string)[] = [];
 

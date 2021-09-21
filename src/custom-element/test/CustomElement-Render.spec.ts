@@ -11,9 +11,33 @@ beforeEach(() => {
 
 describe("custom element render tests", () => {
 
+    it('should render the element even when there are no properties changing', async () => {
+
+        class A extends CustomElement {
+
+            render() {
+
+                return html`
+                    <span>Hello, my name is unknown</span>
+                `;
+            }
+        };
+
+        defineCustomElement('test-a', A);
+
+        // Attach it to the DOM
+        document.body.innerHTML = '<test-a></test-a>"';
+
+        // Test the element
+        const component: any = document.querySelector('test-a');
+
+        await component.updateComplete; // Wait for the component to render
+
+        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is unknown</span>');
+    });
+
     it('should render the HTML with the default property', async () => {
 
-        //@ts-ignore
         class A extends CustomElement {
 
             static get properties() {
@@ -50,7 +74,6 @@ describe("custom element render tests", () => {
 
     it('should render the HTML with the set property', async () => {
 
-        //@ts-ignore
         class A extends CustomElement {
 
             static get properties() {
@@ -87,7 +110,6 @@ describe("custom element render tests", () => {
 
     it('should render the HTML with the default property and the style attached', async () => {
 
-        //@ts-ignore
         class A extends CustomElement {
 
             static get properties() {
@@ -139,7 +161,6 @@ describe("custom element render tests", () => {
 
     it('should render the HTML with the set property and the style attached', async () => {
 
-        //@ts-ignore
         class A extends CustomElement {
 
             static get properties() {

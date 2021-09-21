@@ -11,7 +11,6 @@ describe("custom element tests", () => {
 
     it('should set the default property value', () => {
 
-        //@ts-ignore
         class A extends CustomElement {
 
             static get properties() {
@@ -42,7 +41,6 @@ describe("custom element tests", () => {
 
     it('should set the default state value', () => {
 
-        //@ts-ignore
         class A extends CustomElement {
 
             static get state() {

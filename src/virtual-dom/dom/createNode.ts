@@ -1,4 +1,4 @@
-import { VirtualNode } from "../../interfaces";
+import { VirtualNode } from "../interfaces";
 
 const svgElements = ['svg', 'use', 'symbol', 'path', 'g', 'defs', 'title'];
 
@@ -32,7 +32,7 @@ export default function createNode(vnode: VirtualNode | string) {
 
         node = document.createElementNS('http://www.w3.org/2000/svg', tag);
 
-        //isSvg = true;
+        node.isSvg = true;
 
     } else {
 
@@ -41,14 +41,7 @@ export default function createNode(vnode: VirtualNode | string) {
 
     for (let name in Object(attributes)) {
 
-        if (name in node) { // There is a setter defined in the element
-
-            node[name] = attributes[name];
-        }
-        else {
-
-            node.setAttribute(name, attributes[name]);
-        }
+        node.setAttribute(name, attributes[name]);
     }
 
     for (let i = 0; i < children.length; ++i) {

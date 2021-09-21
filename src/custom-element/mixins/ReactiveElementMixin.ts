@@ -33,6 +33,13 @@ const ReactiveElementMixin = Base =>
             }
         }
 
+        connectedCallback() {
+
+            super.connectedCallback?.();
+
+            this.update(); // First update
+        }
+
         /**
          * Requests the custom element to be updated
          */

@@ -1,4 +1,4 @@
-import createNode from "../helpers/dom/createNode";
+import createNode from "../dom/createNode";
 
 describe("creating DOM nodes from virtual nodes tests", () => {
 

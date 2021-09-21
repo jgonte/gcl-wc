@@ -1,4 +1,4 @@
-import markupToVirtualNode from "../helpers/markupToVirtualNode";
+import markupToVirtualNode from "../markupToVirtualNode";
 import { VirtualNode } from "../interfaces";
 
 describe("parse a string and covert to a virtual dom tree tests", () => {
