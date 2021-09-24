@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../../../dist/bundle.js"></script>
+    <script>
+
+        function getRecord() {
+
+            return {
+                name: "Sarah",
+                age: 19,
+                description: 'Smart and beautiful'
+            };
+        }
+
+        function getFields() {
+
+            return ["name", "age", "description"];
+        }
+
+    </script>
+
+    <title>Data row demo</title>
+</head>
+
+<body>
+    <gcl-data-row id="dr1" record='{ "name": "Sarah", "age": "19", "description": "Beautiful and smart" }'
+        fields='[ "name", "age", "description" ]'></gcl-data-row>
+
+    <gcl-data-row id="dr2" record='getRecord()' fields='getFields()'></gcl-data-row>
+</body>
+
+</html>

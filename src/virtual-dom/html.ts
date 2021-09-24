@@ -1,20 +1,22 @@
-import packText from "../utils/packText";
 import markupToVirtualNode from "./markupToVirtualNode";
-import { VirtualNode } from "./interfaces";
+import { VirtualNode, VirtualNodePart } from "./interfaces";
 import { EMPTY_STRING } from "../utils/shared";
 
 /**
  * Template tag to generate the virtual node from the string
  */
-export default function html(strings: TemplateStringsArray, ...values: any): VirtualNode | string | null {
+export default function html(strings: TemplateStringsArray, ...values: any): VirtualNode | VirtualNodePart | string | null {
 
-    const packOptions = {
-        removeWhiteSpaces: false
-    };
+    // const preMarkup = values.reduce(
+    //     (acc, val, idx) => [...acc, `<!--{{${idx}}}-->`, strings[idx + 1]],
+    //     [strings[0]]
+    // ).join('');
+
+    // console.log(preMarkup);
 
     const markup = values.reduce(
-        (acc, val, idx) => [...acc, stringify(val), packText(strings[idx + 1], packOptions)],
-        [packText(strings[0], packOptions)]
+        (acc, val, idx) => [...acc, stringify(val), strings[idx + 1]],
+        [strings[0]]
     ).join('');
 
     return markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true });
@@ -24,7 +26,15 @@ function stringify(value) {
 
     if (isVirtualNode(value)) { // Handle virtual nodes
 
-        return createMarkup(value as VirtualNode)
+        return createMarkup(value as VirtualNode);
+    }
+    else if (typeof value === 'function') {
+
+        return stringify(value());
+    }
+    else if (typeof value === 'object') {
+
+        return JSON.stringify(value);
     }
 
     return value;
@@ -93,7 +103,6 @@ function renderChildren(vnode: VirtualNode) {
     return vnode.children.reduce(
         (acc, child) => [...acc, createMarkup(child)],
         []
-    )
-        .join('');
+    ).join('');
 }
 

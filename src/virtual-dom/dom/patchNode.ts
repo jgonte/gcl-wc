@@ -17,8 +17,6 @@ export default function patchNode(newVNode: VirtualNode, oldVNode: VirtualNode, 
         const newElement = createNode(newVNode);
 
         oldElement.parentNode.replaceChild(newElement, oldElement);
-
-        return newElement;
     }
 
 }

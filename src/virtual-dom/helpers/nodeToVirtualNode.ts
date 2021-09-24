@@ -1,5 +1,5 @@
 import { EMPTY_ARRAY, EMPTY_OBJECT } from "../../utils/shared";
-import { VirtualNode } from "../interfaces";
+import { VirtualNode, VirtualNodePart } from "../interfaces";
 
 /**
  * Creates a virtual node form a DOM one
@@ -7,7 +7,7 @@ import { VirtualNode } from "../interfaces";
  * @param options 
  * @returns 
  */
-export default function nodeToVirtualNode(node?: Node, options: any = {}): VirtualNode | string | null {
+export default function nodeToVirtualNode(node?: Node, options: any = {}): VirtualNode | VirtualNodePart | string | null {
 
     if (node === null) {
 
@@ -30,7 +30,8 @@ export default function nodeToVirtualNode(node?: Node, options: any = {}): Virtu
         return {
             tag,
             attributes,
-            children
+            children,
+            $node: node
         };
     }
     else if (node instanceof Text) {
@@ -45,6 +46,13 @@ export default function nodeToVirtualNode(node?: Node, options: any = {}): Virtu
         }
 
         return content;
+    }
+    else if (node instanceof Comment && node.data.startsWith('{{') && node.data.endsWith('}}')) { // Experimental
+
+        return {
+            index: parseInt(node.data.substring(2, node.data.length - 2)),
+            $node: node
+        };
     }
     else {
 
@@ -82,14 +90,14 @@ function getAttributes(attributes: NamedNodeMap) {
     return props;
 }
 
-function getChildren(childNodes: NodeListOf<ChildNode>, options: any): (VirtualNode | string)[] {
+function getChildren(childNodes: NodeListOf<ChildNode>, options: any): (VirtualNode | VirtualNodePart | string)[] {
 
     if (childNodes === undefined) {
 
         return EMPTY_ARRAY;
     }
 
-    var vnodes: (VirtualNode | string)[] = [];
+    var vnodes: (VirtualNode | VirtualNodePart | string)[] = [];
 
     childNodes.forEach(childNode => {
 

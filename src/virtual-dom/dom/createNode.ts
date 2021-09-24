@@ -6,7 +6,7 @@ const svgElements = ['svg', 'use', 'symbol', 'path', 'g', 'defs', 'title'];
  * Creates the DOM element from the virtual node
  * @param vnode The virtual node to create the element from
  */
-export default function createNode(vnode: VirtualNode | string) {
+export default function createNode(vnode: VirtualNode | string): Node {
 
     if (typeof vnode === 'string') {
 
@@ -16,8 +16,14 @@ export default function createNode(vnode: VirtualNode | string) {
     const {
         tag,
         attributes,
-        children
+        children,
+        $node
     } = vnode;
+
+    if ($node !== undefined) { // If there is a node attached to the virtual node, return it
+
+        return $node;
+    }
 
     let node = null;
 

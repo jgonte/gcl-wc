@@ -23,7 +23,7 @@ describe("creating DOM nodes from virtual nodes tests", () => {
 
         expect(domNode).toBeInstanceOf(HTMLElement);
 
-        expect(domNode.outerHTML).toEqual('<span name=\"Sarah\">My name is Sarah</span>');
+        expect((domNode as HTMLElement).outerHTML).toEqual('<span name=\"Sarah\">My name is Sarah</span>');
     });
 
     it('should create an fragment node if a virtual node with a null tag is passed to it', () => {

@@ -24,10 +24,10 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
                         value: "a" // Options: "a" | "b" | "c"
                     },
 
-                    fcn: {
+                    showType: {
                         type: Function,
-                        value: (element: A, text: string) => {
-                            return `${text} ${element.type}`;
+                        value: function () {
+                            return `This is the type: ${this.type}`;
                         }
                     },
 
@@ -58,11 +58,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
         component.type = 'b'; // It should change the type
 
-        const fcn = component.fcn;
-
-        const text = fcn(component, 'This is the type:');
-
-        expect(text).toEqual('This is the type: b');
+        expect(component.showType).toEqual('This is the type: b');
 
         expect(component.smart).toBe(false);
 
@@ -97,12 +93,12 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
                 return {
 
-                    fcn: {
+                    showType: {
                         type: Function,
-                        value: (element: B, text: string) => {
-                            return `${text} ${element.type}`;
+                        value: function () {
+                            return `This is the type: ${this.type}`;
                         }
-                    }
+                    },
                 };
             }
         }
@@ -137,11 +133,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
         componentB.type = 'b'; // It should change the type
 
-        const fcn = componentB.fcn;
-
-        const text = fcn(componentB, 'This is the type:');
-
-        expect(text).toEqual('This is the type: b');
+        expect(componentB.showType).toEqual('This is the type: b');
     });
 
     it('should override the properties of the custom element when the attributes are provided', () => {
@@ -162,10 +154,10 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
                         }                            
                     },
 
-                    fcn: {
+                    showType: {
                         type: Function,
-                        value: (element: A, text: string) => {
-                            return `${text} ${element.type}`;
+                        value: function () {
+                            return `This is the type: ${this.type}`;
                         }
                     },
 
@@ -196,11 +188,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
         expect(component.type).toBe('c');
 
-        const fcn = component.fcn;
-
-        const text = fcn(component, 'This is the type:');
-
-        expect(text).toEqual('Overriden This is the type: c');
+        expect(component.showType).toEqual('This is the type: c');
 
         expect(component.smart).toBe(true);
     });
@@ -239,10 +227,10 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
                 return {
 
-                    fcn: {
+                    showType: {
                         type: Function,
-                        value: (element: A, text: string) => {
-                            return `${text} ${element.type}`;
+                        value: function () {
+                            return `This is the type: ${this.type}`;
                         }
                     }
                 };
@@ -275,11 +263,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
         expect(componentB.type).toBe('c');
 
-        const fcn = componentB.fcn;
-
-        const text = fcn(componentB, 'This is the type:');
-
-        expect(text).toEqual('Overriden This is the type: c');
+        expect(componentB.showType).toEqual('This is the type: c');
     });
 
     // it('should set the attribute (reflect) when the property has changed', () => {

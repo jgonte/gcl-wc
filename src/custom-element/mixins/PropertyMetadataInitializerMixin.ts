@@ -71,7 +71,11 @@ const PropertyMetadataInitializerMixin = Base =>
                 {
                     get(): any {
 
-                        return this._properties[name];
+                        const value = this._properties[name];
+
+                        return typeof value === 'function' ?
+                            value() :
+                            value;
                     },
                     set(this: any, value: unknown) {
 

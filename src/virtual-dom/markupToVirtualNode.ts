@@ -1,13 +1,20 @@
-import { VirtualNode } from "./interfaces";
+import { VirtualNode, VirtualNodePart } from "./interfaces";
 import nodeToVirtualNode from "./helpers/nodeToVirtualNode";
 import parseFromString from "./helpers/parseFromString";
 import { EMPTY_OBJECT } from "../utils/shared";
 
+/**
+ * Convert a HTML markup into a virtual node
+ * @param markup 
+ * @param type 
+ * @param options 
+ * @returns 
+ */
 export default function markupToVirtualNode(
     markup: string,
     type: 'html' | 'xml' = 'xml',
     options: any = {}
-): VirtualNode | string | null {
+): VirtualNode | VirtualNodePart | string | null {
 
     let nodes = Array.from(parseFromString(markup, type));
 
@@ -19,6 +26,7 @@ export default function markupToVirtualNode(
     if (options.excludeTextWithWhiteSpacesOnly === true) {
 
         nodes = nodes.filter(node => node instanceof HTMLElement ||
+            node instanceof Comment && node.data.startsWith('{{') && node.data.endsWith('}}') || // Experimental
             node instanceof Text && !(/^\s*$/g.test((node as Text).textContent)))
     }
 

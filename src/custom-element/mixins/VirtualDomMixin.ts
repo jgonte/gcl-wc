@@ -100,7 +100,7 @@ const VirtualDomMixin = Base =>
             }
         }
 
-        beforeRender(newVNode: VirtualNode): VirtualNode {
+        beforeRender(newVNode: VirtualNode | VirtualNode[]): VirtualNode | VirtualNode[] {
 
             const styles = (this.constructor as any).metadata.styles;
 
@@ -112,28 +112,39 @@ const VirtualDomMixin = Base =>
             return newVNode;
         }
 
-        addStyles(newVNode: VirtualNode, styles: string[]) {
+        addStyles(newVNode: VirtualNode | VirtualNode[], styles: string[]) {
 
             if (this.shadowRoot !== null) {
 
                 const styleNode = {
                     tag: 'style',
                     attributes: null,
-                    children: styles.join('')
+                    children: [styles.join('')]
                 }
 
-                if (newVNode.tag === null) { // It is a fragment node
-
-                    newVNode.children.push(styleNode); // Add it to the fragment
-                }
-                else { // Wrap it in a fragment
+                if (Array.isArray(newVNode)) {
 
                     newVNode = {
                         tag: null,
                         attributes: null,
-                        children: [newVNode, styleNode]
+                        children: [...newVNode, styleNode]
                     };
                 }
+                else {
+
+                    if (newVNode.tag === null) { // It is a fragment node
+
+                        newVNode.children.push(styleNode); // Add it to the fragment
+                    }
+                    else { // Wrap it in a fragment
+    
+                        newVNode = {
+                            tag: null,
+                            attributes: null,
+                            children: [newVNode, styleNode]
+                        };
+                    }
+                }         
             }
 
             return newVNode;

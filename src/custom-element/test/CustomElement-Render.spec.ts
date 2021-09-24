@@ -130,11 +130,7 @@ describe("custom element render tests", () => {
 
             static get styles() {
 
-                return css`
-                    :host {
-                        background-color: yellowgreen;
-                    }
-                `;
+                return css`:host { background-color: yellowgreen; }`;
             }           
 
             render() {
@@ -156,7 +152,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Sarah</span><span>My age is 19</span><style>:host{background-color:yellowgreen;}</style>');
+        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Sarah</span><span>My age is 19</span><style>:host { background-color: yellowgreen; }</style>');
     });
 
     it('should render the HTML with the set property and the style attached', async () => {
@@ -181,12 +177,8 @@ describe("custom element render tests", () => {
 
             static get styles() {
 
-                return css`
-                    :host {
-                        background-color: yellowgreen;
-                    }
-                `;
-            }    
+                return css`:host { background-color: yellowgreen; }`;
+            }
 
             render() {
 
@@ -207,7 +199,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Mark</span><span>My age is 31</span><style>:host{background-color:yellowgreen;}</style>');
+        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Mark</span><span>My age is 31</span><style>:host { background-color: yellowgreen; }</style>');
     });
     
 });

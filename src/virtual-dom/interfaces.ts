@@ -21,6 +21,19 @@ export interface VirtualNode {
     $node?: Node;
 }
 
+export interface VirtualNodePart {
+
+    /**
+     * The DOM element of the node
+     */
+     $node?: Node;
+
+    /**
+     * The index in the values array
+     */
+    index: number;
+}
+
 export enum DiffOperation {
 
     None = 1,

@@ -17,17 +17,13 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
 
             static get styles() {
 
-                return css`
-                    div {
-                        color: red;
-                    }
-                `;
+                return css`div { color: red; }`;
             }
         }
 
         defineCustomElement('test-a', A);
 
-        expect(A.metadata.styles).toEqual(["div{color:red;}"]);
+        expect(A.metadata.styles).toEqual(["div { color: red; }"]);
     });
 
     it('should populate a several styles of the custom element', () => {
@@ -38,26 +34,17 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
             static get styles() {
 
                 return [
-                    css`
-                        div {
-                            color: red;
-                        }
-                    `,
-                    css`
-                        span {
-                            display: inline-block;
-                        }
-                    `,
+                    css`div { color: red; }`,
+                    css`span { display: inline-block; }`,
                 ];
-
             }
         }
 
         defineCustomElement('test-a', A);
 
         expect(A.metadata.styles).toEqual([
-            "div{color:red;}",
-            "span{display:inline-block;}"
+            "div { color: red; }",
+            "span { display: inline-block; }"
         ]);
     });
 
@@ -68,11 +55,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
 
             static get styles() {
 
-                return css`
-                    div {
-                        color: red;
-                    }
-                `;
+                return css`div { color: red; }`;
             }
         }
 
@@ -83,18 +66,14 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
 
             static get styles() {
 
-                return css`
-                    span {
-                        display: inline-block;
-                    }
-                `;
+                return css`span { display: inline-block; }`;
 
             }
         }
 
         defineCustomElement('test-b', B);
 
-        expect(B.metadata.styles).toEqual(["span{display:inline-block;}"]);
+        expect(B.metadata.styles).toEqual(["span { display: inline-block; }"]);
 
     });
 
@@ -105,11 +84,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
 
             static get styles() {
 
-                return css`
-                    div {
-                        color: red;
-                    }
-                `;
+                return css`div { color: red; }`;
             }
         }
 
@@ -122,11 +97,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
 
                 return [
                     super.styles,
-                    css`
-                        span {
-                            display: inline-block;
-                        }
-                    `
+                    css`span { display: inline-block; }`
                 ];
 
             }
@@ -135,8 +106,8 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
         defineCustomElement('test-b', B);
 
         expect(B.metadata.styles).toEqual([
-            "div{color:red;}",
-            "span{display:inline-block;}"
+            "div { color: red; }",
+            "span { display: inline-block; }"
         ]);
 
     });

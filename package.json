@@ -8,14 +8,16 @@
   ],
   "scripts": {
     "prebuild": "rimraf lib",
-    "build": "tsc && rollup -c",
+    "build": "tsc && npm run copyCss && rollup -c",
+    "copyCss": "copyfiles --up 1 --verbose src/components/**/*.css lib",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache"
   },
   "jest": {
     "transform": {
-      "^.+\\.tsx?$": "ts-jest"
+      "^.+\\.tsx?$": "ts-jest",
+      ".+\\.(css|styl|less|sass|scss)$": "jest-css-modules-transform"
     },
     "testEnvironment": "@happy-dom/jest-environment",
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(tsx?)$",
@@ -45,13 +47,14 @@
   "devDependencies": {
     "@happy-dom/jest-environment": "^2.22.0",
     "@types/jest": "^26.0.24",
-    "copyfiles": "^2.3.0",
+    "copyfiles": "^2.4.1",
     "jest": "^26.6.3",
+    "jest-css-modules-transform": "^4.3.0",
     "prettier": "^2.3.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.56.3",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-import-css": "^3.0.2",
+    "rollup-plugin-typescript2": "^0.30.0",
     "ts-jest": "^26.5.6",
     "typescript": "^4.4.2"
   },
