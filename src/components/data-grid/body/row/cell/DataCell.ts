@@ -26,7 +26,7 @@ export default class DataCell extends CustomElement {
              * The descriptor of the fields to render the row
              */
             field: {
-                type: oneOf(Object, Function),
+                type: oneOf(Object, Function, String),
                 required: true
             }
         };

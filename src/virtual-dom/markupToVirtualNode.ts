@@ -26,7 +26,7 @@ export default function markupToVirtualNode(
     if (options.excludeTextWithWhiteSpacesOnly === true) {
 
         nodes = nodes.filter(node => node instanceof HTMLElement ||
-            node instanceof Comment && node.data.startsWith('{{') && node.data.endsWith('}}') || // Experimental
+            node instanceof Comment || // && node.data.startsWith('{{') && node.data.endsWith('}}') || // Experimental
             node instanceof Text && !(/^\s*$/g.test((node as Text).textContent)))
     }
 

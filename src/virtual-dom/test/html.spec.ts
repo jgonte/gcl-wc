@@ -37,17 +37,11 @@ describe("html tag template tests", () => {
 
         expect(vnode.$node).toBeDefined();
 
-        // expect(vnode.children[0]).toBe(nestedVNode); TODO: performance optimization. Reuse existing node
+        const childVNode = vnode.children[0] as VirtualNode;
 
-        const childNode = vnode.children[0] as VirtualNode;
+        expect(childVNode).toBe(nestedVNode);
 
-        expect(nestedVNode.tag).toEqual(childNode.tag);
-
-        expect(nestedVNode.attributes).toEqual(childNode.attributes);
-
-        expect(childNode.children[0].trim()).toEqual('My name is: Sarah');
-
-        expect(childNode.$node).toBeDefined();
+        expect(childVNode.$node).toBe(nestedVNode.$node);
     });
 
     it('should render a complex object as a value', () => {

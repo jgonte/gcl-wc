@@ -1,7 +1,7 @@
 import CustomElement from "../../custom-element/CustomElement";
+import oneOf from "../../custom-element/helpers/oneOf";
 import html from "../../virtual-dom/html";
-import { config } from "../config";
-import styles from "./DataGrid-css";
+import styles from "./DataGrid.css";
 
 export default class DataGrid extends CustomElement {
 
@@ -10,205 +10,46 @@ export default class DataGrid extends CustomElement {
         return styles;
     }
 
+	static get properties() {
+
+        return {
+
+            /**
+             * The collection of records to render the data from
+             */
+            data: {
+                type: oneOf(Array, Function),
+                required: true
+            },
+
+            /**
+             * The descriptor of the fields to render each row
+             */
+            fields: {
+                type: oneOf(Array, Function),
+                required: true
+            }
+        };
+    }
+
     render() {
 
         return html`
-			<gcl-data-grid-row></gcl-data-grid-row>
-			${this.renderBody()}
-			${this.renderFooter()}         
+			
+			${this.renderBody()}         
         `;
     }
 
     renderBody() {
 
-        return html`<div class="tr">
-	  <div class="td"
-		style="flex-grow: 2;">
-		<span><a href="javascript:void(0)">Andrew Jackman</a></span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>41</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>30</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>27</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$176.15</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$14.94</span>
-	  </div>
-	</div>
-	<div class="tr">
-	  <div class="td"
-		style="flex-grow: 2;">
-		<span><a href="javascript:void(0)">Oliver Ogden</a></span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>9</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>3</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>1</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$29,403.09</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$1,385.58</span>
-	  </div>
-	</div>
-	<div class="tr">
-	  <div class="td"
-		style="flex-grow: 2;">
-		<span><a href="javascript:void(0)">Basil Ullon</a></span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>750</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>535</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>707</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$795,170.40</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$341,946.34</span>
-	  </div>
-	</div>
-	<div class="tr">
-	  <div class="td"
-		style="flex-grow: 2;">
-		<span><a href="javascript:void(0)">Frank Davis</a></span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>2</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>1</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>0</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$65.10</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$41.12</span>
-	  </div>
-	</div>
-	<div class="tr">
-	  <div class="td"
-		style="flex-grow: 2;">
-		<span><a href="javascript:void(0)">Edward Ellis</a></span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>80</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>27</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>17</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$685,372.01</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$40,422.95</span>
-	  </div>
-	</div>
-	<div class="tr">
-	  <div class="td"
-		style="flex-grow: 2;">
-		<span><a href="javascript:void(0)">Keyrene Byrne</a></span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>295</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>211</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: center;">
-		<span>369</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$1,844,327.00</span>
-	  </div>
-	  <div class="td"
-		style="justify-content: flex-end;">
-		<span>$472,188.44</span>
-	  </div>
-	</div>`;
-    }
+        const 
+		{
+			fields,
+			data
+		} = this;
 
-	renderFooter() {
-
-        return html`
-      <div class="tr table-total">
-        <div class="td"
-          style="flex-grow: 2;">
-          <b>Total</b>
-        </div>
-        <div class="td"
-          style="justify-content: center;">
-          <b>4102</b>
-        </div>
-        <div class="td"
-          style="justify-content: center;">
-          <b>2914</b>
-        </div>
-        <div class="td"
-          style="justify-content: center;">
-          <b>1341</b>
-        </div>
-        <div class="td"
-          style="justify-content: flex-end;">
-          <b>$12,118,329.15</b>
-        </div>
-        <div class="td"
-          style="justify-content: flex-end;">
-          <b>$4,036,930.16</b>
-        </div>
-      </div>`;
+		return data.map(record => html`<gcl-data-row fields=${fields} record='${record}' key="tbd"></gcl-data-row>`);
     }
 }
 
-customElements.define(`${config.tagPrefix}-data-grid`, DataGrid as any);
+customElements.define('gcl-data-grid', DataGrid as any);

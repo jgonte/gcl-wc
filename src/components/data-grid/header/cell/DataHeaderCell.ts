@@ -1,6 +1,5 @@
 import CustomElement from "../../../../custom-element/CustomElement";
 import html from "../../../../virtual-dom/html";
-import { config } from "../../../config";
 
 export class DataHeaderCell extends CustomElement {
     
@@ -10,4 +9,4 @@ export class DataHeaderCell extends CustomElement {
     }
 }
 
-customElements.define(`${config.tagPrefix}-data-header-cell`, DataHeaderCell as any);
+customElements.define('gcl-data-header-cell', DataHeaderCell as any);

@@ -1,7 +1,6 @@
 import CustomElement from "../../../../custom-element/CustomElement";
 import oneOf from "../../../../custom-element/helpers/oneOf";
 import html from "../../../../virtual-dom/html";
-import { config } from "../../../config";
 import styles from "./DataRow.css";
 
 export default class DataRow extends CustomElement {
@@ -43,10 +42,10 @@ export default class DataRow extends CustomElement {
         return fields.map(field => {
 
             return (
-                html`<gcl-data-cell field='${field}' record='${record}'></gcl-data-cell>`
+                html`<gcl-data-cell field='${field}' record='${record}' key="${field}"></gcl-data-cell>`
             );
         });
     }
 }
 
-customElements.define(`${config.tagPrefix}-data-row`, DataRow as any);
+customElements.define('gcl-data-row', DataRow as any);

@@ -39,6 +39,11 @@ export class OneOf {
             }
             catch (error) {
 
+                if (!this.types.includes(String)) {
+
+                    throw error; // Malformed JSON
+                }
+
                 // Try the other types below
             }
 

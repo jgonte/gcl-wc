@@ -34,19 +34,7 @@ describe("Data cell tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`Sarah<style>
-:host {
-    display: flex;
-    flex-flow: row nowrap;
-    flex-grow: 1;
-    flex-basis: 0;
-    padding: 0.5em;
-    word-break: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0px;
-    white-space: nowrap;
-}</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`Sarah<style>[object Object]</style>`);
     });
 
     it('should render when the data of the attributes is provided via functions', async () => {
@@ -77,18 +65,6 @@ describe("Data cell tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`Sarah<style>
-:host {
-    display: flex;
-    flex-flow: row nowrap;
-    flex-grow: 1;
-    flex-basis: 0;
-    padding: 0.5em;
-    word-break: break-word;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0px;
-    white-space: nowrap;
-}</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`Sarah<style>[object Object]</style>`);
     });
 });
