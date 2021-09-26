@@ -57,11 +57,17 @@ export default function html(strings: TemplateStringsArray, ...values: any): Vir
 
 function stringify(value, parts) {
 
+    if (value === null) {
+
+        return EMPTY_STRING;
+    }
+
     if (Array.isArray(value) && isVirtualNode(value[0])) { // Recurse for every item of the array
 
         return value.reduce((acc, val, i) => acc = [...acc, stringify(val, parts)], [])
             .join('')
     }
+
     if (isVirtualNode(value)) { // Handle virtual nodes
 
         parts.push(value);
@@ -70,11 +76,13 @@ function stringify(value, parts) {
 
         //return createMarkup(value as VirtualNode);
     }
-    else if (typeof value === 'function') {
+    
+    if (typeof value === 'function') {
 
         return stringify(value(), parts);
     }
-    else if (typeof value === 'object') {
+
+    if (typeof value === 'object') {
 
         return JSON.stringify(value);
     }
@@ -98,54 +106,54 @@ function isVirtualNode(value: any) {
         'children' in value);
 }
 
-function createMarkup(vnode: VirtualNode) {
+// function createMarkup(vnode: VirtualNode) {
 
-    const type = typeof vnode;
+//     const type = typeof vnode;
 
-    // If primitives, then return them
-    if (type === 'string' ||
-        type === 'number') {
+//     // If primitives, then return them
+//     if (type === 'string' ||
+//         type === 'number') {
 
-        return vnode;
-    }
+//         return vnode;
+//     }
 
-    const {
-        tag
-    } = vnode;
+//     const {
+//         tag
+//     } = vnode;
 
-    if (tag !== null) { // HTML element
+//     if (tag !== null) { // HTML element
 
-        return `<${vnode.tag} ${renderAttributes(vnode)}>${renderChildren(vnode)}</${vnode.tag}>`;
-    }
-    else { // Document fragment
+//         return `<${vnode.tag} ${renderAttributes(vnode)}>${renderChildren(vnode)}</${vnode.tag}>`;
+//     }
+//     else { // Document fragment
 
-        return renderChildren(vnode);
-    }
-}
+//         return renderChildren(vnode);
+//     }
+// }
 
-function renderAttributes(vnode: VirtualNode) {
+// function renderAttributes(vnode: VirtualNode) {
 
-    const attributes = [];
+//     const attributes = [];
 
-    if (vnode.attributes === null) {
+//     if (vnode.attributes === null) {
 
-        return EMPTY_STRING;
-    }
+//         return EMPTY_STRING;
+//     }
 
-    for (const [key, value] of Object.entries(vnode.attributes)) {
+//     for (const [key, value] of Object.entries(vnode.attributes)) {
 
-        attributes.push(`${key}="${value}"`);
-    }
+//         attributes.push(`${key}="${value}"`);
+//     }
 
-    return attributes.join(' ');
-}
+//     return attributes.join(' ');
+// }
 
-function renderChildren(vnode: VirtualNode) {
+// function renderChildren(vnode: VirtualNode) {
 
-    return vnode.children.reduce(
-        (acc, child) => [...acc, createMarkup(child)],
-        []
-    ).join('');
-}
+//     return vnode.children.reduce(
+//         (acc, child) => [...acc, createMarkup(child)],
+//         []
+//     ).join('');
+// }
 
 

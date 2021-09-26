@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../../../dist/bundle.js"></script>
+    <script>
+
+        function getFields() {
+
+            return ["name", "age", "description"];
+        }
+
+    </script>
+
+    <title>Data header demo</title>
+</head>
+
+<body>
+    <gcl-data-header id="dr1" fields='[ "name", "age", "description" ]'></gcl-data-header>
+
+    <gcl-data-header id="dr2" fields='getFields()'></gcl-data-header>
+</body>
+
+</html>

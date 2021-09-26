@@ -1,11 +1,40 @@
 import CustomElement from "../../../../custom-element/CustomElement";
+import oneOf from "../../../../custom-element/helpers/oneOf";
 import html from "../../../../virtual-dom/html";
+import styles from "./DataHeaderCell.css";
 
-export class DataHeaderCell extends CustomElement {
+export default class DataHeaderCell extends CustomElement {
+
+    static get styles() {
+
+        return styles;
+    }
     
+    static get properties() {
+
+        return {
+
+            /**
+             * The descriptor of the field to render the header cell
+             */
+            field: {
+                type: oneOf(Object, Function, String),
+                required: true
+            }
+        };
+    }
+
     render() {
 
-        return html`cell`;
+        const {
+            field          
+        } = this;
+
+        const name = typeof field === 'string' ?
+            field:
+            field.name;
+
+        return html`${name}`;
     }
 }
 

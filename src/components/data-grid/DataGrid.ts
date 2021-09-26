@@ -35,9 +35,19 @@ export default class DataGrid extends CustomElement {
     render() {
 
         return html`
-			
+			${this.renderHeader()}
 			${this.renderBody()}         
         `;
+    }
+
+    renderHeader() {
+
+        const 
+		{
+			fields
+		} = this;
+
+        return html`<gcl-data-header fields=${fields}></gcl-data-header>`;
     }
 
     renderBody() {

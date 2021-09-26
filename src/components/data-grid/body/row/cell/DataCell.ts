@@ -15,7 +15,7 @@ export default class DataCell extends CustomElement {
         return {
 
             /**
-             * The record to render the row from
+             * The record to render the cell from
              */
             record: {
                 type: oneOf(Object, Function),
@@ -23,7 +23,7 @@ export default class DataCell extends CustomElement {
             },
 
             /**
-             * The descriptor of the fields to render the row
+             * The descriptor of the field to render the cell
              */
             field: {
                 type: oneOf(Object, Function, String),

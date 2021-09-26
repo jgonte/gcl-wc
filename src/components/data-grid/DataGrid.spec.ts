@@ -49,7 +49,7 @@ describe("Data grid tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:&#x22;19&#x22;,&#x22;description&#x22;:&#x22;Beautiful and smart&#x22;}\" key=\"tbd\"></gcl-data-row><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:&#x22;31&#x22;,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!----><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:&#x22;19&#x22;,&#x22;description&#x22;:&#x22;Beautiful and smart&#x22;}\" key=\"tbd\"></gcl-data-row><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:&#x22;31&#x22;,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!----><style>[object Object]</style>`);
     });
 
     it('should render when the data of the attributes is provided via functions', async () => {
@@ -91,6 +91,6 @@ describe("Data grid tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!----><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!----><style>[object Object]</style>`);
     });
 });

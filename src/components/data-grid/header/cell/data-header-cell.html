@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../../../dist/bundle.js"></script>
+
+    <script>
+
+        function getField() {
+
+            return "name";
+
+        //     return {
+        //         name: "name",
+        //         display: "Name",
+        //         width: '200px',
+        //         render: (record, field) => {
+        //             return `
+        // <gcl-row justify-content="center" style="width:${field.width};">
+        //     <gcl-icon name="person" variant="warning" size="large"></gcl-icon>
+        //     <span style="background-color: red;">
+        //         ${record[field.name]}
+        //     </span>
+        // </gcl-row>`;
+        //         }
+        //     };
+        }
+
+    </script>
+
+    <title>Data header cell demo</title>
+
+</head>
+
+<body>
+    <gcl-data-header-cell id="dh1" field="name"></gcl-data-header-cell>
+    <gcl-data-header-cell id="dh2" field="getField()"></gcl-data-header-cell>
+</body>
+
+</html>
