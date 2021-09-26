@@ -116,11 +116,13 @@ const VirtualDomMixin = Base =>
 
             if (this.shadowRoot !== null) {
 
-                const styleNode = {
+                const styleNode: VirtualNode = {
                     tag: 'style',
                     attributes: null,
                     children: [styles.join('')]
-                }
+                };
+
+                styleNode.$node = createNode(styleNode);
 
                 if (Array.isArray(newVNode)) {
 
@@ -135,6 +137,11 @@ const VirtualDomMixin = Base =>
                     if (newVNode.tag === null) { // It is a fragment node
 
                         newVNode.children.push(styleNode); // Add it to the fragment
+
+                        if (newVNode.$node !== undefined) {
+
+                            newVNode.$node.appendChild(styleNode.$node);
+                        }
                     }
                     else { // Wrap it in a fragment
     

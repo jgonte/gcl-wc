@@ -72,7 +72,7 @@ describe("html tag template tests", () => {
                 age: 19,
                 description: "Smart and beautiful"
             };
-        }; 
+        };
 
         const vnode = html`<x-container class="container" record='${getData}'></x-container>` as VirtualNode;
 
@@ -82,6 +82,52 @@ describe("html tag template tests", () => {
             class: "container",
             record: "{\"name\":\"Sarah\",\"age\":19,\"description\":\"Smart and beautiful\"}"
         });
+
+    });
+
+    it('should render from nested calls to the "html" function', () => {
+
+        function getData() {
+
+            return [
+                {
+                    name: "Sarah"
+                },
+                {
+                    name: "Mark"
+                }
+            ];
+        }
+
+        const render = () => {
+
+            return getData().map(record => html`<span style="color: red;">${record.name}</span>`);
+        };
+
+        const vnode = html`
+                
+            ${render()}      
+        ` as VirtualNode;
+
+        expect(vnode.tag).toEqual(null);
+
+        expect(vnode.attributes).toEqual({});
+
+        expect(vnode.children.length).toEqual(2);
+
+        let node = vnode.$node;
+
+        expect(node).toBeInstanceOf(DocumentFragment);
+
+        let child = vnode.children[0];
+
+        expect(child.tag).toEqual('span');
+
+        expect(child.attributes).toEqual({
+            style: "color: red;"
+        });
+
+        expect(child.children[0]).toEqual("Sarah");
 
     });
 });

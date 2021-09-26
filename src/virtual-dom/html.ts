@@ -23,6 +23,8 @@ export default function html(strings: TemplateStringsArray, ...values: any): Vir
         if (node === undefined) {
 
             node = new DocumentFragment();
+
+            (vnode as VirtualNode).$node = node;
         }
 
         const comments = Array.from(node.childNodes)
