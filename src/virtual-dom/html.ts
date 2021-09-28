@@ -1,6 +1,5 @@
 import markupToVirtualNode from "./markupToVirtualNode";
 import { EventHandler, VirtualNode } from "./interfaces";
-import { EMPTY_STRING } from "../utils/shared";
 
 /**
  * Template tag to generate the virtual node from the string
@@ -11,10 +10,7 @@ export default function html(strings: TemplateStringsArray, ...values: any): Vir
 
     const eventHandlers: EventHandler[] = [];
 
-    const markup = values.reduce(
-        (acc, val, idx) => [...acc, stringify(strings[idx], val, parts, eventHandlers), removeEventCall(strings[idx + 1])],
-        [removeEventCall(strings[0])]
-    ).join('');
+    const markup = processMarkup(strings, values, parts, eventHandlers);
 
     const vnode = markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true });
 
@@ -64,27 +60,36 @@ export default function html(strings: TemplateStringsArray, ...values: any): Vir
     return vnode;
 }
 
-function stringify(leftSide: string, value, parts, eventHandlers) {
+function processMarkup(strings: TemplateStringsArray, values: any, parts: any[], eventHandlers: EventHandler[]) {
 
-    if (value === null ||
-        value === EMPTY_STRING) {
+    const markupParts: string[] = [];
 
-        return EMPTY_STRING;
+    const length = values.length;
+
+    for (let i = 0; i < length; ++i) {
+
+        markupParts.push(
+            processMarkupPart(
+                strings !== undefined ? strings[i] : '',
+                values[i],
+                parts,
+                eventHandlers)
+        );
     }
 
-    if (Array.isArray(value) && isVirtualNode(value[0])) { // Recurse for every item of the array
+    if (strings !== undefined) {
 
-        return value.reduce((acc, val, i) => acc = [...acc, stringify(leftSide, val, parts, eventHandlers)], [])
-            .join('')
+        markupParts.push(strings[length]); // Add the last string
     }
 
-    if (isVirtualNode(value)) { // Handle virtual nodes
+    return markupParts.join('');
+}
 
-        parts.push(value);
+function processMarkupPart(leftSide: string, value: any, parts: any[], eventHandlers: EventHandler[]): string {
 
-        return '<!---->';
+    if (value === undefined) {
 
-        //return createMarkup(value as VirtualNode);
+        return removeRightMember(leftSide);
     }
 
     if (typeof value === 'function') {
@@ -102,19 +107,83 @@ function stringify(leftSide: string, value, parts, eventHandlers) {
         else {
 
             throw Error('Not implemented');
-
-            //return stringify(value(), parts);
         }
 
-        return EMPTY_STRING;
+        return removeRightMember(leftSide);
+    }
+
+    if (Array.isArray(value) && isVirtualNode(value[0])) { // Recurse for every item of the array
+
+        return processMarkup(undefined, value, parts, eventHandlers);
+    }
+
+    if (isVirtualNode(value)) { // Handle virtual nodes
+
+        parts.push(value);
+
+        return `${leftSide}<!---->`; // Set the placeholder
     }
 
     if (typeof value === 'object') {
 
-        return JSON.stringify(value);
+        if (leftSide.endsWith('=')) { // It is an attribute
+
+            return `${leftSide}'${JSON.stringify(value)}'`;
+        }
+        else { // It is a text node
+
+            return JSON.stringify(value); // Show the raw data
+        }
     }
 
-    return value;
+    // A primitive type
+    if (leftSide.endsWith('=')) { // It is an attribute
+
+        return `${leftSide}"${value}"`;
+    }
+    else { // It is a text node
+
+        return `${leftSide}${value}`;
+    }
+}
+
+/**
+ * Removes the rightmost member of a string if it has the equal operator
+ */
+function removeRightMember(str: string): string {
+
+    if (str.endsWith('=')) { // It is an attribute ... remove it
+
+        let lastSpace = str.lastIndexOf(' ');
+
+        if (lastSpace == -1) {
+
+            lastSpace = 0;
+        }
+
+        return str.substring(lastSpace, str.lastIndexOf(str));
+    }
+    else {
+
+        return str; // Nothing to remove
+    }
+}
+
+function getFunctionName(leftSide: string): string | null {
+
+    const parts = leftSide.split(' ');
+
+    for (let i = 0; i < parts.length; ++i) {
+
+        const functionName = parts[i].trim().toLocaleLowerCase();
+
+        if (functionName[0] === 'o' && functionName[1] === 'n') {
+
+            return functionName.replace('=', '');
+        }
+    }
+
+    return null;
 }
 
 function isVirtualNode(value: any) {
@@ -132,93 +201,3 @@ function isVirtualNode(value: any) {
         'attributes' in value &&
         'children' in value);
 }
-
-
-function getFunctionName(leftSide: string) : string | null {
-
-    const parts = leftSide.split(' ');
-
-    for (let i = 0; i < parts.length; ++i) {
-
-        const functionName = parts[i].trim().toLocaleLowerCase();
-
-        if (functionName[0] === 'o' && functionName[1] === 'n') {
-
-            return functionName.replace('=', '');
-        }   
-    }
-
-    return null;
-}
-
-function removeEventCall(str: string): string {
-
-    const parts = str.split(' ');
-
-    const newParts = [];
-
-    for (let i = 0; i < parts.length; ++i) {
-
-        const part = parts[i];
-
-        const normalizedPart = part.trim().toLocaleLowerCase();
-
-        if (normalizedPart[0] !== 'o' || normalizedPart[1] !== 'n') { // Not an event handler
-
-            newParts.push(part);
-        }   
-    }
-
-    return newParts.join(' ');
-}
-// function createMarkup(vnode: VirtualNode) {
-
-//     const type = typeof vnode;
-
-//     // If primitives, then return them
-//     if (type === 'string' ||
-//         type === 'number') {
-
-//         return vnode;
-//     }
-
-//     const {
-//         tag
-//     } = vnode;
-
-//     if (tag !== null) { // HTML element
-
-//         return `<${vnode.tag} ${renderAttributes(vnode)}>${renderChildren(vnode)}</${vnode.tag}>`;
-//     }
-//     else { // Document fragment
-
-//         return renderChildren(vnode);
-//     }
-// }
-
-// function renderAttributes(vnode: VirtualNode) {
-
-//     const attributes = [];
-
-//     if (vnode.attributes === null) {
-
-//         return EMPTY_STRING;
-//     }
-
-//     for (const [key, value] of Object.entries(vnode.attributes)) {
-
-//         attributes.push(`${key}="${value}"`);
-//     }
-
-//     return attributes.join(' ');
-// }
-
-// function renderChildren(vnode: VirtualNode) {
-
-//     return vnode.children.reduce(
-//         (acc, child) => [...acc, createMarkup(child)],
-//         []
-//     ).join('');
-// }
-
-

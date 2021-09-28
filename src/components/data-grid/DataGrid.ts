@@ -58,7 +58,7 @@ export default class DataGrid extends CustomElement {
 			data
 		} = this;
 
-		return data.map(record => html`<gcl-data-row fields=${fields} record='${record}' key="tbd"></gcl-data-row>`);
+		return data.map(record => html`<gcl-data-row fields=${fields} record=${record} key="tbd"></gcl-data-row>`);
     }
 }
 

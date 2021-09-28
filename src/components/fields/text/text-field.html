@@ -10,7 +10,7 @@
     <script>
 
         window.addEventListener('change', event => alert(
-`
+            `
         Event type: 'change'
         Field name: '${event.detail.name}'
         Field old value: '${event.detail.oldValue}'
@@ -24,7 +24,7 @@
 </head>
 
 <body>
-    <gcl-text-field id="tf1"></gcl-text-field>
+    <gcl-text-field id="tf1" name="name"></gcl-text-field>
     <br />
     <gcl-text-field id="tf2" name="name" value="Sarah"></gcl-text-field>
 </body>

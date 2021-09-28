@@ -42,7 +42,7 @@ export default class DataRow extends CustomElement {
         return fields.map(field => {
 
             return (
-                html`<gcl-data-cell field='${field}' record='${record}' key="${field}"></gcl-data-cell>`
+                html`<gcl-data-cell field=${field} record=${record} key=${field}></gcl-data-cell>`
             );
         });
     }

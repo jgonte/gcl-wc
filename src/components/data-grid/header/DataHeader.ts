@@ -29,7 +29,7 @@ export default class DataHeader extends CustomElement {
         return this.fields.map(field => {
 
             return (
-                html`<gcl-data-header-cell field='${field}' key="${field}"></gcl-data-header-cell>`
+                html`<gcl-data-header-cell field=${field} key=${field}></gcl-data-header-cell>`
             );
         });
     }

@@ -20,8 +20,8 @@ export default class TextField extends Field {
 
         return html`<input
             type="text"
-            ${name !== undefined ? `name=${name}` : EMPTY_STRING}
-            ${value !== undefined ? `value=${value}` : EMPTY_STRING}
+            name=${name}
+            value=${value}
             onInput=${event => this.handleInput(event)}
             onChange=${event => this.handleChange(event)}
             onBlur=${event => this.handleBlur(event)}

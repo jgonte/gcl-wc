@@ -52,7 +52,7 @@ describe("html tag template tests", () => {
             description: "Smart and beautiful"
         }
 
-        const vnode = html`<x-container class="container" record='${data}'></x-container>` as VirtualNode;
+        const vnode = html`<x-container class="container" record=${data}></x-container>` as VirtualNode;
 
         expect(vnode.tag).toEqual('x-container');
 

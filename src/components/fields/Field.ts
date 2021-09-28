@@ -17,7 +17,8 @@ export abstract class Field extends CustomElement {
              * The name of the field
              */
             name: {
-                type: String
+                type: String,
+                required: true
             },
 
             /**
