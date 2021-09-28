@@ -1,5 +1,5 @@
 import markupToVirtualNode from "../markupToVirtualNode";
-import { VirtualNode, VirtualNodePart } from "../interfaces";
+import { VirtualNode } from "../interfaces";
 
 describe("parse a string and covert to a virtual dom tree tests", () => {
 
@@ -147,34 +147,6 @@ describe("parse a string and covert to a virtual dom tree tests", () => {
         expect((vnode.children[3] as VirtualNode).tag).toEqual('gcl-text');
 
         expect((vnode.children[4] as VirtualNode).tag).toEqual('img');
-    });
-
-    it('should create a reference to a dynamic part', () => {
-
-        const markup =`<!--{{0}}-->`;
-
-        const vnode = markupToVirtualNode(markup, 'html',
-            {
-                excludeTextWithWhiteSpacesOnly: true
-            }) as VirtualNodePart;
-
-        expect((vnode as VirtualNodePart).index).toEqual(0);
-    });
-
-    it('should create a reference to a dynamic part in a nested object', () => {
-
-        const markup =`<div><!--{{0}}--></div>`;
-
-        const vnode = markupToVirtualNode(markup, 'html',
-            {
-                excludeTextWithWhiteSpacesOnly: true
-            }) as VirtualNode;
-
-            expect(vnode.tag).toEqual('div');
-
-            expect(vnode.children.length).toEqual(1);
-
-            expect((vnode.children[0] as VirtualNodePart).index).toEqual(0);
     });
 
     // DOMParser for xml is not implemented in HappyDom yet

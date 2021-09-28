@@ -5,17 +5,19 @@ import DataHeader from "./components/data-grid/header/DataHeader";
 import DataCell from "./components/data-grid/body/row/cell/DataCell";
 import DataRow from "./components/data-grid/body/row/DataRow";
 import DataGrid from "./components/data-grid/DataGrid";
-import Slider from "./components/slider/Slider";
-
-
+import TextField from "./components/fields/text/TextField";
+import Slider from "./components/fields/slider/Slider";
 
 export {
     defineCustomElement,
     CustomElement,
+    // Data grid components
     DataHeaderCell,
     DataHeader,
     DataCell,
     DataRow,
     DataGrid,
+    // Fields
+    TextField,
     Slider
 }

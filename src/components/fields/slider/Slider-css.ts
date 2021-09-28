@@ -1,4 +1,4 @@
-import css from "../../custom-element/helpers/css";
+import css from "../../../custom-element/helpers/css";
 
 const sliderCss = css`
 

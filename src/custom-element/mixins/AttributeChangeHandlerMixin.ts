@@ -113,7 +113,7 @@ const AttributeChangeHandlerMixin = Base =>
         private _setAttribute(attribute: string, value: any): boolean {
 
             // Verify that the property is one of the configured in the custom element
-            let propertyMetadata = (this.constructor as any)._propertiesByAttribute[attribute];
+            let propertyMetadata = (this.constructor as any).metadata.propertiesByAttribute.get(attribute);
 
             const {
                 name,

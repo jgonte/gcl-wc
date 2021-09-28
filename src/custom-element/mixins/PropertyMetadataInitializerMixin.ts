@@ -14,11 +14,6 @@ const PropertyMetadataInitializerMixin = Base =>
          */
         static properties: () => Record<string, CustomElementPropertyMetadata>;
 
-        /**
-         * To index the property descriptor by attribute name
-         */
-        private static _propertiesByAttribute: Record<string, CustomElementPropertyMetadata> = {};
-
         protected static initalizeProperties(metadata: CustomElementMetadata): void {
 
             const {
@@ -32,7 +27,7 @@ const PropertyMetadataInitializerMixin = Base =>
 
             Object.entries(properties).forEach(([key, value]) => this._initializeProperty(key, value, metadata));
 
-            // Add the properties of the base class if any so we can validate and initialize
+            // Merge the properties of the base class if any so we can validate and initialize
             // the values of the properties of the base class in the instance
             const baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
 
@@ -43,6 +38,8 @@ const PropertyMetadataInitializerMixin = Base =>
                 if (baseClassMetadata !== undefined) {
 
                     metadata.properties = new Map([...metadata.properties, ...baseClassMetadata.properties]);
+
+                    metadata.propertiesByAttribute = new Map([...metadata.propertiesByAttribute, ...baseClassMetadata.propertiesByAttribute]);
 
                     metadata.observedAttributes = [...metadata.observedAttributes, ...baseClassMetadata.observedAttributes];
                 }
@@ -86,15 +83,15 @@ const PropertyMetadataInitializerMixin = Base =>
                 }
             );
 
+            // Add it to the metadata properties so the properties of the instances can be validated and initialized
+            metadata.properties.set(name, propertyMetadata);
+
             const {
                 attribute
             } = propertyMetadata;
 
             // Index the property descriptor by the attribute name
-            this._propertiesByAttribute[attribute] = propertyMetadata; // Index by attribute name
-
-            // Add it to the metadata properties so the properties of the instances can be validated and initialized
-            metadata.properties.set(name, propertyMetadata);
+            metadata.propertiesByAttribute.set(attribute, propertyMetadata); // Index by attribute name
 
             // Add the observed attribute
             metadata.observedAttributes.push(propertyMetadata.attribute.toLowerCase());

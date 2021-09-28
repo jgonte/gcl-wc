@@ -94,9 +94,15 @@ export interface CustomElementMetadata {
     shadow: boolean;
 
     /**
-     * The merged properties configuration of the custom element mapped by its name
+     * The merged properties configuration of the custom element mapped by its name.
+     * They are indexed by the name of the property
      */
     properties: Map<string, CustomElementPropertyMetadata>;
+
+    /**
+     * The merged properties indexed by the name of the attribute
+     */
+    propertiesByAttribute: Map<string, CustomElementPropertyMetadata>;
 
     /**
      * The merged observed attributes of the custom element

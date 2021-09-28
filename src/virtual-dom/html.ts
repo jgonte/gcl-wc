@@ -1,17 +1,19 @@
 import markupToVirtualNode from "./markupToVirtualNode";
-import { VirtualNode, VirtualNodePart } from "./interfaces";
+import { EventHandler, VirtualNode } from "./interfaces";
 import { EMPTY_STRING } from "../utils/shared";
 
 /**
  * Template tag to generate the virtual node from the string
  */
-export default function html(strings: TemplateStringsArray, ...values: any): VirtualNode | VirtualNodePart | string | null {
+export default function html(strings: TemplateStringsArray, ...values: any): VirtualNode | string | null {
 
     const parts = [];
 
+    const eventHandlers: EventHandler[] = [];
+
     const markup = values.reduce(
-        (acc, val, idx) => [...acc, stringify(val, parts), strings[idx + 1]],
-        [strings[0]]
+        (acc, val, idx) => [...acc, stringify(strings[idx], val, parts, eventHandlers), removeEventCall(strings[idx + 1])],
+        [removeEventCall(strings[0])]
     ).join('');
 
     const vnode = markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true });
@@ -52,19 +54,27 @@ export default function html(strings: TemplateStringsArray, ...values: any): Vir
         });
     }
 
+    if (eventHandlers.length > 0) {
+
+        const node = (vnode as VirtualNode).$node;
+
+        eventHandlers.forEach(eh => node.addEventListener(eh.name, eh.handler));
+    }
+
     return vnode;
 }
 
-function stringify(value, parts) {
+function stringify(leftSide: string, value, parts, eventHandlers) {
 
-    if (value === null) {
+    if (value === null ||
+        value === EMPTY_STRING) {
 
         return EMPTY_STRING;
     }
 
     if (Array.isArray(value) && isVirtualNode(value[0])) { // Recurse for every item of the array
 
-        return value.reduce((acc, val, i) => acc = [...acc, stringify(val, parts)], [])
+        return value.reduce((acc, val, i) => acc = [...acc, stringify(leftSide, val, parts, eventHandlers)], [])
             .join('')
     }
 
@@ -76,10 +86,27 @@ function stringify(value, parts) {
 
         //return createMarkup(value as VirtualNode);
     }
-    
+
     if (typeof value === 'function') {
 
-        return stringify(value(), parts);
+        const fcnName = getFunctionName(leftSide);
+
+        if (fcnName !== null) { // Add an event handler
+
+            eventHandlers.push({
+
+                name: fcnName.replace('on', ''),
+                handler: value
+            });
+        }
+        else {
+
+            throw Error('Not implemented');
+
+            //return stringify(value(), parts);
+        }
+
+        return EMPTY_STRING;
     }
 
     if (typeof value === 'object') {
@@ -106,6 +133,44 @@ function isVirtualNode(value: any) {
         'children' in value);
 }
 
+
+function getFunctionName(leftSide: string) : string | null {
+
+    const parts = leftSide.split(' ');
+
+    for (let i = 0; i < parts.length; ++i) {
+
+        const functionName = parts[i].trim().toLocaleLowerCase();
+
+        if (functionName[0] === 'o' && functionName[1] === 'n') {
+
+            return functionName.replace('=', '');
+        }   
+    }
+
+    return null;
+}
+
+function removeEventCall(str: string): string {
+
+    const parts = str.split(' ');
+
+    const newParts = [];
+
+    for (let i = 0; i < parts.length; ++i) {
+
+        const part = parts[i];
+
+        const normalizedPart = part.trim().toLocaleLowerCase();
+
+        if (normalizedPart[0] !== 'o' || normalizedPart[1] !== 'n') { // Not an event handler
+
+            newParts.push(part);
+        }   
+    }
+
+    return newParts.join(' ');
+}
 // function createMarkup(vnode: VirtualNode) {
 
 //     const type = typeof vnode;

@@ -63,26 +63,17 @@ describe("html tag template tests", () => {
 
     });
 
-    it('should render a complex object as a value', () => {
+    it('should attach events to the DOM node and remove the function name from the markup', () => {
 
-        const getData = () => {
+        const handleClick = () => {};
 
-            return {
-                name: "Sarah",
-                age: 19,
-                description: "Smart and beautiful"
-            };
-        };
+        const vnode = html`<x-item onClick=${handleClick}></x-item>` as VirtualNode;
 
-        const vnode = html`<x-container class="container" record='${getData}'></x-container>` as VirtualNode;
+        expect(vnode.tag).toEqual('x-item');
 
-        expect(vnode.tag).toEqual('x-container');
+        expect(vnode.attributes).toEqual(null); // The handler is not part of the attributes
 
-        expect(vnode.attributes).toEqual({
-            class: "container",
-            record: "{\"name\":\"Sarah\",\"age\":19,\"description\":\"Smart and beautiful\"}"
-        });
-
+        expect((vnode.$node as any)._listeners['click']).toEqual([handleClick]);
     });
 
     it('should render from nested calls to the "html" function', () => {

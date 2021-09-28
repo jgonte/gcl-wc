@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../../../../dist/bundle.js"></script>
+
+    <script>
+
+        window.addEventListener('change', event => alert(
+`
+        Event type: 'change'
+        Field name: '${event.detail.name}'
+        Field old value: '${event.detail.oldValue}'
+        Field new value: '${event.detail.newValue}'
+`));
+
+    </script>
+
+    <title>Text field demo</title>
+
+</head>
+
+<body>
+    <gcl-text-field id="tf1"></gcl-text-field>
+    <br />
+    <gcl-text-field id="tf2" name="name" value="Sarah"></gcl-text-field>
+</body>
+
+</html>

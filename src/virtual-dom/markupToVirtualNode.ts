@@ -1,4 +1,4 @@
-import { VirtualNode, VirtualNodePart } from "./interfaces";
+import { VirtualNode } from "./interfaces";
 import nodeToVirtualNode from "./helpers/nodeToVirtualNode";
 import parseFromString from "./helpers/parseFromString";
 import { EMPTY_OBJECT } from "../utils/shared";
@@ -14,7 +14,7 @@ export default function markupToVirtualNode(
     markup: string,
     type: 'html' | 'xml' = 'xml',
     options: any = {}
-): VirtualNode | VirtualNodePart | string | null {
+): VirtualNode | string | null {
 
     let nodes = Array.from(parseFromString(markup, type));
 

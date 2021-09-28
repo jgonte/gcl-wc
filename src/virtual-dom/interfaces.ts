@@ -21,17 +21,17 @@ export interface VirtualNode {
     $node?: Node;
 }
 
-export interface VirtualNodePart {
+export interface EventHandler {
 
     /**
-     * The DOM element of the node
+     * The name of the event handler
      */
-     $node?: Node;
+    name: string;
 
     /**
-     * The index in the values array
+     * The function that handles the event
      */
-    index: number;
+    handler: EventListenerOrEventListenerObject;
 }
 
 export enum DiffOperation {

@@ -31,6 +31,7 @@ const MetadataInitializerMixin = Base =>
 
                 classMetadataRegistry.set(this, {
                     properties: new Map<string, CustomElementPropertyMetadata>(),
+                    propertiesByAttribute: new Map<string, CustomElementPropertyMetadata>(),
                     observedAttributes: [],
                     state: new Map<string, CustomElementStateMetadata>(),
                     styles: [],
