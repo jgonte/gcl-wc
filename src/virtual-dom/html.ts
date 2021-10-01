@@ -148,25 +148,19 @@ function processMarkupPart(leftSide: string, value: any, parts: any[], eventHand
 }
 
 /**
- * Removes the rightmost member of a string if it has the equal operator
+ * Removes the rightmost member of a string
+ * Assumes that it always has the = operator
  */
 function removeRightMember(str: string): string {
 
-    if (str.endsWith('=')) { // It is an attribute ... remove it
+    let lastSpace = str.lastIndexOf(' ');
 
-        let lastSpace = str.lastIndexOf(' ');
+    if (lastSpace == -1) {
 
-        if (lastSpace == -1) {
-
-            lastSpace = 0;
-        }
-
-        return str.substring(lastSpace, str.lastIndexOf(str));
+        lastSpace = 0;
     }
-    else {
 
-        return str; // Nothing to remove
-    }
+    return str.substring(lastSpace, str.lastIndexOf(str));
 }
 
 function getFunctionName(leftSide: string): string | null {

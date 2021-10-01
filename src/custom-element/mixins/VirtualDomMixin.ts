@@ -1,7 +1,5 @@
 import { VirtualNode, DiffOperation, LifecycleHooks } from "../../virtual-dom/interfaces";
-import createNode from "../../virtual-dom/dom/createNode";
 import patchNode from "../../virtual-dom/dom/patchNode";
-import removeChildren from "../../virtual-dom/dom/removeChildren";
 
 /**
  * Updates the element using a virtual DOM approach
@@ -46,7 +44,7 @@ const VirtualDomMixin = Base =>
                     {
                         this.willMount();
 
-                        this.document.insertBefore(createNode(newVNode), null); // Faster than appendChild
+                        this.document.insertBefore(patchNode(newVNode, this.document), null); // Faster than appendChild
 
                         this.didMount(); // Protected method to ensure the children are mounted first before calling didMountCallback on the parent
                     }
@@ -57,7 +55,17 @@ const VirtualDomMixin = Base =>
 
                         this.willUpdate();
 
-                        patchNode(newVNode, this._oldVNode, this.document);
+                        newVNode.$node = this._oldVNode.$node; // Set the existing DOM node to be patched
+
+                        if (newVNode.tag === null) { // Document fragment
+
+                            (this.document as HTMLElement).replaceChildren(...Array.from(patchNode(newVNode, this.document).childNodes));
+
+                        }
+                        else {
+
+                            this.document.replaceChild(patchNode(newVNode, this.document), this._oldVNode.$node);
+                        }
 
                         this.didUpdate(); // Protected method to ensure the children are updated first before calling didUpdateCallback on the parent
                     }
@@ -66,7 +74,7 @@ const VirtualDomMixin = Base =>
                     {
                         this.willUnmountCallback?.();
 
-                        removeChildren(this.document);
+                        (this.document as HTMLElement).replaceChildren(); // Remove all the existing children
                     }
                     break;
             }
@@ -122,8 +130,6 @@ const VirtualDomMixin = Base =>
                     children: [styles.join('')]
                 };
 
-                styleNode.$node = createNode(styleNode);
-
                 if (Array.isArray(newVNode)) {
 
                     newVNode = {
@@ -137,28 +143,23 @@ const VirtualDomMixin = Base =>
                     if (newVNode.tag === null) { // It is a fragment node
 
                         newVNode.children.push(styleNode); // Add it to the fragment
-
-                        if (newVNode.$node !== undefined) {
-
-                            newVNode.$node.appendChild(styleNode.$node);
-                        }
                     }
                     else { // Wrap it in a fragment
-    
+
                         newVNode = {
                             tag: null,
                             attributes: null,
                             children: [newVNode, styleNode]
                         };
                     }
-                }         
+                }
             }
 
             return newVNode;
         }
 
         private _initializeChildrenToUpdate() {
-            
+
             if (this.adoptedChildren.size > 0) {
 
                 this._childrenToUpdate = new Set<Node>(this.adoptedChildren);
@@ -204,7 +205,7 @@ const VirtualDomMixin = Base =>
 
             this._initializeChildrenToUpdate();
         }
-        
+
         protected async didUpdate() {
 
             if (this.adoptedChildren.size == 0) { // It is a leaf node
