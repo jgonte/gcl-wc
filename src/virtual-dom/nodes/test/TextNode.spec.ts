@@ -1,4 +1,4 @@
-import TextNode from "../../nodes/TextNode";
+import TextNode from "../TextNode";
 
 describe("creating text virtual nodes tests", () => {
 

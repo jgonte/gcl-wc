@@ -59,11 +59,10 @@ export default class ElementNode {
             node = document.createElement(tag);
         }
 
-        for (let name in Object(attributes)) {
+        for (let key in Object(attributes)) {
 
-            node.setAttribute(name, attributes[name]);
+            setAttribute(node, key, attributes[key]);  
         }
-
         for (let i = 0; i < children.length; ++i) {
 
             node.appendChild(children[i].createDom());
@@ -133,9 +132,30 @@ export default class ElementNode {
             return false;
         }
 
-        (node as HTMLElement).setAttribute(key, value);
+        setAttribute(node, key, value);
 
         return true; // Value changed
     }
+}
 
+function setAttribute(node: HTMLElement, key: string, value: string) {
+
+    if (value === 'undefined' ||
+        value === 'null' ||
+        value === '' ||
+        value === 'false') {
+
+        (node as HTMLElement).removeAttribute(key);
+    }
+    else {
+
+        if (value === 'true') {
+
+            (node as HTMLElement).setAttribute(key, '');
+        }
+        else {
+
+            (node as HTMLElement).setAttribute(key, value);
+        }
+    }
 }

@@ -12,9 +12,9 @@ export default function patchChildren(container: Node, children: (ElementNode | 
 
     for (const node of childNodes) {
 
-        let key;
+        let key = (node as HTMLElement).getAttribute?.('key') || null;
 
-        if ((key = (node as HTMLElement).getAttribute?.('key')) !== undefined) {
+        if (key !== null) {
 
             keyedNodes.set(key, node);
         }
@@ -29,7 +29,7 @@ export default function patchChildren(container: Node, children: (ElementNode | 
 
         const vnode = children[i]; // Get the vnode at the current index
 
-        const vnodeKey = (vnode as any).key; // Check if the virtual node has a key
+        const vnodeKey = (vnode as any).key || null; // Check if the virtual node has a key (set it to null to match the comparison of keys)
 
         const domNode = childNodes[i]; // Get the DOM node at the current index
 
@@ -58,7 +58,7 @@ export default function patchChildren(container: Node, children: (ElementNode | 
         }
         else { // domNode !== undefined
 
-            const domNodeKey = (domNode as HTMLElement).getAttribute?.('key'); // Check if the DOM node has a key
+            const domNodeKey = (domNode as HTMLElement).getAttribute?.('key') || null; // Check if the DOM node has a key
 
             if (vnodeKey === domNodeKey) {
 

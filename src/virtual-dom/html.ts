@@ -1,37 +1,38 @@
+import { EventHandler } from "./interfaces";
+import ElementNode from "./nodes/ElementNode";
+import MarkupParsingResult from "./MarkupParsingResult";
 import markupToVirtualNode from "./markupToVirtualNode";
-import { EventHandler, VirtualNode } from "./interfaces";
 
 /**
  * Template tag to generate the virtual node from the string
  */
-export default function html(strings: TemplateStringsArray, ...values: any): VirtualNode | string | null {
+export default function html(strings: TemplateStringsArray, ...values: any): MarkupParsingResult {
 
-    const parts = [];
+    const parts: MarkupParsingResult[] = [];
 
     const eventHandlers: EventHandler[] = [];
 
     const markup = processMarkup(strings, values, parts, eventHandlers);
 
-    const vnode = markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true });
+    const result = markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true });
+
+    let node = result.node as Node;
+
+    const vnode = result.vnode as ElementNode;
 
     if (parts.length > 0) {
 
-        let node = (vnode as VirtualNode).$node;
-
-        if (node === undefined) {
-
-            node = new DocumentFragment();
-
-            (vnode as VirtualNode).$node = node;
-        }
-
-        const comments = Array.from(node.childNodes)
-            .filter(n => n.nodeType === Node.COMMENT_NODE);
+        const comments = node.childNodes !== undefined ?
+            Array.from(node.childNodes)
+                .filter(n => n.nodeType === Node.COMMENT_NODE) :
+            [];
 
         parts.forEach((part, i) => {
 
+            const partNode = part.node as Node;
+
             // Add as a child of the vnode
-            (vnode as VirtualNode).children.push(part);
+            vnode.children.push(part.vnode as any);
 
             const comment = comments.length > i ?
                 comments[i] :
@@ -39,25 +40,23 @@ export default function html(strings: TemplateStringsArray, ...values: any): Vir
 
             if (comment !== undefined) { // Prepend its DOM node to the next comment placeholder of the dom node
 
-                node.insertBefore(part.$node, comment);
+                node.insertBefore(partNode, comment);
             }
             else { // Add the part and the marker
 
-                node.appendChild(part.$node);
+                node.insertBefore(partNode, null);
 
-                node.appendChild(new Comment());
+                node.insertBefore(new Comment(), null);
             }
         });
     }
 
     if (eventHandlers.length > 0) {
 
-        const node = (vnode as VirtualNode).$node;
-
         eventHandlers.forEach(eh => node.addEventListener(eh.name, eh.handler));
     }
 
-    return vnode;
+    return result;
 }
 
 function processMarkup(strings: TemplateStringsArray, values: any, parts: any[], eventHandlers: EventHandler[]) {
@@ -87,7 +86,8 @@ function processMarkup(strings: TemplateStringsArray, values: any, parts: any[],
 
 function processMarkupPart(leftSide: string, value: any, parts: any[], eventHandlers: EventHandler[]): string {
 
-    if (value === undefined) {
+    if (value === undefined ||
+        value === '') {
 
         return removeRightMember(leftSide);
     }
@@ -112,12 +112,12 @@ function processMarkupPart(leftSide: string, value: any, parts: any[], eventHand
         return removeRightMember(leftSide);
     }
 
-    if (Array.isArray(value) && isVirtualNode(value[0])) { // Recurse for every item of the array
+    if (Array.isArray(value) && isMarkupParsingResult(value[0])) { // Recurse for every item of the array
 
         return processMarkup(undefined, value, parts, eventHandlers);
     }
 
-    if (isVirtualNode(value)) { // Handle virtual nodes
+    if (isMarkupParsingResult(value)) { // Handle virtual nodes
 
         parts.push(value);
 
@@ -180,18 +180,16 @@ function getFunctionName(leftSide: string): string | null {
     return null;
 }
 
-function isVirtualNode(value: any) {
+function isMarkupParsingResult(value: any) {
 
     const type = typeof value;
 
-    // Exclude primitives
     if (type === 'string' ||
         type === 'number') {
 
         return false;
     }
 
-    return ('tag' in value &&
-        'attributes' in value &&
-        'children' in value);
+    return ('vnode' in value &&
+        'node' in value);
 }

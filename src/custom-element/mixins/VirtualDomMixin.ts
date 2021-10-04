@@ -1,5 +1,8 @@
-import { VirtualNode, DiffOperation, LifecycleHooks } from "../../virtual-dom/interfaces";
-import patchNode from "../../virtual-dom/dom/patchNode";
+import { DiffOperation, LifecycleHooks } from "../../virtual-dom/interfaces";
+import MarkupParsingResult from "../../virtual-dom/MarkupParsingResult";
+import ElementNode from "../../virtual-dom/nodes/ElementNode";
+import FragmentNode from "../../virtual-dom/nodes/FragmentNode";
+import TextNode from "../../virtual-dom/nodes/TextNode";
 
 /**
  * Updates the element using a virtual DOM approach
@@ -21,7 +24,7 @@ const VirtualDomMixin = Base =>
         /**
          * The old virtual node to diff against
          */
-        private _oldVNode: VirtualNode = null;
+        private _oldResult: MarkupParsingResult = null;
 
         /**
          * The set of children nodes that are removed every time of one them gets mounted/updated to
@@ -31,12 +34,17 @@ const VirtualDomMixin = Base =>
 
         protected updateDom() {
 
-            let newVNode = this.render();
+            let newResult: MarkupParsingResult = this.render();
+
+            if (Array.isArray(newResult)) { // An array of results was returned from an map -> html call
+
+                newResult = wrap(newResult);
+            }
 
             // Modify the original render if needed
-            newVNode = this.beforeRender(newVNode);
+            newResult = this.beforeRender(newResult);
 
-            const operation = this._getOperation(newVNode);
+            const operation = this._getOperation(newResult);
 
             switch (operation) {
                 case DiffOperation.None: return; // Nothing to do
@@ -44,7 +52,7 @@ const VirtualDomMixin = Base =>
                     {
                         this.willMount();
 
-                        this.document.insertBefore(patchNode(newVNode, this.document), null); // Faster than appendChild
+                        this.document.insertBefore(newResult.node, null); // Faster than appendChild
 
                         this.didMount(); // Protected method to ensure the children are mounted first before calling didMountCallback on the parent
                     }
@@ -55,17 +63,7 @@ const VirtualDomMixin = Base =>
 
                         this.willUpdate();
 
-                        newVNode.$node = this._oldVNode.$node; // Set the existing DOM node to be patched
-
-                        if (newVNode.tag === null) { // Document fragment
-
-                            (this.document as HTMLElement).replaceChildren(...Array.from(patchNode(newVNode, this.document).childNodes));
-
-                        }
-                        else {
-
-                            this.document.replaceChild(patchNode(newVNode, this.document), this._oldVNode.$node);
-                        }
+                        newResult.patch(this._oldResult, this.document);
 
                         this.didUpdate(); // Protected method to ensure the children are updated first before calling didUpdateCallback on the parent
                     }
@@ -79,14 +77,14 @@ const VirtualDomMixin = Base =>
                     break;
             }
 
-            this._oldVNode = newVNode;
+            this._oldResult = newResult;
         }
 
-        private _getOperation(newVNode: VirtualNode): DiffOperation {
+        private _getOperation(newResult: MarkupParsingResult): DiffOperation {
 
-            if (this._oldVNode === null) {
+            if (this._oldResult === null) {
 
-                if (newVNode === null) {
+                if (newResult === null) {
 
                     return DiffOperation.None;
                 }
@@ -97,7 +95,7 @@ const VirtualDomMixin = Base =>
             }
             else { // this._oldVNode !== null
 
-                if (newVNode === null) {
+                if (newResult === null) {
 
                     return DiffOperation.Unmount;
                 }
@@ -108,54 +106,39 @@ const VirtualDomMixin = Base =>
             }
         }
 
-        beforeRender(newVNode: VirtualNode | VirtualNode[]): VirtualNode | VirtualNode[] {
+        beforeRender(newResult: MarkupParsingResult): MarkupParsingResult {
 
             const styles = (this.constructor as any).metadata.styles;
 
             if (styles.length > 0) { // Add a style element to the node
 
-                return this.addStyles(newVNode, styles);
+                return this.addStyles(newResult, styles);
             }
 
-            return newVNode;
+            return newResult;
         }
 
-        addStyles(newVNode: VirtualNode | VirtualNode[], styles: string[]) {
+        addStyles(result: MarkupParsingResult, styles: string[]): MarkupParsingResult {
 
             if (this.shadowRoot !== null) {
 
-                const styleNode: VirtualNode = {
-                    tag: 'style',
-                    attributes: null,
-                    children: [styles.join('')]
-                };
+                const styleVNode = new ElementNode(
+                    'style',
+                    null,
+                    [
+                        new TextNode(styles.join(''))
+                    ]
+                );
 
-                if (Array.isArray(newVNode)) {
+                result = result.appendSibling(new MarkupParsingResult(styleVNode, styleVNode.createDom()));
 
-                    newVNode = {
-                        tag: null,
-                        attributes: null,
-                        children: [...newVNode, styleNode]
-                    };
-                }
-                else {
+            }
+            else { // this.shadowRoot === null
 
-                    if (newVNode.tag === null) { // It is a fragment node
-
-                        newVNode.children.push(styleNode); // Add it to the fragment
-                    }
-                    else { // Wrap it in a fragment
-
-                        newVNode = {
-                            tag: null,
-                            attributes: null,
-                            children: [newVNode, styleNode]
-                        };
-                    }
-                }
+                throw Error('Not implemented');
             }
 
-            return newVNode;
+            return result;
         }
 
         private _initializeChildrenToUpdate() {
@@ -238,3 +221,19 @@ const VirtualDomMixin = Base =>
     }
 
 export default VirtualDomMixin;
+
+/**
+ * Wraps the array of results in a fragment node one
+ * @param results 
+ * @returns 
+ */
+function wrap(results: MarkupParsingResult[]): MarkupParsingResult {
+
+    const wrapperVNode = new FragmentNode(results.map(r => r.vnode) as any);
+
+    const wrapperNode = new DocumentFragment();
+
+    results.forEach(r => wrapperNode.insertBefore(r.node, null));
+
+    return new MarkupParsingResult(wrapperVNode, wrapperNode);
+}

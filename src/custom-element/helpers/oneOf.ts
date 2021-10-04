@@ -1,6 +1,4 @@
-//import { ElementNode } from "gclib-vdom";
 import getGlobalFunction from "./getGlobalFunction"
-//import createVirtualNode from "./createVirtualNode";
 
 export class OneOf {
 
@@ -10,8 +8,15 @@ export class OneOf {
 
     toProperty(value: any) {
 
+        if (value === null &&
+            this.types.includes(String)) { // When an attribute gets removed attributeChangedCallback gives the value of null
+
+            return '';
+        }
+
         // First try a function since that can create any of the objects below
-        if (value[value.length - 2] === '(' && value[value.length - 1] === ')' // The function by convention must end in ()
+        if (value !== null &&
+            value[value.length - 2] === '(' && value[value.length - 1] === ')' // The function by convention must end in ()
             && this.types.includes(Function)) {
 
             var fcn = getGlobalFunction(value);

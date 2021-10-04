@@ -1,5 +1,7 @@
+import ElementNode from "../nodes/ElementNode";
 import html from "../html";
-import { VirtualNode } from "../interfaces";
+import TextNode from "../nodes/TextNode";
+import FragmentNode from "../nodes/FragmentNode";
 
 describe("html tag template tests", () => {
 
@@ -7,11 +9,13 @@ describe("html tag template tests", () => {
 
         const name = "Sarah";
 
-        const nestedVNode = html`
-            <x-item class="item">       
+        const nestedResult = html`
+            <x-item class="item">
                 My name is: ${name}
             </x-item>
-        ` as VirtualNode;
+        `;
+
+        const nestedVNode = nestedResult.vnode as ElementNode;
 
         expect(nestedVNode.tag).toEqual('x-item');
 
@@ -19,15 +23,17 @@ describe("html tag template tests", () => {
             class: "item",
         });
 
-        expect(nestedVNode.children[0].trim()).toEqual('My name is: Sarah');
+        expect((nestedVNode.children[0] as TextNode).text.toString().trim()).toEqual('My name is: Sarah');
 
-        expect(nestedVNode.$node).toBeDefined();
+        expect(nestedResult.node).toBeDefined();
 
-        const vnode = html`
+        const result = html`
             <x-container class="container">       
-                ${nestedVNode}
+                ${nestedResult}
             </x-container>
-        ` as VirtualNode;
+        `;
+
+        const vnode = result.vnode as ElementNode;
 
         expect(vnode.tag).toEqual('x-container');
 
@@ -35,13 +41,13 @@ describe("html tag template tests", () => {
             class: "container",
         });
 
-        expect(vnode.$node).toBeDefined();
+        expect(result.node).toBeDefined();
 
-        const childVNode = vnode.children[0] as VirtualNode;
+        const childVNode = vnode.children[0] as ElementNode;
 
         expect(childVNode).toBe(nestedVNode);
 
-        expect(childVNode.$node).toBe(nestedVNode.$node);
+        expect((result.node as HTMLElement).childNodes[1]).toBe(nestedResult.node);
     });
 
     it('should render a complex object as a value', () => {
@@ -52,7 +58,9 @@ describe("html tag template tests", () => {
             description: "Smart and beautiful"
         }
 
-        const vnode = html`<x-container class="container" record=${data}></x-container>` as VirtualNode;
+        const result = html`<x-container class="container" record=${data}></x-container>`;
+
+        const vnode = result.vnode as ElementNode;
 
         expect(vnode.tag).toEqual('x-container');
 
@@ -65,15 +73,17 @@ describe("html tag template tests", () => {
 
     it('should attach events to the DOM node and remove the function name from the markup', () => {
 
-        const handleClick = () => {};
+        const handleClick = () => { };
 
-        const vnode = html`<x-item onClick=${handleClick}></x-item>` as VirtualNode;
+        const result = html`<x-item onClick=${handleClick}></x-item>`;
+
+        const vnode = result.vnode as ElementNode;
 
         expect(vnode.tag).toEqual('x-item');
 
         expect(vnode.attributes).toEqual(null); // The handler is not part of the attributes
 
-        expect((vnode.$node as any)._listeners['click']).toEqual([handleClick]);
+        expect((result.node as any)._listeners['click']).toEqual([handleClick]);
     });
 
     it('should render from nested calls to the "html" function', () => {
@@ -95,22 +105,22 @@ describe("html tag template tests", () => {
             return getData().map(record => html`<span style="color: red;">${record.name}</span>`);
         };
 
-        const vnode = html`
+        const result = html`
                 
             ${render()}      
-        ` as VirtualNode;
+        `;
 
-        expect(vnode.tag).toEqual(null);
+        const vnode = result.vnode as FragmentNode;
 
-        expect(vnode.attributes).toEqual({});
+        expect(vnode).toBeInstanceOf(FragmentNode)
 
         expect(vnode.children.length).toEqual(2);
 
-        let node = vnode.$node;
+        let node = result.node;
 
         expect(node).toBeInstanceOf(DocumentFragment);
 
-        let child = vnode.children[0];
+        let child = vnode.children[0] as ElementNode;
 
         expect(child.tag).toEqual('span');
 
@@ -118,7 +128,7 @@ describe("html tag template tests", () => {
             style: "color: red;"
         });
 
-        expect(child.children[0]).toEqual("Sarah");
+        expect(child.children[0]).toEqual({"text": "Sarah"});
 
     });
 });

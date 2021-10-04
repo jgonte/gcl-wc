@@ -1,5 +1,6 @@
 import { EMPTY_ARRAY, EMPTY_OBJECT } from "../../utils/shared";
-import { VirtualNode } from "../interfaces";
+import ElementNode from "../nodes/ElementNode";
+import TextNode from "../nodes/TextNode";
 
 /**
  * Creates a virtual node form a DOM one
@@ -7,7 +8,7 @@ import { VirtualNode } from "../interfaces";
  * @param options 
  * @returns 
  */
-export default function nodeToVirtualNode(node?: Node, options: any = {}): VirtualNode | string | null {
+export default function nodeToVirtualNode(node?: Node, options: any = {}): ElementNode | TextNode | null {
 
     if (node === null) {
 
@@ -23,16 +24,11 @@ export default function nodeToVirtualNode(node?: Node, options: any = {}): Virtu
             throw Error('Script elements are not allowed unless the allowScripts option is set to true');
         }
 
-        const attributes = getAttributes(node.attributes);
-
-        const children = getChildren(node.childNodes, options);
-
-        return {
+        return new ElementNode(
             tag,
-            attributes,
-            children,
-            $node: node
-        };
+            getAttributes(node.attributes),
+            getChildren(node.childNodes, options)
+        );
     }
     else if (node instanceof Text) {
 
@@ -45,15 +41,15 @@ export default function nodeToVirtualNode(node?: Node, options: any = {}): Virtu
             return null;
         }
 
-        return content;
+        return new TextNode(content);
     }
-    else {
+    else { // Ignore comments, also we don't expect converting from fragment documents
 
         return null;
     }
 }
 
-function getAttributes(attributes: NamedNodeMap) {
+function getAttributes(attributes: NamedNodeMap) : Record<PropertyKey, any> {
 
     if (attributes === null) {
 
@@ -73,24 +69,20 @@ function getAttributes(attributes: NamedNodeMap) {
 
         const { name, value } = attributes[i];
 
-        // if (name.substring(0,2)==='on' && walk.options.allowEvents){
-        // 	value  = new Function(value); // eslint-disable-line no-new-func
-        // }
-
         (props as any)[name] = value;
     }
 
     return props;
 }
 
-function getChildren(childNodes: NodeListOf<ChildNode>, options: any): (VirtualNode | string)[] {
+function getChildren(childNodes: NodeListOf<ChildNode>, options: any): (ElementNode | TextNode)[] {
 
     if (childNodes === undefined) {
 
         return EMPTY_ARRAY;
     }
 
-    var vnodes: (VirtualNode | string)[] = [];
+    var vnodes: (ElementNode | TextNode)[] = [];
 
     childNodes.forEach(childNode => {
 

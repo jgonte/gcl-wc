@@ -158,8 +158,16 @@ const AttributeChangeHandlerMixin = Base =>
 
                 value = valueConverter.toAttribute(value);
 
-                // This will trigger the attributeChangedCallback
-                this.setAttribute(reflectOnAttribute, value);
+                if (value === '') {
+
+                    this.removeAttribute(reflectOnAttribute);
+                }
+                else {
+
+                    // This will trigger the attributeChangedCallback
+                    this.setAttribute(reflectOnAttribute, value);
+                }
+
             }
 
             this._changedProperties.set(name, (this.constructor as any).metadata.properties.get(name));
@@ -174,7 +182,7 @@ const AttributeChangeHandlerMixin = Base =>
                 if (p.afterUpdate !== undefined) { // Call the change function if defined
 
                     p.afterUpdate.call(this);
-                }    
+                }
             });
         }
 

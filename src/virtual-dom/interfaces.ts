@@ -1,25 +1,25 @@
-export interface VirtualNode {
+// export interface VirtualNode {
 
-    /**
-     * The name of the tag of the node
-     */
-    tag: string,
+//     /**
+//      * The name of the tag of the node
+//      */
+//     tag: string,
 
-    /**
-     * The attributes of the node
-     */
-    attributes: Record<string, any>,
+//     /**
+//      * The attributes of the node
+//      */
+//     attributes: Record<string, any>,
 
-    /**
-     * The children of the node
-     */
-    children: any[]
+//     /**
+//      * The children of the node
+//      */
+//     children: any[]
 
-    /**
-     * The DOM element of the node
-     */
-    $node?: Node;
-}
+//     /**
+//      * The DOM element of the node
+//      */
+//     $node?: Node;
+// }
 
 export interface EventHandler {
 

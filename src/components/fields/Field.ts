@@ -27,7 +27,8 @@ export abstract class Field extends CustomElement {
             value: {
                 type: oneOf(String, Object), // Ideally is a string but could be a more complex object
                 mutable: true,
-                reflect: true
+                reflect: true,
+                value: ''
             },
 
             disabled: {

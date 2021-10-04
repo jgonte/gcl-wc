@@ -68,14 +68,19 @@ const valueConverter = {
 
             return value ? '' : 'false';
         }
-        else if (type === 'object' || Array.isArray(value)) {
+
+        if (type === 'object' || Array.isArray(value)) {
 
             return value == null ? value : JSON.stringify(value);
         }
-        else {
 
-            return value;
+        if (value === undefined ||
+            value === null) {
+
+            return `${value}`; // Convert undefined and null to string
         }
+
+        return value;
     }
 
 };
