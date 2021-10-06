@@ -13,24 +13,18 @@ const VirtualDomMixin = Base =>
 
     class VirtualDom extends Base implements LifecycleHooks {
 
-        didMountCallback?: () => void;
+        didMountCallback() { }
 
-        willUpdateCallback?: () => void;
+        willUpdateCallback() { };
 
-        didUpdateCallback?: () => void;
+        didUpdateCallback() { };
 
-        willUnmountCallback?: () => void;
+        willUnmountCallback() { };
 
         /**
          * The old virtual node to diff against
          */
         private _oldResult: MarkupParsingResult = null;
-
-        /**
-         * The set of children nodes that are removed every time of one them gets mounted/updated to
-         * allow to call the respective callback after in the parent after the children have been mounted/updated
-         */
-        private _childrenToUpdate: Set<Node> = undefined;
 
         protected updateDom() {
 
@@ -50,22 +44,18 @@ const VirtualDomMixin = Base =>
                 case DiffOperation.None: return; // Nothing to do
                 case DiffOperation.Mount:
                     {
-                        this.willMount();
-
                         this.document.insertBefore(newResult.node, null); // Faster than appendChild
 
-                        this.didMount(); // Protected method to ensure the children are mounted first before calling didMountCallback on the parent
+                        this._waitForChildrenToMount();
                     }
                     break;
                 case DiffOperation.Update:
                     {
-                        this.willUpdateCallback?.();
-
-                        this.willUpdate();
+                        this.willUpdateCallback();
 
                         newResult.patch(this._oldResult, this.document);
 
-                        this.didUpdate(); // Protected method to ensure the children are updated first before calling didUpdateCallback on the parent
+                        this._waitForChildrenToUpdate();
                     }
                     break;
                 case DiffOperation.Unmount:
@@ -141,82 +131,34 @@ const VirtualDomMixin = Base =>
             return result;
         }
 
-        private _initializeChildrenToUpdate() {
+        /**
+         * Wait for the children to mount before this (parent)
+         */
+         private async _waitForChildrenToMount() {
 
-            if (this.adoptedChildren.size > 0) {
+            const updatePromises = [...this.adoptedChildren].map(child => (child as any)._updatePromise);
 
-                this._childrenToUpdate = new Set<Node>(this.adoptedChildren);
+            if (updatePromises.length > 0) {
+
+                await Promise.all(updatePromises);
             }
+
+            this.didMountCallback();
         }
 
-        protected willMount() {
+        /**
+         * Wait for the children to update before this (parent)
+         */
+         private async _waitForChildrenToUpdate() {
 
-            this._initializeChildrenToUpdate();
-        }
+            const updatePromises = [...this.adoptedChildren].map(child => (child as any)._updatePromise);
 
-        protected async didMount() {
+            if (updatePromises.length > 0) {
 
-            if (this.adoptedChildren.size == 0) { // It is a leaf node
-
-                this._notifyDidMount();
+                await Promise.all(updatePromises);
             }
-        }
 
-        protected childDidMount(child: Node, callback: Function) {
-
-            this._childrenToUpdate.delete(child);
-
-            if (this._childrenToUpdate.size === 0) { // Copy the children that need to be removed when updated
-
-                this._notifyDidMount();
-            }
-        }
-
-        private _notifyDidMount() {
-
-            this.callAttributesChange();
-
-            this.didMountCallback?.();
-
-            if (this.adoptingParent !== null) { // Let the adopting parent know that the child was mounted/updated 
-
-                this.adoptingParent.childDidMount(this);
-            }
-        }
-
-        protected willUpdate() {
-
-            this._initializeChildrenToUpdate();
-        }
-
-        protected async didUpdate() {
-
-            if (this.adoptedChildren.size == 0) { // It is a leaf node
-
-                this._notifyDidUpdate();
-            }
-        }
-
-        protected childDidUpdate(child: Node, callback: Function) {
-
-            this._childrenToUpdate.delete(child);
-
-            if (this._childrenToUpdate.size === 0) { // Copy the children that need to be removed when updated
-
-                this._notifyDidUpdate();
-            }
-        }
-
-        private _notifyDidUpdate() {
-
-            this.callAttributesChange();
-
-            this.didUpdateCallback?.();
-
-            if (this.adoptingParent !== null) { // Let the adopting parent know that the child was mounted/updated 
-
-                this.adoptingParent.childDidUpdate(this);
-            }
+            this.didUpdateCallback();
         }
     }
 

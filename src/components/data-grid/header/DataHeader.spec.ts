@@ -1,3 +1,4 @@
+import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import clearCustomElements from "../../../custom-element/test/utils/clearCustomElements";
 import DataHeaderCell from "./cell/DataHeaderCell";
 import DataHeader from "./DataHeader";
@@ -12,9 +13,9 @@ describe("Data row tests", () => {
     it('should throw an error when the record and field attributes are not provided', () => {
 
         // Re-register the data row and its dependencies since all the custom elements are cleared before any test
-        customElements.define('gcl-data-header-cell', DataHeaderCell as any);
+        defineCustomElement('gcl-data-header-cell', DataHeaderCell);
 
-        customElements.define('gcl-data-header', DataHeader as any);
+        defineCustomElement('gcl-data-header', DataHeader);
 
         expect(() => {
 
@@ -27,9 +28,9 @@ describe("Data row tests", () => {
     it('should render when the data of the attributes is provided', async () => {
 
         // Re-register the data row since all the custom elements are cleared before any test
-        customElements.define('gcl-data-header-cell', DataHeaderCell as any);
+        defineCustomElement('gcl-data-header-cell', DataHeaderCell);
 
-        customElements.define('gcl-data-header', DataHeader as any);
+        defineCustomElement('gcl-data-header', DataHeader);
 
         // Attach it to the DOM
         document.body.innerHTML = `
@@ -55,9 +56,9 @@ describe("Data row tests", () => {
         };
 
         // Re-register the data row since all the custom elements are cleared before any test
-        customElements.define('gcl-data-header-cell', DataHeaderCell as any);
+        defineCustomElement('gcl-data-header-cell', DataHeaderCell);
         
-        customElements.define('gcl-data-header', DataHeader as any);
+        defineCustomElement('gcl-data-header', DataHeader);
 
         // Attach it to the DOM
         document.body.innerHTML = '<gcl-data-header id="dr2" fields="getFields()"></gcl-data-header>';

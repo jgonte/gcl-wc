@@ -1,6 +1,7 @@
 import { Field } from "../Field";
 import html from "../../../virtual-dom/html";
 import { EMPTY_STRING } from "../../../utils/shared";
+import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 
 export default class TextField extends Field {
 
@@ -30,4 +31,4 @@ export default class TextField extends Field {
     }
 }
 
-customElements.define('gcl-text-field', TextField as any);
+defineCustomElement('gcl-text-field', TextField);

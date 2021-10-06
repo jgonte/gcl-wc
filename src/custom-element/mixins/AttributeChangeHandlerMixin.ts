@@ -78,12 +78,17 @@ const AttributeChangeHandlerMixin = Base =>
 
             const missingValueAttributes: string[] = [];
 
-            for (const [name, property] of propertiesMetadata) {
+            for (const [, property] of propertiesMetadata) {
 
-                if (property.required === true &&
-                    this._properties[name] === undefined) { // No value set
+                const {
+                    required,
+                    attribute
+                } = property;
 
-                    missingValueAttributes.push(property.attribute);
+                if (required === true &&
+                    this.attributes[attribute] === undefined) { // The attribute for that property has not been set
+
+                    missingValueAttributes.push(attribute);
                 }
             }
 

@@ -1,4 +1,5 @@
 import CustomElement from "../../../../custom-element/CustomElement";
+import defineCustomElement from "../../../../custom-element/helpers/defineCustomElement";
 import oneOf from "../../../../custom-element/helpers/oneOf";
 import html from "../../../../virtual-dom/html";
 import styles from "./DataRow.css";
@@ -48,4 +49,4 @@ export default class DataRow extends CustomElement {
     }
 }
 
-customElements.define('gcl-data-row', DataRow as any);
+defineCustomElement('gcl-data-row', DataRow);

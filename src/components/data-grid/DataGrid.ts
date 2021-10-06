@@ -1,4 +1,5 @@
 import CustomElement from "../../custom-element/CustomElement";
+import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import oneOf from "../../custom-element/helpers/oneOf";
 import html from "../../virtual-dom/html";
 import styles from "./DataGrid.css";
@@ -62,4 +63,4 @@ export default class DataGrid extends CustomElement {
     }
 }
 
-customElements.define('gcl-data-grid', DataGrid as any);
+defineCustomElement('gcl-data-grid', DataGrid);

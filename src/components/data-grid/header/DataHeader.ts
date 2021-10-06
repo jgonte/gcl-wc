@@ -1,4 +1,5 @@
 import CustomElement from "../../../custom-element/CustomElement";
+import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import oneOf from "../../../custom-element/helpers/oneOf";
 import html from "../../../virtual-dom/html";
 import styles from "./DataHeader.css";
@@ -28,11 +29,9 @@ export default class DataHeader extends CustomElement {
 
         return this.fields.map(field => {
 
-            return (
-                html`<gcl-data-header-cell field=${field} key=${field}></gcl-data-header-cell>`
-            );
+            return html`<gcl-data-header-cell field=${field} key=${field}></gcl-data-header-cell>`;
         });
     }
 }
 
-customElements.define('gcl-data-header', DataHeader as any);
+defineCustomElement('gcl-data-header', DataHeader);

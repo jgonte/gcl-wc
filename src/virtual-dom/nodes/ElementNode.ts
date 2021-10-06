@@ -101,7 +101,7 @@ export default class ElementNode {
         }
         else { // Different tags, replace the element
 
-            throw 'Not implemented'
+            throw 'patchDom not implemented for different tags';
             // return vnode.$node = node = createNode(vnode);
         }
 
@@ -112,29 +112,34 @@ export default class ElementNode {
 
         let updated = false;
 
-        for (const [key, value] of Object.entries(attributes)) {
+        const nodeAttributes = toRecord(node.attributes);
 
-            if (this._patchAttribute(node, key, value) === true) {
+        const mergedAttributes = { ...nodeAttributes, ...attributes};
+
+        for (const key of Object.keys(mergedAttributes)) {
+
+            const value = attributes[key];
+
+            if (value === undefined) { // It was removed in the new virtual node
+
+                node.removeAttribute(key);
 
                 updated = true;
+            }
+            else {
+
+                const oldValue = nodeAttributes[key];
+
+                if (value !== oldValue) {
+
+                    setAttribute(node, key, value);
+
+                    updated = true;
+                }
             }
         }
 
         return updated;
-    }
-
-    private _patchAttribute(node: HTMLElement, key: string, value: string): boolean {
-
-        const oldValue = node.getAttribute(key);
-
-        if (oldValue === value) {
-
-            return false;
-        }
-
-        setAttribute(node, key, value);
-
-        return true; // Value changed
     }
 }
 
@@ -158,4 +163,20 @@ function setAttribute(node: HTMLElement, key: string, value: string) {
             (node as HTMLElement).setAttribute(key, value);
         }
     }
+}
+
+function toRecord(attributes: NamedNodeMap): Record<PropertyKey, string> {
+
+    const record: Record<PropertyKey, string> = {};
+
+    const length = attributes.length;
+
+    for (let i = 0; i < length; ++i) {
+
+        const attribute = attributes[i];
+
+        record[attribute.name] = attribute.value;
+    }
+
+    return record;
 }

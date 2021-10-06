@@ -1,4 +1,5 @@
 import CustomElement from "../../../../../custom-element/CustomElement";
+import defineCustomElement from "../../../../../custom-element/helpers/defineCustomElement";
 import oneOf from "../../../../../custom-element/helpers/oneOf";
 import html from "../../../../../virtual-dom/html";
 import styles from "./DataCell.css";
@@ -49,4 +50,4 @@ export default class DataCell extends CustomElement {
     }
 }
 
-customElements.define('gcl-data-cell', DataCell as any);
+defineCustomElement('gcl-data-cell', DataCell);

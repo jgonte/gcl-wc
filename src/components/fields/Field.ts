@@ -79,7 +79,7 @@ export abstract class Field extends CustomElement {
 
     }
 
-    handleChange(event) {
+    handleChange(event) : void {
 
         // Retrieve the new value
         const target = event.target as HTMLInputElement;
@@ -93,11 +93,15 @@ export abstract class Field extends CustomElement {
             value
         } = this;
 
-        this.dispatchCustomEvent('change', {
-            name,
-            oldValue,
-            newValue: value
-        });
+        setTimeout(() => { // Repaint before dispatching the event
+            
+            this.dispatchCustomEvent('change', {
+                name,
+                oldValue,
+                newValue: value
+            });
+
+        }, 0);
     }
 
     getNewValue(input: HTMLInputElement): any {

@@ -1,3 +1,4 @@
+import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import clearCustomElements from "../../custom-element/test/utils/clearCustomElements";
 import DataCell from "./body/row/cell/DataCell";
 import DataRow from "./body/row/DataRow";
@@ -13,11 +14,11 @@ describe("Data grid tests", () => {
     it('should throw an error when the record and field attributes are not provided', () => {
 
         // Re-register the data grid and its dependencies since all the custom elements are cleared before any test
-        customElements.define('gcl-data-cell', DataCell as any);
+        defineCustomElement('gcl-data-cell', DataCell);
 
-        customElements.define('gcl-data-row', DataRow as any);
+        defineCustomElement('gcl-data-row', DataRow);
 
-        customElements.define('gcl-data-grid', DataGrid as any);
+        defineCustomElement('gcl-data-grid', DataGrid);
 
         expect(() => {
 
@@ -30,11 +31,11 @@ describe("Data grid tests", () => {
     it('should render when the data of the attributes is provided', async () => {
 
         // Re-register the data grid since all the custom elements are cleared before any test
-        customElements.define('gcl-data-cell', DataCell as any);
+        defineCustomElement('gcl-data-cell', DataCell);
 
-        customElements.define('gcl-data-row', DataRow as any);
+        defineCustomElement('gcl-data-row', DataRow);
 
-        customElements.define('gcl-data-grid', DataGrid as any);
+        defineCustomElement('gcl-data-grid', DataGrid);
 
         // Attach it to the DOM
         document.body.innerHTML = `
@@ -77,11 +78,11 @@ describe("Data grid tests", () => {
         };
 
         // Re-register the data grid since all the custom elements are cleared before any test
-        customElements.define('gcl-data-cell', DataCell as any);
+        defineCustomElement('gcl-data-cell', DataCell);
 
-        customElements.define('gcl-data-row', DataRow as any);
+        defineCustomElement('gcl-data-row', DataRow);
 
-        customElements.define('gcl-data-grid', DataGrid as any);
+        defineCustomElement('gcl-data-grid', DataGrid);
 
         // Attach it to the DOM
         document.body.innerHTML = '<gcl-data-grid id="dg2" data="getData()" fields="getFields()"></gcl-data-grid>';

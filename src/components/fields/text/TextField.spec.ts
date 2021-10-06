@@ -1,3 +1,4 @@
+import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import clearCustomElements from "../../../custom-element/test/utils/clearCustomElements";
 import TextField from "./TextField";
 
@@ -11,7 +12,7 @@ describe("Text field tests", () => {
     it('should throw an error when the required attributes are not provided', () => {
 
         // Re-register the data cell since all the custom elements are cleared before any test
-        customElements.define('gcl-text-field', TextField as any);
+        defineCustomElement('gcl-text-field', TextField);
 
         expect(() => {
 
@@ -24,7 +25,7 @@ describe("Text field tests", () => {
     it('should render not render the value when it is not provided', async () => {
 
         // Re-register the data cell since all the custom elements are cleared before any test
-        customElements.define('gcl-text-field', TextField as any);
+        defineCustomElement('gcl-text-field', TextField);
 
         // Attach it to the DOM
         document.body.innerHTML = '<gcl-text-field id="tf1" name="name"></gcl-text-field>';
@@ -52,7 +53,7 @@ describe("Text field tests", () => {
     it('should render the value when it is provided', async () => {
 
         // Re-register the data cell since all the custom elements are cleared before any test
-        customElements.define('gcl-text-field', TextField as any);
+        defineCustomElement('gcl-text-field', TextField);
 
         // Attach it to the DOM
         document.body.innerHTML = '<gcl-text-field id="tf1" name="name" value="Sarah"></gcl-text-field>';

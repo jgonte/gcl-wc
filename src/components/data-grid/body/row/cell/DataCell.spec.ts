@@ -1,3 +1,4 @@
+import defineCustomElement from "../../../../../custom-element/helpers/defineCustomElement";
 import clearCustomElements from "../../../../../custom-element/test/utils/clearCustomElements";
 import DataCell from "./DataCell";
 
@@ -11,7 +12,7 @@ describe("Data cell tests", () => {
     it('should throw an error when the record and field attributes are not provided', () => {
 
         // Re-register the data cell since all the custom elements are cleared before any test
-        customElements.define('gcl-data-cell', DataCell as any);
+        defineCustomElement('gcl-data-cell', DataCell);
 
         expect(() => {
 
@@ -24,7 +25,7 @@ describe("Data cell tests", () => {
     it('should render when the data of the attributes is provided', async () => {
 
         // Re-register the data cell since all the custom elements are cleared before any test
-        customElements.define('gcl-data-cell', DataCell as any);
+        defineCustomElement('gcl-data-cell', DataCell);
 
         // Attach it to the DOM
         document.body.innerHTML = '<gcl-data-cell id="dc1" record=\'{ \"name\": \"Sarah\" }\' field="name"></gcl-data-cell>';
@@ -55,7 +56,7 @@ describe("Data cell tests", () => {
         };
 
         // Re-register the data cell since all the custom elements are cleared before any test
-        customElements.define('gcl-data-cell', DataCell as any);
+        defineCustomElement('gcl-data-cell', DataCell);
 
         // Attach it to the DOM
         document.body.innerHTML = '<gcl-data-cell id="dc2" record="getRecord()" field="getField()"></gcl-data-cell>';
