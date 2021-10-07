@@ -1,6 +1,8 @@
 import CustomElement from "../../custom-element/CustomElement";
 import styles from "./Field.css";
 
+export const change = "change";
+
 export abstract class Field extends CustomElement {
 
     static get styles() {
@@ -94,7 +96,7 @@ export abstract class Field extends CustomElement {
 
         setTimeout(() => { // Repaint before dispatching the event
             
-            this.dispatchCustomEvent('change', {
+            this.dispatchCustomEvent(change, {
                 name,
                 oldValue,
                 newValue: value

@@ -62,5 +62,7 @@
     "lib": "lib",
     "test": "test"
   },
-  "dependencies": {}
+  "dependencies": {
+    "oidc-client": "^1.11.5"
+  }
 }

@@ -80,9 +80,7 @@ const ReactiveElementMixin = Base =>
 
                     this._markUpdated();
 
-                    reject();
-
-                    throw error;
+                    reject(error);
                 }
 
             });

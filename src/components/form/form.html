@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../../../../dist/bundle.js"></script>
+
+    <script>
+
+        window.addEventListener('change', event => alert(
+            `
+        Event type: 'change'
+        Field name: '${event.detail.name}'
+        Field old value: '${event.detail.oldValue}'
+        Field new value: '${event.detail.newValue}'
+`));
+
+    </script>
+
+    <title>
+        <Form></Form> field demo
+    </title>
+
+</head>
+
+<body>
+
+    <gcl-form submit-url="http://localhost:60314/api/contacts/">
+        <gcl-form-field>
+            <span slot="label">Name</span>
+            <gcl-text-field slot="field" id="tf1" name="name"></gcl-text-field>
+        </gcl-form-field>
+    </gcl-form>
+
+    <br />
+
+    <gcl-form submit-url="http://localhost:60314/api/contacts/">
+        <gcl-form-field>
+            <span slot="label">Name</span>
+            <gcl-text-field slot="field" id="tf2" name="name" value="Sarah"></gcl-text-field>
+        </gcl-form-field>
+    </gcl-form>
+</body>
+
+</html>

@@ -1,5 +1,6 @@
 import defineCustomElement from "./custom-element/helpers/defineCustomElement";
 import CustomElement from "./custom-element/CustomElement";
+import Button from "./components/button/Button";
 import DataHeaderCell from "./components/data-grid/header/cell/DataHeaderCell";
 import DataHeader from "./components/data-grid/header/DataHeader";
 import DataCell from "./components/data-grid/body/row/cell/DataCell";
@@ -13,6 +14,7 @@ import Form from "./components/form/Form";
 export {
     defineCustomElement,
     CustomElement,
+    Button,
     // Data grid components
     DataHeaderCell,
     DataHeader,

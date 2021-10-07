@@ -27,7 +27,7 @@ export interface CustomElementPropertyMetadata {
     /**
      * The type of the property
      */
-    type: Function;
+    type: Function | Function[];
 
     /**
      * The default value of the property if no attribute is set in HTML
@@ -119,3 +119,5 @@ export interface CustomElementMetadata {
      */
     styles: string | string[];
 }
+
+export function Callback() {}

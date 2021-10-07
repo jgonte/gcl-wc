@@ -68,11 +68,23 @@ const PropertyMetadataInitializerMixin = Base =>
                 {
                     get(): any {
 
+                        let {
+                            type
+                        } = propertyMetadata;
+
                         const value = this._properties[name];
 
-                        return typeof value === 'function' ?
-                            value() :
-                            value;
+                        if (!Array.isArray(type)) {
+
+                            type = [type];
+                        }
+
+                        if (type.includes(Function) && typeof value === 'function') { // Only call the function if the type of Function
+
+                            return value();
+                        }
+
+                        return value;
                     },
                     set(this: any, value: unknown) {
 
