@@ -125,7 +125,7 @@ const AttributeChangeHandlerMixin = Base =>
                 type
             } = propertyMetadata;
 
-            value = valueConverter.toProperty(value, type); // Covert from the value returned by the parameter
+            value = valueConverter.toProperty(value, type); // Convert from the value returned by the parameter
 
             return this.setProperty(name, value);
         }

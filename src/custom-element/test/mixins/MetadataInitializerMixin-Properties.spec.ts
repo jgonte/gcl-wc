@@ -1,7 +1,6 @@
 import clearCustomElements from "../utils/clearCustomElements";
 import defineCustomElement from "../../helpers/defineCustomElement";
 import MetadataInitializerMixin from "../../mixins/MetadataInitializerMixin";
-import oneOf from "../../helpers/oneOf";
 
 beforeEach(() => {
 
@@ -37,7 +36,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
                     },
 
                     record: {
-                        type: oneOf(Object, Function),
+                        type: [Object, Function],
                         value: {
                             name: 'Sarah'
                         }

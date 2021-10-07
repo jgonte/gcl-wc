@@ -1,6 +1,5 @@
 import CustomElement from "../../../../custom-element/CustomElement";
 import defineCustomElement from "../../../../custom-element/helpers/defineCustomElement";
-import oneOf from "../../../../custom-element/helpers/oneOf";
 import html from "../../../../virtual-dom/html";
 import styles from "./DataHeaderCell.css";
 
@@ -19,7 +18,7 @@ export default class DataHeaderCell extends CustomElement {
              * The descriptor of the field to render the header cell
              */
             field: {
-                type: oneOf(Object, Function, String),
+                type: [Object, Function, String],
                 required: true
             }
         };

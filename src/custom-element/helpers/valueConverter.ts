@@ -1,60 +1,84 @@
 import getGlobalFunction from "./getGlobalFunction";
-import { OneOf } from "./oneOf";
 
 const valueConverter = {
 
-    toProperty: (value: string, type: Function) => {
+    toProperty: (value: string, type: Function | Function[]) => {
 
-        if (type instanceof OneOf) {
+        if (!Array.isArray(type)) { // Convert type to array so we can handle multiple types as well
 
-            return type.toProperty(value);
+            type = [type];
         }
 
-        switch (type) {
+        if (value === null &&
+            type.includes(String)) { // When an attribute gets removed attributeChangedCallback gives the value of null
 
-            case Boolean:
+            return '';
+        }
 
-                return value !== null && value !== 'false';
+        // First try a function since that can create any of the objects below
+        if (value !== null &&
+            value[value.length - 2] === '(' && value[value.length - 1] === ')' // The function by convention must end in ()
+            && type.includes(Function)) {
 
-            case Number:
+            var fcn = getGlobalFunction(value);
 
-                return value === null ? null : Number(value);
+            if (fcn !== undefined) {
 
-            case Array:
-                {
-                    // All the properties that are not declared as Function accept a function as alternative by design
-                    // The probing is as follows: 
-                    // Test whether it is really an array
-                    try {
+                return fcn;
+            }
+        }
 
-                        return JSON.parse(value);
-                    }
-                    catch (error) {// Value is a string but not a JSON one, assume a function
+        // if (type.includes(ElementNode)) {
 
-                        return getGlobalFunction(value);
-                    }
+        //     return createVirtualNode(value);
+        // }
+
+        if (type.includes(Object) ||
+            type.includes(Array)
+        ) {
+
+            let o;
+
+            try {
+
+                o = JSON.parse(value);
+            }
+            catch (error) {
+
+                if (!type.includes(String)) {
+
+                    throw error; // Malformed JSON
                 }
 
-            // case ElementNode: {
-
-            //     return createVirtualNode(value);
-            // }
-
-            case Function: { // Extract the string and return the global function
-
-                return getGlobalFunction(value);
+                // Try the other types below
             }
 
-            case Object: // It can also be a string
+            if (o !== undefined) {
 
-                try {
+                if (!Array.isArray(o) &&
+                    !type.includes(Object)) {
 
-                    value = JSON.parse(value);
+                    throw Error(`value: ${value} is not an array but there is no object type expected`);
                 }
-                catch (error) {
 
-                    return value;
+                if (Array.isArray(o) &&
+                    !type.includes(Array)) {
+
+                    throw Error(`value: ${value} is an array but there is no array type expected`);
                 }
+
+                return o;
+            }
+        }
+
+        if (type.includes(Boolean)) {
+
+            return value !== null && value !== 'false';
+        }
+
+        if (type.includes(Number)) {
+
+            return value === null ? null : Number(value);
         }
 
         return value;

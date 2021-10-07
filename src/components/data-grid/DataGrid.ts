@@ -1,6 +1,5 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
-import oneOf from "../../custom-element/helpers/oneOf";
 import html from "../../virtual-dom/html";
 import styles from "./DataGrid.css";
 
@@ -19,7 +18,7 @@ export default class DataGrid extends CustomElement {
              * The collection of records to render the data from
              */
             data: {
-                type: oneOf(Array, Function),
+                type: [Array, Function],
                 required: true
             },
 
@@ -27,7 +26,7 @@ export default class DataGrid extends CustomElement {
              * The descriptor of the fields to render each row
              */
             fields: {
-                type: oneOf(Array, Function),
+                type: [Array, Function],
                 required: true
             }
         };

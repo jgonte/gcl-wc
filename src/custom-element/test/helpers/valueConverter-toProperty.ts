@@ -1,41 +1,40 @@
-//import { ElementNode } from 'gclib-vdom';
-import oneOf from '../../helpers/oneOf';
+import valueConverter from "../../helpers/valueConverter";
 
 (window as any).getFields = () => { };
 
-describe("OneOf tests", () => {
+describe("Value converter to property tests", () => {
 
     it('should return a function', () => {
 
-        const type = oneOf(Object, Function);
+        const type = [Object, Function];
 
         const value = "getFields()";
 
-        const property = type.toProperty(value);
+        const property = valueConverter.toProperty(value, type);
 
         expect(property).toEqual((window as any).getFields);
     });
 
     it('should return an object', () => {
 
-        const type = oneOf(Object, Function);
+        const type = [Object, Function];
 
         const value = '{ "name" : "Sarah" }';
 
-        const property = type.toProperty(value);
+        const property = valueConverter.toProperty(value, type);
 
         expect(property).toEqual({ name: "Sarah" });
     });
 
     it('should throw an error because we are asking for an array but returned an object', () => {
 
-        const type = oneOf(Array, Function);
+        const type = [Array, Function];
 
         const value = '{ "name" : "Sarah" }';
 
         try {
 
-            type.toProperty(value);
+            valueConverter.toProperty(value, type);
         }
         catch (e) {
 
@@ -45,11 +44,11 @@ describe("OneOf tests", () => {
 
     it('should return an array', () => {
 
-        const type = oneOf(Array, Function);
+        const type = [Array, Function];
 
         const value = '[{ "name" : "Sarah" }, { "name" : "Mark" }]';
 
-        const property = type.toProperty(value);
+        const property = valueConverter.toProperty(value, type);
 
         expect(property).toEqual([
             { name: "Sarah" },
@@ -59,13 +58,13 @@ describe("OneOf tests", () => {
 
     it('should throw an error because we are asking for an object but returned an array', () => {
 
-        const type = oneOf(Object, Function);
+        const type = [Object, Function];
 
         const value = '[{ "name" : "Sarah" }, { "name" : "Mark" }]';
 
         try {
 
-            type.toProperty(value);
+            valueConverter.toProperty(value, type);
         }
         catch (e) {
 
@@ -75,22 +74,22 @@ describe("OneOf tests", () => {
 
     it('should return a string', () => {
 
-        const type = oneOf(Array, Function, String);
+        const type = [Array, Function, String];
 
         const value = 'Some string';
 
-        const property = type.toProperty(value);
+        const property = valueConverter.toProperty(value, type);
 
         expect(property).toEqual('Some string');
     });
 
     // it('should return an element node', () => {
 
-    //     const type = oneOf(ElementNode, Function);
+    //     const type = [ElementNode, Function];
 
     //     const value = '<span>Text</span>';
 
-    //     const property = type.toProperty(value);
+    //     const property = valueConverter.toProperty(value, type);
 
     //     expect(property).toEqual({
     //         children: [
@@ -107,33 +106,33 @@ describe("OneOf tests", () => {
 
     it('should return a boolean false', () => {
 
-        const type = oneOf(Boolean, Function);
+        const type = [Boolean, Function];
 
         const value = 'false';
 
-        const property = type.toProperty(value);
+        const property = valueConverter.toProperty(value, type);
 
         expect(property).toEqual(false);
     });
 
     it('should return a boolean true', () => {
 
-        const type = oneOf(Boolean, Function);
+        const type = [Boolean, Function];
 
         const value = 'true';
 
-        const property = type.toProperty(value);
+        const property = valueConverter.toProperty(value, type);
 
         expect(property).toEqual(true);
     });
 
     it('should return a number', () => {
 
-        const type = oneOf(Number, Function);
+        const type = [Number, Function];
 
         const value = '26';
 
-        const property = type.toProperty(value);
+        const property = valueConverter.toProperty(value, type);
 
         expect(property).toEqual(26);
     });

@@ -1,6 +1,5 @@
 import CustomElement from "../../../../../custom-element/CustomElement";
 import defineCustomElement from "../../../../../custom-element/helpers/defineCustomElement";
-import oneOf from "../../../../../custom-element/helpers/oneOf";
 import html from "../../../../../virtual-dom/html";
 import styles from "./DataCell.css";
 
@@ -19,7 +18,7 @@ export default class DataCell extends CustomElement {
              * The record to render the cell from
              */
             record: {
-                type: oneOf(Object, Function),
+                type: [Object, Function],
                 required: true
             },
 
@@ -27,7 +26,7 @@ export default class DataCell extends CustomElement {
              * The descriptor of the field to render the cell
              */
             field: {
-                type: oneOf(Object, Function, String),
+                type: [Object, Function, String],
                 required: true
             }
         };

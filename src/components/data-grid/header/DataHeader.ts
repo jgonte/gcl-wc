@@ -1,6 +1,5 @@
 import CustomElement from "../../../custom-element/CustomElement";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
-import oneOf from "../../../custom-element/helpers/oneOf";
 import html from "../../../virtual-dom/html";
 import styles from "./DataHeader.css";
 
@@ -19,7 +18,7 @@ export default class DataHeader extends CustomElement {
              * The descriptor of the fields to render the header
              */
             fields: {
-                type: oneOf(Array, Function),
+                type: [Array, Function],
                 required: true
             }
         };
