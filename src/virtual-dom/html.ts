@@ -2,6 +2,7 @@ import { EventHandler } from "./interfaces";
 import ElementNode from "./nodes/ElementNode";
 import MarkupParsingResult from "./MarkupParsingResult";
 import markupToVirtualNode from "./markupToVirtualNode";
+import { isBlankOrWhiteSpace } from "../utils/string";
 
 /**
  * Template tag to generate the virtual node from the string
@@ -67,13 +68,16 @@ function processMarkup(strings: TemplateStringsArray, values: any, parts: any[],
 
     for (let i = 0; i < length; ++i) {
 
-        markupParts.push(
-            processMarkupPart(
-                strings !== undefined ? strings[i] : '',
-                values[i],
-                parts,
-                eventHandlers)
-        );
+        const markupPart = processMarkupPart(
+            strings !== undefined ? strings[i] : '',
+            values[i],
+            parts,
+            eventHandlers);
+
+        if (!isBlankOrWhiteSpace(markupPart)) {
+
+            markupParts.push(markupPart);
+        }
     }
 
     if (strings !== undefined) {
@@ -193,3 +197,4 @@ function isMarkupParsingResult(value: any) {
     return ('vnode' in value &&
         'node' in value);
 }
+

@@ -101,7 +101,7 @@ export default class ElementNode {
         }
         else { // Different tags, replace the element
 
-            throw 'patchDom not implemented for different tags';
+            throw `patchDom not implemented for different tags. vnode: ${tag.toUpperCase()}, node: ${node.tagName}`;
             // return vnode.$node = node = createNode(vnode);
         }
 

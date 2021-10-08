@@ -1,9 +1,11 @@
 import { EMPTY_ARRAY, EMPTY_OBJECT } from "../../utils/shared";
+import { isBlankOrWhiteSpace } from "../../utils/string";
 import ElementNode from "../nodes/ElementNode";
 import TextNode from "../nodes/TextNode";
 
 /**
  * Creates a virtual node form a DOM one
+ * Removes any white space text node from the element if any bedore creating the virtual node
  * @param node 
  * @param options 
  * @returns 
@@ -24,6 +26,15 @@ export default function nodeToVirtualNode(node?: Node, options: any = {}): Eleme
             throw Error('Script elements are not allowed unless the allowScripts option is set to true');
         }
 
+        // Remove any child text node with white spaces only from the node
+        node.childNodes.forEach(n => {
+
+            if (n instanceof Text && isBlankOrWhiteSpace((n as Text).textContent)) {
+
+                node.removeChild(n);
+            }
+        });
+
         return new ElementNode(
             tag,
             getAttributes(node.attributes),
@@ -35,8 +46,8 @@ export default function nodeToVirtualNode(node?: Node, options: any = {}): Eleme
         const content = node.textContent || '';
 
         // Do not include text with white space characters ' ', '\t', '\r', '\n'
-        if (options.excludeTextWithWhiteSpacesOnly &&
-            /^\s*$/g.test(content)) {
+        if (options.excludeTextWithWhiteSpacesOnly && 
+            isBlankOrWhiteSpace(content)) {
 
             return null;
         }

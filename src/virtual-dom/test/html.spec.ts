@@ -47,7 +47,7 @@ describe("html tag template tests", () => {
 
         expect(childVNode).toBe(nestedVNode);
 
-        expect((result.node as HTMLElement).childNodes[1]).toBe(nestedResult.node);
+        expect((result.node as HTMLElement).childNodes[0]).toBe(nestedResult.node);
     });
 
     it('should render a complex object as a value', () => {

@@ -2,6 +2,7 @@ import FragmentNode from "./nodes/FragmentNode";
 import parseFromString from "./helpers/parseFromString";
 import nodeToVirtualNode from "./helpers/nodeToVirtualNode";
 import MarkupParsingResult from "./MarkupParsingResult";
+import { isBlankOrWhiteSpace } from "../utils/string";
 
 /**
  * Convert a HTML markup into a virtual node
@@ -27,7 +28,7 @@ export default function markupToVirtualNode(
 
         nodes = nodes.filter(node => node instanceof HTMLElement ||
             node instanceof Comment ||
-            node instanceof Text && !(/^\s*$/g.test((node as Text).textContent))) // Exclude text with white spaces
+            node instanceof Text && !isBlankOrWhiteSpace((node as Text).textContent)) // Exclude text with white spaces
     }
 
     const vnode = nodes.length > 1 ?
