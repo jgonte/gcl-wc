@@ -23,10 +23,12 @@ export default function html(strings: TemplateStringsArray, ...values: any): Mar
 
     if (parts.length > 0) {
 
-        const comments = node.childNodes !== undefined ?
-            Array.from(node.childNodes)
-                .filter(n => n.nodeType === Node.COMMENT_NODE) :
-            [];
+        // const comments = node.childNodes !== undefined ?
+        //     Array.from(node.childNodes)
+        //         .filter(n => n.nodeType === Node.COMMENT_NODE) :
+        //     [];
+
+        const comments = getAllComments(node.childNodes);
 
         parts.forEach((part, i) => {
 
@@ -91,6 +93,7 @@ function processMarkup(strings: TemplateStringsArray, values: any, parts: any[],
 function processMarkupPart(leftSide: string, value: any, parts: any[], eventHandlers: EventHandler[]): string {
 
     if (value === undefined ||
+        value === null ||
         value === '') {
 
         return removeRightMember(leftSide);
@@ -196,5 +199,30 @@ function isMarkupParsingResult(value: any) {
 
     return ('vnode' in value &&
         'node' in value);
+}
+
+function getAllComments(childNodes: NodeListOf<ChildNode>) : Comment[] {
+
+    let comments = [];
+
+    if (childNodes === undefined) {
+
+        return comments;
+    }
+
+    childNodes.forEach(childNode => {
+        
+        if (childNode.nodeType === Node.COMMENT_NODE) {
+
+            comments.push(childNode);
+        }
+
+        if (childNode.childNodes.length > 0) {
+
+            comments = [...comments, ...getAllComments(childNode.childNodes)];
+        }  
+    });
+
+    return comments;
 }
 

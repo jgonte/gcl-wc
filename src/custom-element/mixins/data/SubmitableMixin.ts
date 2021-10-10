@@ -1,5 +1,6 @@
 import Fetcher from "../../../utils/data/transfer/Fetcher";
 import { ErrorResponse } from "../../../utils/data/transfer/interfaces";
+import html from "../../../virtual-dom/html";
 import { Callback } from "../../interfaces";
 
 const SubmitableMixin = Base =>
@@ -36,17 +37,33 @@ const SubmitableMixin = Base =>
             };
         }
 
+        renderSubmitting() {
+
+            const {
+                submitting
+            } = this;
+
+            if (submitting === false) {
+
+                return null;
+            }
+
+            return html`<span key="submitting-overlay">Submiting ...</span>`;
+        }
+
         connectedCallback() {
 
             super.connectedCallback?.();
 
             this._fetcher = new Fetcher({
-                onData: this.handleSubmitData,
-                onError: this.handleSubmitError
+                onData: data => this.handleSubmitData(data),
+                onError: error => this.handleSubmitError(error)
             });
         }
 
         submit() {
+
+            this.error = undefined; // Clear any previous error
 
             this.submitting = true;
 
@@ -92,7 +109,7 @@ const SubmitableMixin = Base =>
 
             this.submitting = false;
 
-            //this.error = error;
+            this.error = error;
         }
     }
 

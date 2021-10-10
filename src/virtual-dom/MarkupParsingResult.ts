@@ -33,7 +33,7 @@ export default class MarkupParsingResult {
         }
         else { // Wrap it in a fragment
 
-            const wrapperVNode = new FragmentNode([ vnode as ElementNode, result.vnode as ElementNode]);
+            const wrapperVNode = new FragmentNode([vnode as ElementNode, result.vnode as ElementNode]);
 
             const wrapperNode = new DocumentFragment();
 
@@ -46,27 +46,29 @@ export default class MarkupParsingResult {
     }
 
     patch(result: MarkupParsingResult, container: HTMLElement): void {
-        
+
         const {
             node
         } = result;
 
         container = node instanceof DocumentFragment ?
-            container :
+            container instanceof DocumentFragment ?
+                (container as any).host :
+                container :
             node as any;
 
         (this.vnode as ElementNode).patchDom(container);
 
-                        // newResult.$node = this._oldResult.$node; // Set the existing DOM node to be patched
+        // newResult.$node = this._oldResult.$node; // Set the existing DOM node to be patched
 
-                        // if (newResult.tag === null) { // Document fragment
+        // if (newResult.tag === null) { // Document fragment
 
-                        //     (this.document as HTMLElement).replaceChildren(...Array.from(patchNode(newResult, this.document).childNodes));
+        //     (this.document as HTMLElement).replaceChildren(...Array.from(patchNode(newResult, this.document).childNodes));
 
-                        // }
-                        // else {
+        // }
+        // else {
 
-                        //     this.document.replaceChild(patchNode(newResult, this.document), this._oldResult.$node);
-                        // }
+        //     this.document.replaceChild(patchNode(newResult, this.document), this._oldResult.$node);
+        // }
     }
 }

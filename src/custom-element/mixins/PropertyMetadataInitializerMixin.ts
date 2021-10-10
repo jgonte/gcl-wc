@@ -29,7 +29,7 @@ const PropertyMetadataInitializerMixin = Base =>
 
             // Merge the properties of the base class if any so we can validate and initialize
             // the values of the properties of the base class in the instance
-            const baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
+            let baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
 
             if (baseClass !== undefined) {
 
@@ -44,6 +44,19 @@ const PropertyMetadataInitializerMixin = Base =>
                     metadata.observedAttributes = [...metadata.observedAttributes, ...baseClassMetadata.observedAttributes];
                 }
             }
+            // else { // Loop and copy the properties of the mixins
+
+            //     do {
+
+            //         if (baseClass.properties !== undefined) {
+
+            //             metadata.properties = new Map([...metadata.properties, ...Object.entries(baseClass.properties) as any]);
+            //         }
+
+            //         baseClass = Object.getPrototypeOf(baseClass.prototype)?.constructor;
+
+            //     } while (baseClass._isCustomElement === true);
+            // }
         }
 
         /**

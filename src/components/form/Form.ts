@@ -1,21 +1,27 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import SubmitableMixin from "../../custom-element/mixins/data/SubmitableMixin";
+import ErrorableMixin from "../../custom-element/mixins/ErrorableMixin";
 import DataRecord from "../../utils/data/record/DataRecord";
 import html from "../../virtual-dom/html";
 import { change } from "../fields/Field";
 
 export default class Form extends
     SubmitableMixin(
-        CustomElement
+        ErrorableMixin(
+            CustomElement
+        )
     ) {
 
     private _record: DataRecord = new DataRecord();
 
     render() {
 
-        return html`<form>
-            <slot></slot>
+        return html`
+        ${this.renderSubmitting()}
+        ${this.renderError()}
+        <form key="form">
+            <slot key="form-fields-slot"></slot>
             ${this.renderButton()}
         </form>`;
     }
@@ -23,7 +29,7 @@ export default class Form extends
     renderButton() {
 
         // Doing onClick=${this.submit} binds the button instead of the form to the submit function
-        return html`<gcl-button onClick=${() => this.submit()}>
+        return html`<gcl-button key="submit-button" onClick=${() => this.submit()}>
             Submit
         </gcl-button>`;
     }

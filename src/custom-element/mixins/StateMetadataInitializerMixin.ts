@@ -48,7 +48,7 @@ const StateMetadataInitializerMixin = Base =>
 
             // Add the properties of the state base class if any so we can validate and initialize
             // the values of the properties of the state of the base class in the instance
-            const baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
+            let baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
 
             if (baseClass !== undefined) {
 
@@ -58,6 +58,19 @@ const StateMetadataInitializerMixin = Base =>
 
                     metadata.state = new Map([...metadata.state, ...baseClassMetadata.state]);
                 }
+                // else { // Loop and copy the states of the mixins
+
+                //     do {
+
+                //         if (baseClass.state !== undefined) {
+
+                //             metadata.state = new Map([...metadata.state, ...Object.entries(baseClass.state) as any]);
+                //         }
+
+                //         baseClass = Object.getPrototypeOf(baseClass.prototype)?.constructor;
+
+                //     } while (baseClass._isCustomElement === true);
+                // }
             }
         }
     }
