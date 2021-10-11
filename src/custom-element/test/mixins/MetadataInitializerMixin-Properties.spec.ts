@@ -252,7 +252,11 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
         expect(componentA.type).toBe('b');
 
+        const spySetPropertyA = jest.spyOn(componentA, 'setProperty');
+
         componentA.type = 'c'; // It should change the type
+
+        expect(spySetPropertyA).toHaveBeenCalledWith('type', 'c');
 
         expect(componentA.type).toBe('c');
 
@@ -263,6 +267,90 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         expect(componentB.type).toBe('c');
 
         expect(componentB.showType).toEqual('This is the type: c');
+    });
+
+    it('should populate the properties of the custom element with default values including the ones from the mixins', () => {
+
+        const Property1Mixin = Base =>
+            class Property1 extends Base {
+
+                static get properties() {
+
+                    return {
+
+                        prop1: {
+                            value: "a"
+                        }
+                    };
+                }
+            }
+
+        const Property2Mixin = Base =>
+            class Property2 extends Base {
+
+                static get properties() {
+
+                    return {
+
+                        prop2: {
+                            value: "b"
+                        }
+                    };
+                }
+            }
+
+        //@ts-ignore
+        class A extends
+            Property2Mixin(
+                Property1Mixin(
+                    MetadataInitializerMixin(HTMLElement)
+                )
+            )
+        {
+            static get properties() {
+
+                return {
+
+                    prop3: {
+                        value: "c"
+                    }
+                };
+            }
+        }
+
+        defineCustomElement('test-a', A);
+
+        // Attach it to the DOM
+        document.body.innerHTML = '<test-a></test-a>';
+
+        // Test the elements
+        const componentA: any = document.querySelector('test-a');
+
+        expect(componentA.prop1).toBe('a');
+
+        expect(componentA.prop2).toBe('b');
+
+        expect(componentA.prop3).toBe('c');
+
+        const spySetProperty = jest.spyOn(componentA, 'setProperty');
+
+        componentA.prop1 = '1'; // It should change the prop1
+
+        expect(spySetProperty).toHaveBeenCalledWith('prop1', '1');
+
+        expect(componentA.prop1).toBe('1');
+
+        componentA.prop2 = '2'; // It should change the prop2
+
+        expect(spySetProperty).toHaveBeenCalledWith('prop2', '2');
+
+        expect(componentA.prop2).toBe('2');
+
+        componentA.prop3 = '3'; // It should change the prop3
+
+        expect(spySetProperty).toHaveBeenCalledWith('prop3', '3');
+
+        expect(componentA.prop3).toBe('3');
     });
 
     // it('should set the attribute (reflect) when the property has changed', () => {

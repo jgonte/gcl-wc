@@ -37,20 +37,24 @@ export default function html(strings: TemplateStringsArray, ...values: any): Mar
             // Add as a child of the vnode
             vnode.children.push(part.vnode as any);
 
-            const comment = comments.length > i ?
-                comments[i] :
-                undefined;
+            // const comment = comments.length > i ?
+            //     comments[i] :
+            //     undefined;
 
-            if (comment !== undefined) { // Prepend its DOM node to the next comment placeholder of the dom node
+            // if (comment !== undefined) { // Prepend its DOM node to the next comment placeholder of the dom node
 
-                node.insertBefore(partNode, comment);
-            }
-            else { // Add the part and the marker
+            //     node.insertBefore(partNode, comment);
+            // }
+            // else { // Add the part and the marker
 
-                node.insertBefore(partNode, null);
+            //     node.insertBefore(partNode, null);
 
-                node.insertBefore(new Comment(), null);
-            }
+            //     node.insertBefore(new Comment(), null);
+            // }
+
+            const comment = comments[i];
+            
+            comment.parentNode.insertBefore(partNode, comment);
         });
     }
 

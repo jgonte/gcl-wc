@@ -16,14 +16,7 @@ const PropertyMetadataInitializerMixin = Base =>
 
         protected static initalizeProperties(metadata: CustomElementMetadata): void {
 
-            const {
-                properties
-            } = this;
-
-            if (properties === undefined) {
-
-                return;
-            }
+            const properties = this.getAllProperties();
 
             Object.entries(properties).forEach(([key, value]) => this._initializeProperty(key, value, metadata));
 
@@ -44,19 +37,6 @@ const PropertyMetadataInitializerMixin = Base =>
                     metadata.observedAttributes = [...metadata.observedAttributes, ...baseClassMetadata.observedAttributes];
                 }
             }
-            // else { // Loop and copy the properties of the mixins
-
-            //     do {
-
-            //         if (baseClass.properties !== undefined) {
-
-            //             metadata.properties = new Map([...metadata.properties, ...Object.entries(baseClass.properties) as any]);
-            //         }
-
-            //         baseClass = Object.getPrototypeOf(baseClass.prototype)?.constructor;
-
-            //     } while (baseClass._isCustomElement === true);
-            // }
         }
 
         /**
@@ -120,6 +100,29 @@ const PropertyMetadataInitializerMixin = Base =>
 
             // Add the observed attribute
             metadata.observedAttributes.push(propertyMetadata.attribute.toLowerCase());
+        }
+
+        /**
+         * Retrieve the state of this and the base mixins
+         * @returns The merged state
+         */
+         static getAllProperties(): Record<string, CustomElementPropertyMetadata> {
+
+            let properties = this.properties || {};
+
+            let baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
+
+            while (baseClass._isMetadataInitializer === true) {
+
+                if (baseClass.properties !== undefined) {
+
+                    properties = { ...properties, ...baseClass.properties };
+                }
+
+                baseClass = Object.getPrototypeOf(baseClass.prototype)?.constructor;
+            }
+
+            return properties;
         }
 
     }

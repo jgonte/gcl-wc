@@ -4,6 +4,8 @@ const StateMetadataInitializerMixin = Base =>
 
     class StateMetadataInitializer extends Base {
 
+        static readonly _isMetadataInitializer = true;
+
         /**
          * The state to track in the class
          */
@@ -11,18 +13,11 @@ const StateMetadataInitializerMixin = Base =>
 
         protected static initializeState(metadata: CustomElementMetadata): void {
 
-            const {
-                state
-            } = this;
-
-            if (state === undefined) {
-
-                return;
-            }
+            const state = this.getAllState();
 
             Object.entries(state).forEach(([name, stateMetadata]) => {
 
-                stateMetadata.name = name; // Set the name of the state property
+                (stateMetadata as CustomElementStateMetadata).name = name; // Set the name of the state property
 
                 Object.defineProperty(
                     this.prototype,
@@ -42,8 +37,7 @@ const StateMetadataInitializerMixin = Base =>
                 );
 
                 // Add it to the metadata properties so the properties of the instances can be validated and initialized
-                metadata.state.set(name, stateMetadata);
-
+                metadata.state.set(name, stateMetadata as CustomElementStateMetadata);
             });
 
             // Add the properties of the state base class if any so we can validate and initialize
@@ -58,20 +52,30 @@ const StateMetadataInitializerMixin = Base =>
 
                     metadata.state = new Map([...metadata.state, ...baseClassMetadata.state]);
                 }
-                // else { // Loop and copy the states of the mixins
-
-                //     do {
-
-                //         if (baseClass.state !== undefined) {
-
-                //             metadata.state = new Map([...metadata.state, ...Object.entries(baseClass.state) as any]);
-                //         }
-
-                //         baseClass = Object.getPrototypeOf(baseClass.prototype)?.constructor;
-
-                //     } while (baseClass._isCustomElement === true);
-                // }
             }
+        }
+
+        /**
+         * Retrieve the state of this and the base mixins
+         * @returns The merged state
+         */
+        static getAllState(): Record<string, CustomElementStateMetadata> {
+
+            let state = this.state || {};
+
+            let baseClass = Object.getPrototypeOf(this.prototype)?.constructor;
+
+            while (baseClass._isMetadataInitializer === true) {
+
+                if (baseClass.state !== undefined) {
+
+                    state = { ...state, ...baseClass.state };
+                }
+
+                baseClass = Object.getPrototypeOf(baseClass.prototype)?.constructor;
+            }
+
+            return state;
         }
     }
 
