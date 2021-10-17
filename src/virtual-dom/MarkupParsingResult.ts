@@ -1,6 +1,6 @@
-import ElementNode from "./nodes/ElementNode";
-import FragmentNode from "./nodes/FragmentNode";
-import TextNode from "./nodes/TextNode";
+// import ElementNode from "./nodes/ElementNode";
+// import FragmentNode from "./nodes/FragmentNode";
+// import TextNode from "./nodes/TextNode";
 
 export default class MarkupParsingResult {
 
@@ -8,7 +8,7 @@ export default class MarkupParsingResult {
         /**
          * The virtual node extracted from the node parsed from the markup
          */
-        public vnode?: ElementNode | TextNode | FragmentNode | null,
+        //public vnode?: ElementNode | TextNode | FragmentNode | null,
 
         /**
          * The DOM node parsed from the markup
@@ -19,13 +19,14 @@ export default class MarkupParsingResult {
     appendSibling(result: MarkupParsingResult): MarkupParsingResult {
 
         const {
-            vnode,
+            //vnode,
             node
         } = this;
 
-        if ((vnode.constructor as any).isFragment) {
+        //if ((vnode.constructor as any).isFragment) {
+        if (node instanceof DocumentFragment) {
 
-            (vnode as FragmentNode).children.push(result.vnode as any);
+            //(vnode as FragmentNode).children.push(result.vnode as any);
 
             node.insertBefore(result.node, null);
 
@@ -33,7 +34,7 @@ export default class MarkupParsingResult {
         }
         else { // Wrap it in a fragment
 
-            const wrapperVNode = new FragmentNode([ vnode as ElementNode, result.vnode as ElementNode]);
+            //const wrapperVNode = new FragmentNode([ vnode as ElementNode, result.vnode as ElementNode]);
 
             const wrapperNode = new DocumentFragment();
 
@@ -41,12 +42,12 @@ export default class MarkupParsingResult {
 
             wrapperNode.insertBefore(result.node, null);
 
-            return new MarkupParsingResult(wrapperVNode, wrapperNode);
+            return new MarkupParsingResult(/*wrapperVNode,*/ wrapperNode);
         }
     }
 
     patch(result: MarkupParsingResult, container: HTMLElement): void {
-        
+
         const {
             node
         } = result;
@@ -55,18 +56,21 @@ export default class MarkupParsingResult {
             container :
             node as any;
 
-        (this.vnode as ElementNode).patchDom(container);
 
-                        // newResult.$node = this._oldResult.$node; // Set the existing DOM node to be patched
+            
 
-                        // if (newResult.tag === null) { // Document fragment
+        //(this.vnode as ElementNode).patchDom(container);
 
-                        //     (this.document as HTMLElement).replaceChildren(...Array.from(patchNode(newResult, this.document).childNodes));
+        // newResult.$node = this._oldResult.$node; // Set the existing DOM node to be patched
 
-                        // }
-                        // else {
+        // if (newResult.tag === null) { // Document fragment
 
-                        //     this.document.replaceChild(patchNode(newResult, this.document), this._oldResult.$node);
-                        // }
+        //     (this.document as HTMLElement).replaceChildren(...Array.from(patchNode(newResult, this.document).childNodes));
+
+        // }
+        // else {
+
+        //     this.document.replaceChild(patchNode(newResult, this.document), this._oldResult.$node);
+        // }
     }
 }

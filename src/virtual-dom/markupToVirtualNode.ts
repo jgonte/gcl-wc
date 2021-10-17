@@ -1,6 +1,6 @@
-import FragmentNode from "./nodes/FragmentNode";
+//import FragmentNode from "./nodes/FragmentNode";
 import parseFromString from "./helpers/parseFromString";
-import nodeToVirtualNode from "./helpers/nodeToVirtualNode";
+//import nodeToVirtualNode from "./helpers/nodeToVirtualNode";
 import MarkupParsingResult from "./MarkupParsingResult";
 import { isBlankOrWhiteSpace } from "../utils/string";
 
@@ -31,12 +31,12 @@ export default function markupToVirtualNode(
             node instanceof Text && !isBlankOrWhiteSpace((node as Text).textContent)) // Exclude text with white spaces
     }
 
-    const vnode = nodes.length > 1 ?
-        new FragmentNode(
-            nodes.map(n => nodeToVirtualNode(n, options))
-                .filter(n => n !== null)
-        ) :
-        nodeToVirtualNode(nodes[0], options);
+    // const vnode = nodes.length > 1 ?
+    //     new FragmentNode(
+    //         nodes.map(n => nodeToVirtualNode(n, options))
+    //             .filter(n => n !== null)
+    //     ) :
+    //     nodeToVirtualNode(nodes[0], options);
 
     // Wrap the nodes in a fragment if more than one
     let node: Node | DocumentFragment;
@@ -55,5 +55,5 @@ export default function markupToVirtualNode(
         node = nodes[0];
     }
 
-    return new MarkupParsingResult(vnode, node);
+    return new MarkupParsingResult(/*vnode,*/ node);
 }

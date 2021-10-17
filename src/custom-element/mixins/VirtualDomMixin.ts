@@ -1,8 +1,8 @@
 import { DiffOperation, LifecycleHooks } from "../../virtual-dom/interfaces";
 import MarkupParsingResult from "../../virtual-dom/MarkupParsingResult";
-import ElementNode from "../../virtual-dom/nodes/ElementNode";
-import FragmentNode from "../../virtual-dom/nodes/FragmentNode";
-import TextNode from "../../virtual-dom/nodes/TextNode";
+// import ElementNode from "../../virtual-dom/nodes/ElementNode";
+// import FragmentNode from "../../virtual-dom/nodes/FragmentNode";
+// import TextNode from "../../virtual-dom/nodes/TextNode";
 
 /**
  * Updates the element using a virtual DOM approach
@@ -53,7 +53,11 @@ const VirtualDomMixin = Base =>
                     {
                         this.willUpdateCallback();
 
-                        newResult.patch(this._oldResult, this.document);
+                        (this.document as HTMLElement).replaceChildren(); // Remove all the existing children
+
+                        this.document.insertBefore(newResult.node, null);
+
+                        //newResult.patch(this._oldResult, this.document);
 
                         this._waitForChildrenToUpdate();
                     }
@@ -112,15 +116,21 @@ const VirtualDomMixin = Base =>
 
             if (this.shadowRoot !== null) {
 
-                const styleVNode = new ElementNode(
-                    'style',
-                    null,
-                    [
-                        new TextNode(styles.join(''))
-                    ]
-                );
+                // const styleVNode = new ElementNode(
+                //     'style',
+                //     null,
+                //     [
+                //         new TextNode(styles.join(''))
+                //     ]
+                // );
 
-                result = result.appendSibling(new MarkupParsingResult(styleVNode, styleVNode.createDom()));
+                const styleNode = document.createElement('style');
+
+                const styleContent = document.createTextNode(styles.join(''));
+
+                styleNode.appendChild(styleContent);
+
+                result = result.appendSibling(new MarkupParsingResult(/*styleVNode, */styleNode));
 
             }
             else { // this.shadowRoot === null
@@ -134,7 +144,7 @@ const VirtualDomMixin = Base =>
         /**
          * Wait for the children to mount before this (parent)
          */
-         private async _waitForChildrenToMount() {
+        private async _waitForChildrenToMount() {
 
             const updatePromises = [...this.adoptedChildren].map(child => (child as any)._updatePromise);
 
@@ -149,7 +159,7 @@ const VirtualDomMixin = Base =>
         /**
          * Wait for the children to update before this (parent)
          */
-         private async _waitForChildrenToUpdate() {
+        private async _waitForChildrenToUpdate() {
 
             const updatePromises = [...this.adoptedChildren].map(child => (child as any)._updatePromise);
 
@@ -171,11 +181,11 @@ export default VirtualDomMixin;
  */
 function wrap(results: MarkupParsingResult[]): MarkupParsingResult {
 
-    const wrapperVNode = new FragmentNode(results.map(r => r.vnode) as any);
+    //const wrapperVNode = new FragmentNode(results.map(r => r.vnode) as any);
 
     const wrapperNode = new DocumentFragment();
 
     results.forEach(r => wrapperNode.insertBefore(r.node, null));
 
-    return new MarkupParsingResult(wrapperVNode, wrapperNode);
+    return new MarkupParsingResult(/*wrapperVNode, */wrapperNode);
 }

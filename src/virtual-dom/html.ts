@@ -1,5 +1,5 @@
 import { EventHandler } from "./interfaces";
-import ElementNode from "./nodes/ElementNode";
+//import ElementNode from "./nodes/ElementNode";
 import MarkupParsingResult from "./MarkupParsingResult";
 import markupToVirtualNode from "./markupToVirtualNode";
 import { isBlankOrWhiteSpace } from "../utils/string";
@@ -19,7 +19,7 @@ export default function html(strings: TemplateStringsArray, ...values: any): Mar
 
     let node = result.node as Node;
 
-    const vnode = result.vnode as ElementNode;
+    //const vnode = result.vnode as ElementNode;
 
     if (parts.length > 0) {
 
@@ -35,7 +35,7 @@ export default function html(strings: TemplateStringsArray, ...values: any): Mar
             const partNode = part.node as Node;
 
             // Add as a child of the vnode
-            vnode.children.push(part.vnode as any);
+            //vnode.children.push(part.vnode as any);
 
             // const comment = comments.length > i ?
             //     comments[i] :
@@ -201,7 +201,7 @@ function isMarkupParsingResult(value: any) {
         return false;
     }
 
-    return ('vnode' in value &&
+    return (/*'vnode' in value &&*/
         'node' in value);
 }
 
