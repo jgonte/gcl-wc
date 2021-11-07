@@ -1,149 +1,290 @@
-import NodePatcher, { NodePatcherRuleTypes } from "../NodePatcher";
+// import html from "../html";
+// import patch from "../renderer";
 
 describe("patching a DOM node test", () => {
 
-    it("should patch a text node", () => {
+    // it("should patch an attribute in an element", () => {
 
-        const oldValue = 'old text';
+    //     let name = "Sarah";
 
-        const node = new Text(oldValue);
+    //     const node = html`<span name=${name}></span>`;
 
-        const patcher = new NodePatcher([
-            {
-                type: NodePatcherRuleTypes.PATCH_TEXT
-            }
-        ]);
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span name=\"Sarah\"></span>');
 
-        const newValue = 'new text';
+    //     name = "Mark";
 
-        patcher.patch(node, [oldValue], [newValue]);
+    //     const newNode = html`<span name=${name}></span>`;
 
-        expect(node.textContent).toEqual(newValue);
-    });
+    //     patch(node, newNode);
 
-    it("should patch an attribute in an element", () => {
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span name=\"Mark\"></span>');
+    // });
 
-        const name = 'attr1';
+    // it("should patch more than one attribute in an element", () => {
 
-        const oldValue = 'old value';
+    //     let name = "Sarah";
 
-        const node = document.createElement('span');
+    //     let age = 19;
 
-        node.setAttribute(name, oldValue);
+    //     const node = html`<span name=${name} age=${age}></span>`;
 
-        const patcher = new NodePatcher([
-            {
-                type: NodePatcherRuleTypes.PATCH_ATTRIBUTE,
-                name
-            }
-        ]);
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span name=\"Sarah\" age=\"19\"></span>');
 
-        const newValue = 'new value';
+    //     name = "Mark";
 
-        patcher.patch(node, [oldValue], [newValue]);
+    //     age = 31;
 
-        expect(node.getAttribute(name)).toEqual(newValue);
-    });
+    //     const newNode = html`<span name=${name} age=${age}></span>`;
 
-    it("should add the children of an element", () => {
+    //     patch(node, newNode);
 
-        const node = document.createElement('div');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span name=\"Mark" age=\"31\"></span>');
+    // });
 
-        const patcher = new NodePatcher([
-            {
-                type: NodePatcherRuleTypes.PATCH_CHILDREN
-            }
-        ]);
+    // it("should patch one attribute and a text child", () => {
 
-        const oldChildren = [];
+    //     let age = 19;
 
-        const child1 = document.createTextNode('Sarah');
+    //     let name = "Sarah";
 
-        const child2 = document.createElement('style');
+    //     const node = html`<span age=${age}>${name}</span>` as HTMLElement;
 
-        const newChildren = [
-            child1,
-            child2
-        ];
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"19\">Sarah<!--_$node_--></span>');
 
-        patcher.patch(node, oldChildren, newChildren);
+    //     age = 31;
 
-        expect(node.childNodes[0]).toEqual(child1);
+    //     name = "Mark";
 
-        expect(node.childNodes[1]).toEqual(child2);
-    });
+    //     const newNode = html`<span age=${age}>${name}</span>` as HTMLElement;
 
-    it("should remove the children of an element", () => {
+    //     patch(node, newNode);
 
-        const node = document.createElement('div');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"31\">Mark<!--_$node_--></span>');
+    // });
 
-        const child1 = document.createTextNode('Sarah');
+    // it("should patch more than one element", () => {
 
-        node.insertBefore(child1, null);
+    //     let age = 19;
 
-        const child2 = document.createElement('style');
+    //     let name = "Sarah";
 
-        node.insertBefore(child2, null);
+    //     let style = "background-color:green;"
 
-        expect(node.childNodes.length).toEqual(2);
+    //     const node = html`<span age=${age}>${name}</span><style>${style}</style>` as HTMLElement;
 
-        const patcher = new NodePatcher([
-            {
-                type: NodePatcherRuleTypes.PATCH_CHILDREN
-            }
-        ]);
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"19\">Sarah<!--_$node_--></span>');
 
-        const oldChildren = [
-            child1,
-            child2
-        ];
+    //     expect((node.childNodes[1] as HTMLStyleElement).outerHTML).toEqual('<style>background-color:green;<!--_$node_--></style>');
 
-        const newChildren = [];
+    //     age = 31;
 
-        patcher.patch(node, oldChildren, newChildren);
+    //     name = "Mark";
 
-        expect(node.childNodes.length).toEqual(0);
-    });
+    //     style = "background-color:yellow;"
 
-    it("should swap the non-keyed children of an element", () => {
+    //     const newNode = html`<span age=${age}>${name}</span><style>${style}</style>` as HTMLElement;
 
-        const node = document.createElement('div');
+    //     patch(node, newNode);
 
-        const child1 = document.createTextNode('Sarah');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"31\">Mark<!--_$node_--></span>');
 
-        node.insertBefore(child1, null);
+    //     expect((node.childNodes[1] as HTMLStyleElement).outerHTML).toEqual('<style>background-color:yellow;<!--_$node_--></style>');
+    // });
 
-        const child2 = document.createElement('style');
+    // it('should render more a relatively complex element', () => {
 
-        node.insertBefore(child2, null);
+    //     let age = 19;
 
-        expect(node.childNodes.length).toEqual(2);
+    //     let name = "Sarah";
 
-        const patcher = new NodePatcher([
-            {
-                type: NodePatcherRuleTypes.PATCH_CHILDREN
-            }
-        ]);
+    //     let style = "background-color:green;"
 
-        const oldChildren = [
-            child1,
-            child2
-        ];
+    //     const node = html`<div><span age=${age}>${name}</span><style>${style}</style></div>` as HTMLElement;
 
-        const child3 = document.createElement('style');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');
 
-        const child4 = document.createTextNode('Sarah');
+    //     // Patch the node
+    //     age = 31;
 
-        const newChildren = [
-            child3,
-            child4
-        ];
+    //     name = "Mark";
 
-        patcher.patch(node, oldChildren, newChildren);
+    //     style = "background-color:yellow;"
 
-        expect(node.childNodes[0]).toEqual(child3);
+    //     const newNode = html`<div><span age=${age}>${name}</span><style>${style}</style></div>` as HTMLElement;
 
-        expect(node.childNodes[1]).toEqual(child4);
-    });
+    //     patch(node, newNode);
+
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yellow;<!--_$node_--></style></div>');
+    // });
+
+    // it("should add the children of an element", () => {
+
+    //     let data = [];
+
+    //     let children = data.map(r => html`<div><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const node = html`${children}` as HTMLElement;
+
+    //     expect(node.childNodes.length).toEqual(1);
+
+    //     expect(node.childNodes[0]).toBeInstanceOf(Comment);
+
+    //     data = [
+    //         {
+    //             name: 'Sarah',
+    //             age: 19,
+    //             style: "background-color:green;"
+    //         },
+    //         {
+    //             name: 'Mark',
+    //             age: 31,
+    //             style: "background-color:yelow;"
+    //         }
+    //     ];
+
+    //     children = data.map(r => html`<div><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const newNode = html`${children}` as HTMLElement;
+
+    //     patch(node, newNode);
+
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');
+
+    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yelow;<!--_$node_--></style></div>');
+    // });
+
+    // it("should remove the children of an element", () => {
+
+    //     let data = [
+    //         {
+    //             name: 'Sarah',
+    //             age: 19,
+    //             style: "background-color:green;"
+    //         },
+    //         {
+    //             name: 'Mark',
+    //             age: 31,
+    //             style: "background-color:yelow;"
+    //         }
+    //     ];
+
+    //     let children = data.map(r => html`<div><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const node = html`${children}` as HTMLElement;
+
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');
+
+    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yelow;<!--_$node_--></style></div>');
+
+    //     data = [];
+
+    //     children = data.map(r => html`<div><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const newNode = html`${children}` as HTMLElement;
+
+    //     patch(node, newNode);
+
+    //     expect(node.childNodes.length).toEqual(1);
+
+    //     expect(node.childNodes[0]).toBeInstanceOf(Comment);
+    // });
+
+    // it("should swap the non-keyed children of an element", () => {
+
+    //     let data = [
+    //         {
+    //             name: 'Sarah',
+    //             age: 19,
+    //             style: "background-color:green;"
+    //         },
+    //         {
+    //             name: 'Mark',
+    //             age: 31,
+    //             style: "background-color:yelow;"
+    //         }
+    //     ];
+
+    //     let children = data.map(r => html`<div><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const node = html`${children}` as HTMLElement;
+
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');
+
+    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yelow;<!--_$node_--></style></div>');
+
+    //     data = [
+    //         {
+    //             name: 'Mark',
+    //             age: 31,
+    //             style: "background-color:yelow;"
+    //         },
+    //         {
+    //             name: 'Sarah',
+    //             age: 19,
+    //             style: "background-color:green;"
+    //         }
+    //     ];
+
+    //     children = data.map(r => html`<div><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const newNode = html`${children}` as HTMLElement;
+
+    //     patch(node, newNode);
+
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yelow;<!--_$node_--></style></div>');
+
+    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');    
+    // });
+
+    // it("should swap the keyed children of an element", () => {
+
+    //     let data = [
+    //         {
+    //             id: 1,
+    //             name: 'Sarah',
+    //             age: 19,
+    //             style: "background-color:green;"
+    //         },
+    //         {
+    //             id: 2,
+    //             name: 'Mark',
+    //             age: 31,
+    //             style: "background-color:yelow;"
+    //         }
+    //     ];
+
+    //     let children = data.map(r => html`<div key=${r.id}><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const node = html`${children}` as HTMLElement;
+
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div key=\"1\"><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');
+
+    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div key=\"2\"><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yelow;<!--_$node_--></style></div>');
+
+    //     data = [
+    //         {
+    //             id: 2,
+    //             name: 'Mark',
+    //             age: 31,
+    //             style: "background-color:yelow;"
+    //         },
+    //         {
+    //             id: 1,
+    //             name: 'Sarah',
+    //             age: 19,
+    //             style: "background-color:green;"
+    //         }
+    //     ];
+
+    //     children = data.map(r => html`<div key=${r.id}><span age=${r.age}>${r.name}</span><style>${r.style}</style></div>`);
+
+    //     const newNode = html`${children}` as HTMLElement;
+
+    //     patch(node, newNode);
+
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div key=\"2\"><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yelow;<!--_$node_--></style></div>');
+
+    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div key=\"1\"><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');    
+    // });
 
 });

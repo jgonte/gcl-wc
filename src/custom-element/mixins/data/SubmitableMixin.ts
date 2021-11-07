@@ -1,6 +1,6 @@
+import { html } from "../../../renderer/renderer";
 import Fetcher from "../../../utils/data/transfer/Fetcher";
 import { ErrorResponse } from "../../../utils/data/transfer/interfaces";
-import html from "../../../virtual-dom/html";
 import { Callback } from "../../interfaces";
 
 const SubmitableMixin = Base =>

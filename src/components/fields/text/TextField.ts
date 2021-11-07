@@ -1,7 +1,7 @@
 import { Field } from "../Field";
-import html from "../../../virtual-dom/html";
 import { EMPTY_STRING } from "../../../utils/shared";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
+import { html } from "../../../renderer/renderer";
 
 export default class TextField extends Field {
 

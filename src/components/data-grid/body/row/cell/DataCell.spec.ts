@@ -35,7 +35,7 @@ describe("Data cell tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`Sarah<style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style>Sarah<!--_$node_-->`);
     });
 
     it('should render when the data of the attributes is provided via functions', async () => {
@@ -66,6 +66,6 @@ describe("Data cell tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`Sarah<style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style>Sarah<!--_$node_-->`);
     });
 });

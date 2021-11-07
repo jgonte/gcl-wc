@@ -1,6 +1,4 @@
-//import html from "../../virtual-dom/html";
-
-import html from "../../virtual-dom/html";
+import { html } from "../../renderer/renderer";
 
 /**
  * Mixin that handles errors

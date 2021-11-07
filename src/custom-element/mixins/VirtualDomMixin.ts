@@ -1,8 +1,5 @@
-import { DiffOperation, LifecycleHooks } from "../../virtual-dom/interfaces";
-import MarkupParsingResult from "../../virtual-dom/MarkupParsingResult";
-// import ElementNode from "../../virtual-dom/nodes/ElementNode";
-// import FragmentNode from "../../virtual-dom/nodes/FragmentNode";
-// import TextNode from "../../virtual-dom/nodes/TextNode";
+import { NodePatchingData } from "../../renderer/NodePatcher";
+import { render } from "../../renderer/renderer";
 
 /**
  * Updates the element using a virtual DOM approach
@@ -11,7 +8,7 @@ import MarkupParsingResult from "../../virtual-dom/MarkupParsingResult";
  */
 const VirtualDomMixin = Base =>
 
-    class VirtualDom extends Base implements LifecycleHooks {
+    class VirtualDom extends Base {
 
         didMountCallback() { }
 
@@ -22,123 +19,61 @@ const VirtualDomMixin = Base =>
         willUnmountCallback() { };
 
         /**
-         * The old virtual node to diff against
+         * The old patching node data to patch against
          */
-        private _oldResult: MarkupParsingResult = null;
+        private _oldPatchingData: NodePatchingData = null;
 
         protected updateDom() {
 
-            let newResult: MarkupParsingResult = this.render();
+            let newPatchingData: NodePatchingData = this.render();
 
-            if (Array.isArray(newResult)) { // An array of results was returned from an map -> html call
+            // if (Array.isArray(newPatchingData)) { // An array of results was returned from an map -> html call
 
-                newResult = wrap(newResult);
-            }
+            //     const wrapperNode = new DocumentFragment();
 
-            // Modify the original render if needed
-            newResult = this.beforeRender(newResult);
+            //     newPatchingData.forEach(r => wrapperNode.insertBefore(r, null));
 
-            const operation = this._getOperation(newResult);
+            //     newPatchingData = wrapperNode;
+            // }
 
-            switch (operation) {
-                case DiffOperation.None: return; // Nothing to do
-                case DiffOperation.Mount:
-                    {
-                        this.document.insertBefore(newResult.node, null); // Faster than appendChild
+            newPatchingData = this.beforeRender(newPatchingData); // Modify the original patching data if needed
 
-                        this._waitForChildrenToMount();
-                    }
-                    break;
-                case DiffOperation.Update:
-                    {
-                        this.willUpdateCallback();
+            const {
+                document,
+                _oldPatchingData
+            } = this;
 
-                        (this.document as HTMLElement).replaceChildren(); // Remove all the existing children
+            if (_oldPatchingData === null) {
 
-                        this.document.insertBefore(newResult.node, null);
+                if (newPatchingData !== null) { // Mount
 
-                        //newResult.patch(this._oldResult, this.document);
+                    render(document, null, newPatchingData);
 
-                        this._waitForChildrenToUpdate();
-                    }
-                    break;
-                case DiffOperation.Unmount:
-                    {
-                        this.willUnmountCallback?.();
-
-                        (this.document as HTMLElement).replaceChildren(); // Remove all the existing children
-                    }
-                    break;
-            }
-
-            this._oldResult = newResult;
-        }
-
-        private _getOperation(newResult: MarkupParsingResult): DiffOperation {
-
-            if (this._oldResult === null) {
-
-                if (newResult === null) {
-
-                    return DiffOperation.None;
+                    this._waitForChildrenToMount();
                 }
-                else { // newVNode !== null
+                // else newPatchingData === null - Nothing to do
+            }
+            else { // this._oldPatchingData !== null
 
-                    return DiffOperation.Mount;
+                if (newPatchingData !== null) { // Update
+
+                    this.willUpdateCallback();
+
+                    render(document, _oldPatchingData, newPatchingData);
+
+                    this._waitForChildrenToUpdate();
+                }
+                else { // newPatchingData === null - Unmount
+
+                    this.willUnmountCallback?.();
+
+                    (this.document as HTMLElement).replaceChildren(); // Remove all the existing children
+
+                    this.stylesAdded = false; // Need to re-add the styles
                 }
             }
-            else { // this._oldVNode !== null
 
-                if (newResult === null) {
-
-                    return DiffOperation.Unmount;
-                }
-                else { // newVNode !== null
-
-                    return DiffOperation.Update;
-                }
-            }
-        }
-
-        beforeRender(newResult: MarkupParsingResult): MarkupParsingResult {
-
-            const styles = (this.constructor as any).metadata.styles;
-
-            if (styles.length > 0) { // Add a style element to the node
-
-                return this.addStyles(newResult, styles);
-            }
-
-            return newResult;
-        }
-
-        addStyles(result: MarkupParsingResult, styles: string[]): MarkupParsingResult {
-
-            if (this.shadowRoot !== null) {
-
-                // const styleVNode = new ElementNode(
-                //     'style',
-                //     null,
-                //     [
-                //         new TextNode(styles.join(''))
-                //     ]
-                // );
-
-                const styleNode = document.createElement('style');
-
-                const styleContent = document.createTextNode(styles.join(''));
-
-                styleNode.appendChild(styleContent);
-
-                result = result.appendSibling(new MarkupParsingResult(/*styleVNode, */styleNode));
-
-            }
-            else { // this.shadowRoot === null
-
-                throw Error('Not implemented');
-            }
-
-            return result;
+            this._oldPatchingData = newPatchingData;
         }
 
         /**
@@ -173,19 +108,3 @@ const VirtualDomMixin = Base =>
     }
 
 export default VirtualDomMixin;
-
-/**
- * Wraps the array of results in a fragment node one
- * @param results 
- * @returns 
- */
-function wrap(results: MarkupParsingResult[]): MarkupParsingResult {
-
-    //const wrapperVNode = new FragmentNode(results.map(r => r.vnode) as any);
-
-    const wrapperNode = new DocumentFragment();
-
-    results.forEach(r => wrapperNode.insertBefore(r.node, null));
-
-    return new MarkupParsingResult(/*wrapperVNode, */wrapperNode);
-}

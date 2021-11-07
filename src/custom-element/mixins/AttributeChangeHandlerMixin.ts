@@ -1,3 +1,4 @@
+import { attributeMarkerPrefix } from "../../renderer/createTemplate";
 import valueConverter from "../helpers/valueConverter";
 import { CustomElementPropertyMetadata } from "../interfaces";
 import PropertyMetadataInitializerMixin from "./PropertyMetadataInitializerMixin";
@@ -117,6 +118,11 @@ const AttributeChangeHandlerMixin = Base =>
 
         private _setAttribute(attribute: string, value: any): boolean {
 
+            if (value.startsWith(attributeMarkerPrefix)) { // Coming from a template ... ignore
+
+                return false;
+            }
+    
             // Verify that the property is one of the configured in the custom element
             let propertyMetadata = (this.constructor as any).metadata.propertiesByAttribute.get(attribute);
 
@@ -127,7 +133,7 @@ const AttributeChangeHandlerMixin = Base =>
 
             value = valueConverter.toProperty(value, type); // Convert from the value returned by the parameter
 
-            return this.setProperty(name, value);
+            return this.setProperty(name, value);           
         }
 
         protected setProperty(name: string, value: any): boolean {

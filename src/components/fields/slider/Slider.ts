@@ -1,6 +1,6 @@
 import CustomElement from "../../../custom-element/CustomElement";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
-import html from "../../../virtual-dom/html";
+import { html } from "../../../renderer/renderer";
 import sliderCss from "./Slider-css"
 
 export default class Slider extends CustomElement {

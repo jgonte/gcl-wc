@@ -1,8 +1,8 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
-import html from "../../virtual-dom/html";
 import css from "../helpers/css";
+import { html } from "../../renderer/renderer";
 
 beforeEach(() => {
 
@@ -33,7 +33,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is unknown</span>');
+        expect(component.shadowRoot.innerHTML.trim()).toBe('<span>Hello, my name is unknown</span>');
     });
 
     it('should render the HTML with the default property', async () => {
@@ -69,7 +69,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Sarah</span>');
+        expect(component.shadowRoot.innerHTML.trim()).toBe('<span>Hello, my name is Sarah<!--_$node_--></span>');
     });
 
     it('should render the HTML with the set property', async () => {
@@ -105,7 +105,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Mark</span>');
+        expect(component.shadowRoot.innerHTML.trim()).toBe('<span>Hello, my name is Mark<!--_$node_--></span>');
     });
 
     it('should render the HTML with the default property and the style attached', async () => {
@@ -131,7 +131,7 @@ describe("custom element render tests", () => {
             static get styles() {
 
                 return css`:host { background-color: yellowgreen; }`;
-            }           
+            }
 
             render() {
 
@@ -152,7 +152,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Sarah</span><span>My age is 19</span><style>:host { background-color: yellowgreen; }</style>');
+        expect(component.shadowRoot.innerHTML).toBe(`<style>:host { background-color: yellowgreen; }</style><span>Hello, my name is Sarah<!--_$node_--></span><span>My age is 19<!--_$node_--></span>`);
     });
 
     it('should render the HTML with the set property and the style attached', async () => {
@@ -199,7 +199,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<span>Hello, my name is Mark</span><span>My age is 31</span><style>:host { background-color: yellowgreen; }</style>');
+        expect(component.shadowRoot.innerHTML).toBe(`<style>:host { background-color: yellowgreen; }</style><span>Hello, my name is Mark<!--_$node_--></span><span>My age is 31<!--_$node_--></span>`);
     });
-    
+
 });

@@ -1,5 +1,6 @@
 import ParentChildMixin from "./mixins/ParentChildMixin";
 import ReactiveElementMixin from "./mixins/ReactiveElementMixin";
+import StylePatcherMixin from "./mixins/StylePatcherMixin";
 import VirtualDomMixin from "./mixins/VirtualDomMixin";
 import ShadowRootMixin from "./mixins/ShadowRootMixin";
 import MetadataInitializerMixin from "./mixins/MetadataInitializerMixin";
@@ -7,13 +8,15 @@ import MetadataInitializerMixin from "./mixins/MetadataInitializerMixin";
 export default class CustomElement extends
     ParentChildMixin(
         ReactiveElementMixin(
-            VirtualDomMixin(
-                ShadowRootMixin(
-                    MetadataInitializerMixin(
-                        HTMLElement
+            StylePatcherMixin(
+                VirtualDomMixin(
+                    ShadowRootMixin(
+                        MetadataInitializerMixin(
+                            HTMLElement
+                        )
                     )
                 )
-            )
+            )   
         )
     ) {
 

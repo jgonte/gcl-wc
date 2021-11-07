@@ -1,8 +1,8 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
-import html from "../../virtual-dom/html";
 import css from "../helpers/css";
+import { html } from "../../renderer/renderer";
 
 beforeEach(() => {
 

@@ -5,12 +5,9 @@
     "declaration": false,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "lib": [
-      "dom",
-      "ES2019"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "moduleResolution": "node",
-    "module": "esnext",
+    "module": "ESNext",
     "target": "ES2019",
     "outDir": "lib",
     "noUnusedLocals": true,

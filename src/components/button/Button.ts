@@ -1,8 +1,7 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
-import html from "../../virtual-dom/html";
-
 import { Callback } from "../../custom-element/interfaces";
+import { html } from "../../renderer/renderer";
 
 export default class Button extends CustomElement {
 

@@ -35,19 +35,19 @@ describe("Text field tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<input type=\"text\" name=\"name\"/><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><input type=\"text\" name=\"name\"/>`);
 
         component.value = "Sarah";
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<input type=\"text\" name=\"name\" value=\"Sarah\"/><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><input type=\"text\" name=\"name\" value=\"Sarah\"/>`);
 
         component.value = "Mark";
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<input type=\"text\" name=\"name\" value=\"Mark\"/><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><input type=\"text\" name=\"name\" value=\"Mark\"/>`);
     });
 
     it('should render the value when it is provided', async () => {
@@ -63,12 +63,12 @@ describe("Text field tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<input type=\"text\" name=\"name\" value=\"Sarah\"/><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><input type=\"text\" name=\"name\" value=\"Sarah\"/>`);
 
         component.value = "Mark";
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<input type=\"text\" name=\"name\" value=\"Mark\"/><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><input type=\"text\" name=\"name\" value=\"Mark\"/>`);
     });
 });

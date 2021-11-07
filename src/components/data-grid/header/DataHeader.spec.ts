@@ -44,7 +44,7 @@ describe("Data row tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<gcl-data-header-cell field=\"name\" key=\"name\"></gcl-data-header-cell><gcl-data-header-cell field=\"age\" key=\"age\"></gcl-data-header-cell><gcl-data-header-cell field=\"description\" key=\"description\"></gcl-data-header-cell><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><gcl-data-header-cell field=\"name\" key=\"name\"></gcl-data-header-cell><gcl-data-header-cell field=\"age\" key=\"age\"></gcl-data-header-cell><gcl-data-header-cell field=\"description\" key=\"description\"></gcl-data-header-cell>`);
     });
 
     it('should render when the data of the attributes is provided via functions', async () => {
@@ -68,6 +68,6 @@ describe("Data row tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<gcl-data-header-cell field=\"name\" key=\"name\"></gcl-data-header-cell><gcl-data-header-cell field=\"age\" key=\"age\"></gcl-data-header-cell><gcl-data-header-cell field=\"description\" key=\"description\"></gcl-data-header-cell><style>[object Object]</style>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><gcl-data-header-cell field=\"name\" key=\"name\"></gcl-data-header-cell><gcl-data-header-cell field=\"age\" key=\"age\"></gcl-data-header-cell><gcl-data-header-cell field=\"description\" key=\"description\"></gcl-data-header-cell>`);
     });
 });
