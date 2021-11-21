@@ -1,4 +1,4 @@
-import { html } from "../../renderer/renderer";
+export const errorEvent = "errorEvent";
 
 /**
  * Mixin that handles errors
@@ -29,7 +29,11 @@ const ErrorableMixin = Base =>
                 return null;
             }
 
-            return html`${this.getErrorMessage()}`;
+            this.dispatchCustomEvent(errorEvent, {
+                error: {
+                    message: this.getErrorMessage()
+                }
+            });
 
             // return (
             //     <gcl-overlay>

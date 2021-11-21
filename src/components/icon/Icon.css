@@ -1,0 +1,29 @@
+:host {
+    display: inline-block;
+    font-style: normal;
+    line-height: 0;
+    text-align: center;
+    text-transform: none;
+    vertical-align: -.125em;
+    text-rendering: optimizeLegibility;
+}
+
+svg {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    color: inherit;
+    font-size: inherit !important;
+}
+
+svg[size='large'] {
+    font-size: var(--gcl-icon-size-large);
+}
+
+svg[size='medium'] {
+    font-size: var(--gcl-icon-size-medium);
+}
+
+svg[size='small'] {
+    font-size: var(--gcl-icon-size-small);
+}

@@ -1,6 +1,7 @@
 import { isPrimitive } from "../utils/shared";
-import { createNode } from "./createNode";
 import createTemplate, { attributeMarkerPrefix, eventMarkerPrefix, nodeMarker } from "./createTemplate";
+import { createNode } from "./createNode";
+import areEquivalentValues from "./areEquivalentValues";
 
 export enum NodePatcherRuleTypes {
     PATCH_NODE = 1, // Patches either a single node or a collection of nodes
@@ -92,6 +93,9 @@ export class NodePatcher {
      */
     rules: NodePatcherRule[];
 
+    /**
+     * The index of the dynamic property where the key is
+     */
     keyIndex: number;
 
     constructor(strings: TemplateStringsArray) {
@@ -109,16 +113,9 @@ export class NodePatcher {
         this.rules = createNodePatcherRules(template.content);
 
         this.keyIndex = keyIndex;
-
-
     }
 
     patchNode(parentNode: Node, rules: CompiledNodePatcherRule[], oldValues: any[] = [], newValues: any[] = []) {
-
-        // if (rules === null) {
-
-        //     rules = compileRules(parentNode, this._rules);
-        // }
 
         const {
             length
@@ -130,7 +127,7 @@ export class NodePatcher {
 
             let newValue = newValues[i];
 
-            if (oldValue === newValue) {
+            if (areEquivalentValues(oldValue, newValue)) {
 
                 continue;
             }
@@ -153,8 +150,7 @@ export class NodePatcher {
                         }
                         else { // Single node
 
-                            if (newValue !== undefined &&
-                                newValue !== null) {
+                            if (newValue !== null) {
 
                                 if (oldValue === undefined ||
                                     oldValue === null) {
@@ -167,49 +163,6 @@ export class NodePatcher {
                                 }
                             }
                             else { // newValue === undefined || null
-
-                                // if (oldValue !== undefined) {
-
-                                //     if (oldValue.patcher !== undefined) { // It is a patching data
-
-                                //         const oldChildNode = findParentNode(node, n => {
-
-                                //             if (n._$patchingData === undefined) {
-
-                                //                 return false;
-                                //             }
-                            
-                                //             const {
-                                //                 patcher,
-                                //                 values
-                                //             } = n._$patchingData;
-                            
-                                //             const {
-                                //                 patcher: otherPatcher,
-                                //                 values: otherValues
-                                //             } = oldValue as any;
-                            
-                                //             return patcher === otherPatcher &&
-                                //                 values === otherValues;
-                                //         });
-
-                                //         const {
-                                //             patcher: oldPatcher,
-                                //             values: oldValues,
-                                //             rules
-                                //         } = oldValue;
-
-                                //         const values = [];
-
-                                //         oldPatcher.patchNode(oldChildNode, rules, oldValues, values);
-
-                                //         (oldChildNode as any)._$patchingData.values = values; // Update the values 
-                                //     }
-                                //     else {
-
-                                //         removeLeftSibling(node);
-                                //     }
-                                // }
 
                                 removeLeftSibling(node);
                             }

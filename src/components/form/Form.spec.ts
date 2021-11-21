@@ -1,5 +1,7 @@
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import clearCustomElements from "../../custom-element/test/utils/clearCustomElements";
+import TextField from "../fields/text/TextField";
+import FormField from "./form-field/FormField";
 import Form from "./Form";
 
 beforeEach(() => {
@@ -22,30 +24,31 @@ describe("form tests", () => {
         }).toThrow(new Error("The attributes: [submit-url] must have a value"));
     });
 
-    // it('should render when the data of the attributes is provided', async () => {
+    it('should render a form', async () => {
 
-    //     // Re-register the form since all the custom elements are cleared before any test
-    //     defineCustomElement('gcl-data-cell', DataCell);
+        // Re-register the form since all the custom elements are cleared before any test
+        defineCustomElement('gcl-text-field', TextField);
 
-    //     defineCustomElement('gcl-data-row', DataRow);
+        defineCustomElement('gcl-form-field', FormField);
 
-    //     defineCustomElement('gcl-data-grid', DataGrid);
+        defineCustomElement('gcl-form', Form);
 
-    //     // Attach it to the DOM
-    //     document.body.innerHTML = `
-    //     <gcl-data-grid id="dg1" 
-    //         data='[{ "name": "Sarah", "age": "19", "description": "Beautiful and smart" }, { "name": "Mark", "age": "31", "description": "Hard worker" }]'
-    //         fields='[ "name", "age", "description" ]'
-    //     >
-    //     </gcl-data-grid>`;
+        // Attach it to the DOM
+        document.body.innerHTML = `
+        <gcl-form submit-url="http://localhost:60314/api/contacts/">
+            <gcl-form-field>
+                <span slot="label">Name</span>
+                <gcl-text-field slot="field" id="tf2" name="name" value="Sarah"></gcl-text-field>
+            </gcl-form-field>
+        </gcl-form>`;
 
-    //     // Test the element
-    //     const component: any = document.querySelector('gcl-data-grid');
+        // Test the element
+        const component: any = document.querySelector('gcl-form');
 
-    //     await component.updateComplete; // Wait for the component to render
+        await component.updateComplete; // Wait for the component to render
 
-    //     expect(component.shadowRoot.innerHTML).toBe(`<gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:&#x22;19&#x22;,&#x22;description&#x22;:&#x22;Beautiful and smart&#x22;}\" key=\"tbd\"></gcl-data-row><!----><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:&#x22;31&#x22;,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!----><style>[object Object]</style>`);
-    // });
+        expect(component.shadowRoot.innerHTML).toBe(`          <!--_$node_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\">\n            Submit</gcl-button><!--_$node_--></form>`);
+    });
 
     // it('should render when the data of the attributes is provided via functions', async () => {
 

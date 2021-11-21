@@ -4,7 +4,7 @@ import SubmitableMixin from "../../custom-element/mixins/data/SubmitableMixin";
 import ErrorableMixin from "../../custom-element/mixins/ErrorableMixin";
 import { html } from "../../renderer/renderer";
 import DataRecord from "../../utils/data/record/DataRecord";
-import { change } from "../fields/Field";
+import { changeEvent } from "../fields/Field";
 
 export default class Form extends
     SubmitableMixin(
@@ -17,13 +17,12 @@ export default class Form extends
 
     render() {
 
-        return html`
-        ${this.renderSubmitting()}
-        ${this.renderError()}
-        <form key="form">
-            <slot key="form-fields-slot"></slot>
-            ${this.renderButton()}
-        </form>`;
+        return html`${this.renderSubmitting()}
+            ${this.renderError()}
+            <form key="form">
+                <slot key="form-fields-slot"></slot>
+                ${this.renderButton()}
+            </form>`;
     }
 
     renderButton() {
@@ -67,14 +66,14 @@ export default class Form extends
 
         super.connectedCallback?.();
 
-        this.addEventListener(change, this.handleChange);
+        this.addEventListener(changeEvent, this.handleChange);
     }
 
     disconnectedCallback() {
 
         super.disconnectedCallback?.();
 
-        this.removeEventListener(change, this.handleChange);
+        this.removeEventListener(changeEvent, this.handleChange);
     }
 
     handleChange(event: CustomEvent): void {

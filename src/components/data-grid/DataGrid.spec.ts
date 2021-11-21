@@ -94,4 +94,63 @@ describe("Data grid tests", () => {
 
         expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$node_-->\n\t\t\t<gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!--_$node_-->`);
     });
+
+    it('should swap the records', async () => {
+
+        // Set up the functions to be called
+        (window as any).getData = function () {
+
+            return [
+                {
+                    name: "Sarah",
+                    age: 19,
+                    description: 'Smart and beautiful'
+                },
+                {
+                    name: "Mark",
+                    age: 31,
+                    description: 'Hard worker'
+                }
+            ];
+        };
+
+        (window as any).getFields = function () {
+
+            return ["name", "age", "description"];
+        };
+
+        // Re-register the data grid since all the custom elements are cleared before any test
+        defineCustomElement('gcl-data-cell', DataCell);
+
+        defineCustomElement('gcl-data-row', DataRow);
+
+        defineCustomElement('gcl-data-grid', DataGrid);
+
+        // Attach it to the DOM
+        document.body.innerHTML = '<gcl-data-grid id="dg2" data="getData()" fields="getFields()"></gcl-data-grid>';
+
+        // Test the element
+        const component: any = document.querySelector('gcl-data-grid');
+
+        await component.updateComplete; // Wait for the component to render
+
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$node_-->\n\t\t\t<gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!--_$node_-->`);
+
+        component.data = [
+            {
+                name: "Mark",
+                age: 31,
+                description: 'Hard worker'
+            },
+            {
+                name: "Sarah",
+                age: 19,
+                description: 'Smart and beautiful'
+            }
+        ];
+
+        await component.updateComplete; // Wait for the component to render
+
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$node_-->\n\t\t\t<gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><!--_$node_-->`);
+    });
 });

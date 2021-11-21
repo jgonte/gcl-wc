@@ -102,9 +102,11 @@ function renderNode(container: DocumentFragment | HTMLElement,
     }
     else { // oldPatchingData !== null && newPatchingData !== null - Patch the old node/nodes
 
-        const {
+        let {
             node
         } = oldPatchingData;
+
+        node = node !== undefined ? node : container;
 
         patchNode(node, newPatchingData);
     }
