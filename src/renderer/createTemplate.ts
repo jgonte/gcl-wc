@@ -75,6 +75,10 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
 
             parts.push(`${s}<!--${nodeMarker}-->`);
         }
+        else { // Literal
+
+            parts.push(s);
+        }
     }
 
     // Add the ending string

@@ -47,7 +47,7 @@ describe("form tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`          <!--_$node_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\">\n            Submit</gcl-button><!--_$node_--></form>`);
+        expect(component.shadowRoot.innerHTML).toBe('<!--_$node_-->\n            <!--_$node_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\">\n            Submit</gcl-button><!--_$node_--></form>');
     });
 
     // it('should render when the data of the attributes is provided via functions', async () => {

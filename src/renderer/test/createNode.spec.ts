@@ -135,4 +135,59 @@ describe("create node tests", () => {
         expect(node.getAttribute('key')).toEqual('name');
     });
 
+    it('should create an SVG element with attributes', () => {
+
+        const iconsPath = '/dist/assets/icons';
+
+        const name = 'alarm';
+
+        const iconPath = `${iconsPath}#${name}`;
+
+        const patchingData = html`
+            <svg role="img">
+                <use href=${iconPath} />
+            </svg>`;
+
+        const node = createNode(patchingData) as HTMLElement;
+
+        // Verify the patching data
+        const {
+            node: newNode,
+            patcher,
+            rules,
+            values
+        } = patchingData;
+
+        expect(node).toBe(newNode);
+
+        expect(rules.length).toEqual(1);
+
+        expect(values).toEqual([
+            '/dist/assets/icons#alarm'
+        ]);
+
+        const {
+            templateString,
+            template,
+            keyIndex,
+        } = patcher;
+
+        expect(templateString).toEqual('<svg role=\"img\">\n                <use href=\"_$attr:href\" /></svg>');
+
+        const {
+            childNodes: templateChildren
+        } = template.content;
+
+        expect(templateChildren.length).toEqual(1);
+
+        expect(keyIndex).toEqual(undefined);
+
+        // Verify the nodes
+        expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
+
+        expect((node as any)._$patchingData).toEqual(patchingData);
+
+        expect(node.outerHTML).toEqual('<svg role=\"img\">\n                <use href=\"/dist/assets/icons#alarm\"/></svg>');
+    });
+
 });

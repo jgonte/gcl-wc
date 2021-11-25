@@ -22,7 +22,7 @@ describe("App tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<!--_$node_--><slot></slot>`);
+        expect(component.shadowRoot.innerHTML).toBe('<!--_$node_--><slot></slot>');
     });
 
     it('should render the errors', async () => {

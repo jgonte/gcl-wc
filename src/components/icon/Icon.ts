@@ -9,7 +9,7 @@ const {
 } = config;
 
 //The path to the icons svg file
-const _iconsPath = `${assetsFolder}/icon/assets/bootstrap-icons.svg`;
+const _iconsPath = `${assetsFolder}/icons/bootstrap-icons.svg`;
 
 export default class Icon extends CustomElement {
 
@@ -38,10 +38,12 @@ export default class Icon extends CustomElement {
             //variant
         } = this;
 
-        return html`<svg role="img" 
-            <!-- size={size} variant={variant} dir={this.getDir()}  -->
-            >
-                <use href={${_iconsPath}#${name}} />
+        const iconPath = `${_iconsPath}#${name}`;
+
+        //TODO: Add <!-- size={size} variant={variant} dir={this.getDir()}  -->
+        return html`
+            <svg role="img">
+                <use href=${iconPath} />
             </svg>`;
     }
 }
