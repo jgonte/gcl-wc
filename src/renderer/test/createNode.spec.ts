@@ -33,6 +33,19 @@ describe("create node tests", () => {
         expect(comment.data).toEqual(nodeMarker);
     });
 
+    it('should create a literal', () => {
+
+        const patchingData = html`<span>literal</span>`;
+
+        const node = createNode(patchingData) as HTMLElement;
+
+        expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
+
+        expect((node as any)._$patchingData).toEqual(patchingData);
+
+        expect(node.outerHTML).toEqual('<span>literal</span>');
+    });
+
     it('should create an element with a child text node', () => {
 
         const name = 'Sarah';
