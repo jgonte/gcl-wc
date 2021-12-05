@@ -1,6 +1,6 @@
 import clearCustomElements from "../utils/clearCustomElements";
 import defineCustomElement from "../../helpers/defineCustomElement";
-import MetadataInitializerMixin from "../../mixins/MetadataInitializerMixin";
+import MetadataInitializerMixin from "../../mixins/core/MetadataInitializerMixin";
 
 beforeEach(() => {
 

@@ -3,6 +3,7 @@ import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
 import css from "../helpers/css";
 import { html } from "../../renderer/renderer";
+import { CustomElementPropertyMetadata } from "../interfaces";
 
 beforeEach(() => {
 
@@ -112,7 +113,7 @@ describe("custom element render tests", () => {
 
         class A extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -128,7 +129,7 @@ describe("custom element render tests", () => {
                 };
             }
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`:host { background-color: yellowgreen; }`;
             }
@@ -159,7 +160,7 @@ describe("custom element render tests", () => {
 
         class A extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -175,7 +176,7 @@ describe("custom element render tests", () => {
                 };
             }
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`:host { background-color: yellowgreen; }`;
             }

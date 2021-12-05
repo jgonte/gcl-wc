@@ -1,16 +1,17 @@
 import CustomElement from "../../../../../custom-element/CustomElement";
 import defineCustomElement from "../../../../../custom-element/helpers/defineCustomElement";
+import { CustomElementPropertyMetadata } from "../../../../../custom-element/interfaces";
 import { html } from "../../../../../renderer/renderer";
 import styles from "./DataCell.css";
 
 export default class DataCell extends CustomElement {
 
-    static get styles() {
+    static get styles(): string {
 
-        return styles;
+        return styles as any;
     }
 
-    static get properties() {
+    static get properties(): Record<string, CustomElementPropertyMetadata> {
 
         return {
 
@@ -36,11 +37,11 @@ export default class DataCell extends CustomElement {
 
         const {
             field,
-            record           
+            record
         } = this;
 
         const name = typeof field === 'string' ?
-            field:
+            field :
             field.name;
 
         const value = record[name];

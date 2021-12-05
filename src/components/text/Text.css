@@ -1,0 +1,17 @@
+:host {
+    display: inline-block;
+    flex-grow: 1;
+    overflow-wrap: break-word;
+}
+
+:host([size='large']) {
+    font-size: var(--gcl-font-size-large);
+}
+
+:host([size='medium']) {
+    font-size: var(--gcl-font-size-medium);
+}
+
+:host([size='small']) {
+    font-size: var(--gcl-font-size-small);
+}

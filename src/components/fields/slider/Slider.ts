@@ -1,11 +1,17 @@
 import CustomElement from "../../../custom-element/CustomElement";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
+import { CustomElementPropertyMetadata } from "../../../custom-element/interfaces";
 import { html } from "../../../renderer/renderer";
-import sliderCss from "./Slider-css"
+import styles from "./Slider-css"
 
 export default class Slider extends CustomElement {
 
-    static get properties() {
+    static get styles(): string {
+
+        return styles;
+    }
+
+    static get properties(): Record<string, CustomElementPropertyMetadata> {
 
         return {
 
@@ -22,11 +28,6 @@ export default class Slider extends CustomElement {
                 }
             }
         }
-    }
-
-    static get styles() {
-
-        return sliderCss;
     }
 
     render() {

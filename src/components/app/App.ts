@@ -1,8 +1,7 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
-import { errorEvent } from "../../custom-element/mixins/ErrorableMixin";
+import { errorEvent } from "../../custom-element/mixins/components/ErrorableMixin";
 import { html } from "../../renderer/renderer";
-import appCtrl from "./appCtrl";
 
 /**
  * The root class of the SPA
@@ -60,16 +59,12 @@ export default class App extends CustomElement {
 
         super.connectedCallback?.();
 
-        appCtrl.init();
-
         this.addEventListener(errorEvent, this.handleError);
     }
 
     disconnectedCallback() {
 
         super.disconnectedCallback?.();
-
-        appCtrl.destroy();
 
         this.removeEventListener(errorEvent, this.handleError);
     }

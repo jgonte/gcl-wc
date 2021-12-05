@@ -1,5 +1,5 @@
-import classMetadataRegistry from "../helpers/classMetadataRegistry";
-import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../interfaces";
+import classMetadataRegistry from "../../helpers/classMetadataRegistry";
+import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../../interfaces";
 import AttributeChangeHandlerMixin from "./AttributeChangeHandlerMixin";
 import ComponentMetadataInitializerMixin from "./ComponentMetadataInitializerMixin";
 import StateChangeHandlerMixin from "./StateChangeHandlerMixin";
@@ -34,7 +34,7 @@ const MetadataInitializerMixin = Base =>
                     propertiesByAttribute: new Map<string, CustomElementPropertyMetadata>(),
                     observedAttributes: [],
                     state: new Map<string, CustomElementStateMetadata>(),
-                    styles: [],
+                    styles: undefined,
                     shadow: true
                 });
             }

@@ -1,4 +1,4 @@
-import { CustomElementMetadata } from "../interfaces";
+import { CustomElementMetadata } from "../../interfaces";
 
 const StylesMetadataInitializerMixin = Base =>
 
@@ -7,7 +7,7 @@ const StylesMetadataInitializerMixin = Base =>
         /**
          * The styles to track in the class
          */
-        static styles: () => string | string[];
+        static styles: () => string;
 
         protected static initializeStyles(metadata: CustomElementMetadata): void {
 
@@ -20,9 +20,11 @@ const StylesMetadataInitializerMixin = Base =>
                 return;
             }
 
-            metadata.styles = Array.isArray(styles) ?
-                [...metadata.styles, ...styles] :
-                [...metadata.styles, styles];
+            // metadata.styles = Array.isArray(styles) ?
+            //     [...metadata.styles, ...styles] :
+            //     [...metadata.styles, styles];
+
+            metadata.styles = styles as any;
 
             // Do not inherit the styles of the base custom element by default             
         }

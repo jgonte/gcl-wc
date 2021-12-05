@@ -1,16 +1,17 @@
 import CustomElement from "../../custom-element/CustomElement";
+import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import styles from "./Field.css";
 
 export const changeEvent = "changeEvent";
 
 export abstract class Field extends CustomElement {
 
-    static get styles() {
+    static get styles(): string {
 
-        return styles;
+        return styles as any;
     }
 
-    static get properties() {
+    static get properties(): Record<string, CustomElementPropertyMetadata> {
 
         return {
 
@@ -80,7 +81,7 @@ export abstract class Field extends CustomElement {
 
     }
 
-    handleChange(event) : void {
+    handleChange(event): void {
 
         // Retrieve the new value
         const target = event.target as HTMLInputElement;
@@ -95,7 +96,7 @@ export abstract class Field extends CustomElement {
         } = this;
 
         setTimeout(() => { // Repaint before dispatching the event
-            
+
             this.dispatchCustomEvent(changeEvent, {
                 name,
                 oldValue,

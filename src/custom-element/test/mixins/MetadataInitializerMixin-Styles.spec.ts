@@ -1,6 +1,6 @@
 import clearCustomElements from "../utils/clearCustomElements";
 import defineCustomElement from "../../helpers/defineCustomElement";
-import MetadataInitializerMixin from "../../mixins/MetadataInitializerMixin";
+import MetadataInitializerMixin from "../../mixins/core/MetadataInitializerMixin";
 import css from "../../helpers/css";
 
 beforeEach(() => {
@@ -15,7 +15,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`div { color: red; }`;
             }
@@ -23,7 +23,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
 
         defineCustomElement('test-a', A);
 
-        expect(A.metadata.styles).toEqual(["div { color: red; }"]);
+        expect(A.metadata.styles).toEqual("div { color: red; }");
     });
 
     it('should populate a several styles of the custom element', () => {
@@ -31,21 +31,18 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get styles() {
+            static get styles(): string {
 
                 return [
                     css`div { color: red; }`,
                     css`span { display: inline-block; }`,
-                ];
+                ].join('');
             }
         }
 
         defineCustomElement('test-a', A);
 
-        expect(A.metadata.styles).toEqual([
-            "div { color: red; }",
-            "span { display: inline-block; }"
-        ]);
+        expect(A.metadata.styles).toEqual('div { color: red; }span { display: inline-block; }');
     });
 
     it('should not inherit the styles of the base custom element by default', () => {
@@ -53,7 +50,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`div { color: red; }`;
             }
@@ -64,7 +61,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
         //@ts-ignore
         class B extends A {
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`span { display: inline-block; }`;
 
@@ -73,7 +70,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
 
         defineCustomElement('test-b', B);
 
-        expect(B.metadata.styles).toEqual(["span { display: inline-block; }"]);
+        expect(B.metadata.styles).toEqual("span { display: inline-block; }");
 
     });
 
@@ -82,7 +79,7 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`div { color: red; }`;
             }
@@ -93,22 +90,18 @@ describe("MetadataInitializerMixin tests of the functionality of the styles", ()
         //@ts-ignore
         class B extends A {
 
-            static get styles() {
+            static get styles(): string {
 
                 return [
                     super.styles,
                     css`span { display: inline-block; }`
-                ];
-
+                ].join('');
             }
         }
 
         defineCustomElement('test-b', B);
 
-        expect(B.metadata.styles).toEqual([
-            "div { color: red; }",
-            "span { display: inline-block; }"
-        ]);
+        expect(B.metadata.styles).toEqual('div { color: red; }span { display: inline-block; }');
 
     });
 });

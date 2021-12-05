@@ -6,7 +6,7 @@
     /**
      * The folder where the assets files (css, svg, images, etc.) get copied to
      */
-    assetsFolder: 'lib/components/assets'
+    assetsFolder: 'dist/assets'
  };
 
  export default config;

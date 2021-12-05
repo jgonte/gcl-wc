@@ -1,6 +1,9 @@
 import config from "../../config";
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
+import DirectionMixin from "../../custom-element/mixins/components/direction/DirectionMixin";
+import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
+import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import { html } from "../../renderer/renderer";
 import styles from "./Icon.css";
 
@@ -8,39 +11,48 @@ const {
     assetsFolder
 } = config;
 
-//The path to the icons svg file
-const _iconsPath = `${assetsFolder}/icons/bootstrap-icons.svg`;
+const _iconsPath = `${window.location.origin}/${assetsFolder}/icons/bootstrap-icons.svg`;
 
-export default class Icon extends CustomElement {
+//@ts-ignore
+export default class Icon extends
+    DirectionMixin(
+        SizableMixin(
+            KindMixin(
+                CustomElement
+            )
+        )
+    ) {
 
-    static get styles() {
+    static atomic = true;
 
-        return styles;
+    static get styles(): string {
+
+        return [super.styles, styles].join('');
     }
 
-    static properties = {
+    static get properties() {
 
-        /**
-         * The name of the icon
-         */
-        name: {
-            type: String,
-            value: '',
-            required: true
-        }
-    };
+        return {
+
+            /**
+             * The name of the icon
+             */
+            name: {
+                type: String,
+                value: '',
+                required: true
+            }
+        };
+    }
 
     render() {
 
         const {
-            name,
-            //size,
-            //variant
+            name
         } = this;
 
         const iconPath = `${_iconsPath}#${name}`;
 
-        //TODO: Add <!-- size={size} variant={variant} dir={this.getDir()}  -->
         return html`
             <svg role="img">
                 <use href=${iconPath} />

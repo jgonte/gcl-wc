@@ -1,7 +1,7 @@
 /**
  * Template tag to generate the styles
  */
-export default function css(strings: TemplateStringsArray, ...values: any) {
+export default function css(strings: TemplateStringsArray, ...values: any) : string{
 
     return values.reduce(
         (acc, val, idx) => [...acc, val, strings[idx + 1]],

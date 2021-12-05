@@ -1,0 +1,3 @@
+:host([dir='rtl']) {
+    transform: scaleX(-1);
+}

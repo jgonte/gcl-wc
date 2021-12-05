@@ -1,9 +1,9 @@
-import ParentChildMixin from "./mixins/ParentChildMixin";
-import ReactiveElementMixin from "./mixins/ReactiveElementMixin";
-import StylePatcherMixin from "./mixins/StylePatcherMixin";
-import VirtualDomMixin from "./mixins/VirtualDomMixin";
-import ShadowRootMixin from "./mixins/ShadowRootMixin";
-import MetadataInitializerMixin from "./mixins/MetadataInitializerMixin";
+import ParentChildMixin from "./mixins/core/ParentChildMixin";
+import ReactiveElementMixin from "./mixins/core/ReactiveElementMixin";
+import StylePatcherMixin from "./mixins/core/StylePatcherMixin";
+import VirtualDomMixin from "./mixins/core/VirtualDomMixin";
+import ShadowRootMixin from "./mixins/core/ShadowRootMixin";
+import MetadataInitializerMixin from "./mixins/core/MetadataInitializerMixin";
 
 export default class CustomElement extends
     ParentChildMixin(

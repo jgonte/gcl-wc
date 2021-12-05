@@ -1,16 +1,17 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
+import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import { html } from "../../renderer/renderer";
 import styles from "./DataGrid.css";
 
 export default class DataGrid extends CustomElement {
 
-    static get styles() {
+    static get styles(): string {
 
-        return styles;
+        return styles as any;
     }
 
-	static get properties() {
+    static get properties(): Record<string, CustomElementPropertyMetadata> {
 
         return {
 
@@ -42,23 +43,23 @@ export default class DataGrid extends CustomElement {
 
     renderHeader() {
 
-        const 
-		{
-			fields
-		} = this;
+        const
+            {
+                fields
+            } = this;
 
         return html`<gcl-data-header fields=${fields}></gcl-data-header>`;
     }
 
     renderBody() {
 
-        const 
-		{
-			fields,
-			data
-		} = this;
+        const
+            {
+                fields,
+                data
+            } = this;
 
-		return data.map(record => html`<gcl-data-row fields=${fields} record=${record} key="tbd"></gcl-data-row>`);
+        return data.map(record => html`<gcl-data-row fields=${fields} record=${record} key="tbd"></gcl-data-row>`);
     }
 }
 

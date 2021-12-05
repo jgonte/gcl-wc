@@ -1,5 +1,5 @@
-import { NodePatchingData } from "../../renderer/NodePatcher";
-import { render } from "../../renderer/renderer";
+import { NodePatchingData } from "../../../renderer/NodePatcher";
+import { render } from "../../../renderer/renderer";
 
 /**
  * Updates the element using a virtual DOM approach

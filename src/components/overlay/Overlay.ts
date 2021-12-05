@@ -5,11 +5,11 @@ import styles from "./Overlay.css";
 
 export default class Overlay extends CustomElement {
 
-    static get styles() {
+    static get styles(): string {
 
-        return styles;
+        return styles as any;
     }
-    
+
     render() {
 
         return html`<slot></slot>`;

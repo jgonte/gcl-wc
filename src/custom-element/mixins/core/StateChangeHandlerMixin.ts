@@ -1,4 +1,4 @@
-import { CustomElementStateMetadata } from "../interfaces";
+import { CustomElementStateMetadata } from "../../interfaces";
 import StateMetadataInitializerMixin from "./StateMetadataInitializerMixin";
 
 const StateChangeHandlerMixin = Base =>

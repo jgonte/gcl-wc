@@ -5,11 +5,6 @@ import { html } from "../../../renderer/renderer";
 
 export default class TextField extends Field {
 
-    static get styles() {
-
-        return super.styles;
-    }
-
     render() {
 
         const {

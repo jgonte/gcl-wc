@@ -1,7 +1,7 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import SubmitableMixin from "../../custom-element/mixins/data/SubmitableMixin";
-import ErrorableMixin from "../../custom-element/mixins/ErrorableMixin";
+import ErrorableMixin from "../../custom-element/mixins/components/ErrorableMixin";
 import { html } from "../../renderer/renderer";
 import DataRecord from "../../utils/data/record/DataRecord";
 import { changeEvent } from "../fields/Field";

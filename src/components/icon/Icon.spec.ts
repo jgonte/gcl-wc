@@ -35,8 +35,8 @@ describe("Icon tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object]</style><svg role=\"img\">
-                <use href=\"lib/components/assets/icons/bootstrap-icons.svg#alarm\"/></svg>`);
+        expect(component.shadowRoot.innerHTML).toBe(`<style>[object Object][object Object][object Object]</style><svg role=\"img\">
+                <use href=\"///dist/assets/icons/bootstrap-icons.svg#alarm\"/></svg>`);
     });
 
 });

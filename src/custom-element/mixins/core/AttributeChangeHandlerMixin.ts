@@ -1,6 +1,6 @@
-import { attributeMarkerPrefix } from "../../renderer/createTemplate";
-import valueConverter from "../helpers/valueConverter";
-import { CustomElementPropertyMetadata } from "../interfaces";
+import { attributeMarkerPrefix } from "../../../renderer/createTemplate";
+import valueConverter from "../../helpers/valueConverter";
+import { CustomElementPropertyMetadata } from "../../interfaces";
 import PropertyMetadataInitializerMixin from "./PropertyMetadataInitializerMixin";
 
 const AttributeChangeHandlerMixin = Base =>

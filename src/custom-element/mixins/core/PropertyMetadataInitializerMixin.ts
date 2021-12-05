@@ -1,4 +1,4 @@
-import { CustomElementMetadata, CustomElementPropertyMetadata } from "../interfaces";
+import { CustomElementMetadata, CustomElementPropertyMetadata } from "../../interfaces";
 
 /**
  * Initializes the properties of a custom element from the metadata configured

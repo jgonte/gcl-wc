@@ -3,6 +3,7 @@ import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
 import css from "../helpers/css";
 import { html } from "../../renderer/renderer";
+import { CustomElementPropertyMetadata } from "../interfaces";
 
 beforeEach(() => {
 
@@ -20,7 +21,7 @@ describe("custom element parent children relationship tests", () => {
 
         class Parent extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -31,7 +32,7 @@ describe("custom element parent children relationship tests", () => {
                 };
             }
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`
                     :host {
@@ -57,7 +58,7 @@ describe("custom element parent children relationship tests", () => {
 
         class Child extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -68,7 +69,7 @@ describe("custom element parent children relationship tests", () => {
                 };
             }
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`
                     :host {
@@ -131,7 +132,7 @@ describe("custom element parent children relationship tests", () => {
 
         class Parent extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -142,7 +143,7 @@ describe("custom element parent children relationship tests", () => {
                 };
             }
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`
                     :host {
@@ -168,7 +169,7 @@ describe("custom element parent children relationship tests", () => {
 
         class Child extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -179,7 +180,7 @@ describe("custom element parent children relationship tests", () => {
                 };
             }
 
-            static get styles() {
+            static get styles(): string {
 
                 return css`
                     :host {

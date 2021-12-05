@@ -1,4 +1,4 @@
-import { CustomElementComponentMetadata, CustomElementMetadata } from "../interfaces";
+import { CustomElementComponentMetadata, CustomElementMetadata } from "../../interfaces";
 
 const ComponentMetadataInitializerMixin = Base =>
 

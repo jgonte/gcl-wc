@@ -16,13 +16,14 @@ export interface CustomElementComponentMetadata {
 export interface CustomElementPropertyMetadata {
     /**
      * The name of the property in the props object
+     * It corresponds to the key of the record
      */
-    name: string;
+    name?: string;
 
     /**
      * The name of the HTML attribute mapped to the property
      */
-    attribute: string;
+    attribute?: string;
 
     /**
      * The type of the property
@@ -32,38 +33,38 @@ export interface CustomElementPropertyMetadata {
     /**
      * The default value of the property if no attribute is set in HTML
      */
-    value: any;
+    value?: any;
 
     /**
      * Whether the value of the property can be changed
      */
-    mutable: boolean;
+    mutable?: boolean;
 
     /**
      * Whether to reflect the change of the property in its mapped HTML attribute
      */
-    reflect: boolean;
+    reflect?: boolean;
 
     /**
      * Whether the value of the parent property needs to be passed th the children nodes when they are initialized
      */
-    passToChildren: boolean;
+    //passToChildren: boolean;
 
     /**
      * The range to restrict the values of the property
      */
-    options: string[];
+    options?: string[];
 
     /**
      * Whether the property must have a value by the time the connectedCallback method is called
      */
-    required: boolean;
+    required?: boolean;
 
     /**
      * Called when the property has changed but after the DOM has been updated
      * Used to perform modifications to the DOM after updating it
      */
-    afterUpdate: Function;
+    afterUpdate?: Function;
 }
 
 /**
@@ -117,7 +118,7 @@ export interface CustomElementMetadata {
     /**
      * The merged styles of the custom element
      */
-    styles: string | string[];
+    styles: string;
 }
 
 export function Callback() {}

@@ -1,0 +1,50 @@
+/* host applies to the text component*/
+:host([kind='primary']),
+*[kind='primary'] {
+    color: var(--gcl-color-primary);
+}
+
+:host([kind='secondary']),
+*[kind='secondary'] {
+    color: var(--gcl-color-secondary);
+}
+
+:host([kind='tertiary']),
+*[kind='tertiary'] {
+    color: var(--gcl-color-tertiary);
+}
+
+:host([kind='info']),
+*[kind='info'] {
+    color: var(--gcl-color-info);
+}
+
+:host([kind='success']),
+*[kind='success'] {
+    color: var(--gcl-color-success);
+}
+
+:host([kind='warning']),
+*[kind='warning'] {
+    color: var(--gcl-color-warning);
+}
+
+:host([kind='danger']),
+*[kind='danger'] {
+    color: var(--gcl-color-danger);
+}
+
+:host([kind='light']),
+*[kind='light'] {
+    color: var(--gcl-color-light);
+}
+
+:host([kind='medium']),
+*[kind='medium'] {
+    color: var(--gcl-color-medium);
+}
+
+:host([kind='dark']),
+*[kind='dark'] {
+    color: var(--gcl-color-dark);
+}

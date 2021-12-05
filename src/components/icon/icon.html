@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../../variables.css">
+    <script type="module" src="../../../../../../dist/bundle.js"></script>
+
+    <title>Icon</title>
+
+</head>
+
+<body>
+
+    <gcl-icon id="alarm-icon" name="alarm" kind="primary" size="large"></gcl-icon>
+    <gcl-icon name="alarm-fill" kind="secondary" size="medium"></gcl-icon>
+    <gcl-icon name="archive" kind="tertiary" size="small"></gcl-icon>
+    <gcl-icon name="calculator-fill" kind="success" size="large"></gcl-icon>
+    <gcl-icon name="calendar" kind="warning" size="large"></gcl-icon>
+    <gcl-icon name="camera-fill" kind="danger"></gcl-icon>
+    <gcl-icon name="camera-video-fill" kind="light" size="large"></gcl-icon>
+    <gcl-icon name="card-checklist" kind="medium"></gcl-icon>
+    <gcl-icon name="chat-fill" kind="dark"></gcl-icon>
+    <gcl-icon name="compass" size="large" style="color:magenta"></gcl-icon>
+    <gcl-icon name="arrow-right" size="large" kind="success"></gcl-icon>
+    <gcl-icon name="chevron-right" size="large" kind="medium" dir="rtl"></gcl-icon>
+    <gcl-icon name="bug" style="color:orangered; font-size: 64px;"></gcl-icon>
+
+    <script>
+
+        setTimeout(function () {
+
+            const alarmIcon = document.querySelector("#alarm-icon");
+
+            if (alarmIcon !== null) { // User might have left the page after the timeout was set
+
+                alarmIcon.setAttribute("kind", "tertiary");
+            }
+
+        }, 5000);
+
+    </script>
+
+</body>
+
+</html>

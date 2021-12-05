@@ -1,4 +1,4 @@
-import { NodePatchingData } from "../../renderer/NodePatcher";
+import { NodePatchingData } from "../../../renderer/NodePatcher";
 
 /**
  * Patches the template with the style of the component if there is any
@@ -23,7 +23,7 @@ const StylePatcherMixin = Base =>
 
             const styles = (constructor as any).metadata.styles;
 
-            if (styles.length > 0 &&
+            if (styles !== undefined &&
                 _stylesAdded === false) { // Add a style element to the document
 
                 patchingData = this.addStyles(patchingData, styles);
@@ -34,7 +34,7 @@ const StylePatcherMixin = Base =>
             return patchingData;
         }
 
-        addStyles(node: NodePatchingData, styles: string[]): NodePatchingData {
+        addStyles(node: NodePatchingData, styles: string): NodePatchingData {
 
             const {
                 shadowRoot
@@ -48,7 +48,7 @@ const StylePatcherMixin = Base =>
 
                 const styleNode = document.createElement('style');
 
-                const styleContent = document.createTextNode(styles.join(''));
+                const styleContent = document.createTextNode(styles);
 
                 styleNode.appendChild(styleContent);
 

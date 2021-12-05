@@ -1,6 +1,6 @@
 import css from "../../../custom-element/helpers/css";
 
-const sliderCss = css`
+const styles = css`
 
     gcl-slider {
         display: inline-block;
@@ -41,4 +41,4 @@ const sliderCss = css`
     }
 `;
 
-export default sliderCss;
+export default styles;
