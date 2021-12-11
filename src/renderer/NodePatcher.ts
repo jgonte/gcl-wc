@@ -2,6 +2,7 @@ import { isPrimitive } from "../utils/shared";
 import createTemplate, { attributeMarkerPrefix, eventMarkerPrefix, nodeMarker } from "./createTemplate";
 import { createNode } from "./createNode";
 import areEquivalentValues from "./areEquivalentValues";
+import getGlobalFunction from "../custom-element/helpers/getGlobalFunction";
 
 export enum NodePatcherRuleTypes {
     PATCH_NODE = 1, // Patches either a single node or a collection of nodes
@@ -53,7 +54,7 @@ export interface CompiledNodePatcherRule {
 /**
  * The patching data with the information to patch a node
  */
- export interface NodePatchingData {
+export interface NodePatchingData {
 
     /**
      * The node to be patched (it does not exist until it is created if needed)
@@ -181,6 +182,11 @@ export class NodePatcher {
                         const nameParts = eventName.split('_'); // Just in case it has the capture parameter in the event
 
                         const useCapture: boolean = nameParts[1]?.toLowerCase() === 'capture'; // The convention is: eventName_capture for capture. Example onClick_capture
+
+                        if (typeof newValue === 'string') {
+
+                            newValue = getGlobalFunction(newValue);
+                        }
 
                         if (oldValue === undefined &&
                             newValue !== undefined) {
@@ -311,6 +317,8 @@ function setAttribute(node: HTMLElement, key: string, value: string) {
         value === 'false') {
 
         node.removeAttribute(key);
+
+        (node as any)[key] = value; // Reset the value in any case
     }
     else {
 
@@ -322,12 +330,23 @@ function setAttribute(node: HTMLElement, key: string, value: string) {
 
             const type = typeof value;
 
-            if (type === 'object') {
+            if (type === 'function') {
+
+                node.removeAttribute(key); // It is similar to an event. Do not show as attribute
+
+                (node as any)[key] = value; // Bypass the stringification of the attribute
+            }
+            else if (type === 'object') {
 
                 value = JSON.stringify(value);
+
+                node.setAttribute(key, value);
+            }
+            else { // Any other type
+
+                node.setAttribute(key, value);
             }
 
-            node.setAttribute(key, value);
         }
     }
 }
@@ -501,7 +520,7 @@ function insertBefore(markerNode: Node, newChild: Node | NodePatchingData, rules
 
             (newChild as NodePatchingData).rules = rules;
         }
-        
+
         newChild = createNode(newChild as NodePatchingData);
 
         // Transfer the patching data from the document fragment to the parent node
@@ -643,7 +662,7 @@ function removeLeftSibling(markerNode: Node) {
 }
 
 // function findParentNode(parentNode: Node, predicate: (node: any) => boolean) : Node {
-    
+
 //     for (let node = parentNode; node !== null; node = node.parentNode) {
 
 //         if (predicate(node) === true) {

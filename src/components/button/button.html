@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
 
+<html>
 <head>
     <meta charset="UTF-8">
+    <html lang="en">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="stylesheet" href="../../../variables.css">
     <script type="module" src="../../../../../../dist/bundle.js"></script>
 
     <script>
@@ -21,9 +22,49 @@
 </head>
 
 <body>
-    <gcl-button id="b1" click="onButtonClicked()">
-        Click me
+    <h4>Text only</h4>
+    <gcl-button id="b1" click="onButtonClicked()" kind="primary">
+        Outlined
     </gcl-button>
+    <br />
+    <gcl-button id="b2" click="onButtonClicked()" kind="secondary" variant="contained" size="large">
+        Contained
+    </gcl-button>
+    <br />
+    <gcl-button id="b3" click="onButtonClicked()" kind="tertiary" variant="text" size="small">
+        Text
+    </gcl-button>
+
+    <h4>With icon</h4>
+    <gcl-button id="b4" click="onButtonClicked()" kind="primary">
+        <gcl-icon name="alarm"></gcl-icon>
+        Outlined
+    </gcl-button>
+    <br />
+    <gcl-button id="b5" click="onButtonClicked()" kind="secondary" variant="contained" size="large">
+        <gcl-icon name="alarm-fill" size="small"></gcl-icon>
+        Contained
+    </gcl-button>
+    <br />
+    <gcl-button id="b6" click="onButtonClicked()" kind="tertiary" variant="text" size="small">
+        <gcl-icon name="archive"></gcl-icon>
+        Text
+    </gcl-button>
+
+    <h4>With localized text</h4>
+    <gcl-button id="b4" click="onButtonClicked()" kind="primary">
+        <gcl-text intl-key="outlined">Outlined</gcl-text>
+    </gcl-button>
+    <br />
+    <!-- <gcl-button id="b5" click="onButtonClicked()" kind="secondary" variant="contained" size="large">
+        <gcl-icon name="alarm-fill" size="small"></gcl-icon>
+        Contained
+    </gcl-button>
+    <br />
+    <gcl-button id="b6" click="onButtonClicked()" kind="tertiary" variant="text" size="small">
+        <gcl-icon name="archive"></gcl-icon>
+        Text
+    </gcl-button> -->
 </body>
 
 </html>

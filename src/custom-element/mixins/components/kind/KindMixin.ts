@@ -20,10 +20,9 @@ const KindMixin = Base =>
 
                 kind: {
                     type: String,
-                    value: 'default',
+                    inherit: true
                     // mutable: true,
                     // reflect: true,
-                    // passToChildren: true
                 }
             };
         }

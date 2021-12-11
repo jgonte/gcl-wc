@@ -1,6 +1,8 @@
 import config from "../../config";
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
+import mergeStyles from "../../custom-element/helpers/mergeStyles";
+import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import DirectionMixin from "../../custom-element/mixins/components/direction/DirectionMixin";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
@@ -27,10 +29,10 @@ export default class Icon extends
 
     static get styles(): string {
 
-        return [super.styles, styles].join('');
+        return mergeStyles(super.styles, styles);
     }
 
-    static get properties() {
+    static get properties(): Record<string, CustomElementPropertyMetadata> {
 
         return {
 

@@ -72,7 +72,7 @@ const PropertyMetadataInitializerMixin = Base =>
                             type = [type];
                         }
 
-                        if (type.includes(Function) && typeof value === 'function') { // Only call the function if the type of Function
+                        if (type.includes(Function) && typeof value === 'function') { // Only call the function if the type is a Function
 
                             return value();
                         }

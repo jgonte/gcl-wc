@@ -18,13 +18,13 @@ const StylePatcherMixin = Base =>
 
             const {
                 constructor,
-                stylesAdded: _stylesAdded = false
+                stylesAdded = false
             } = this;
 
             const styles = (constructor as any).metadata.styles;
 
             if (styles !== undefined &&
-                _stylesAdded === false) { // Add a style element to the document
+                stylesAdded === false) { // Add a style element to the document
 
                 patchingData = this.addStyles(patchingData, styles);
 

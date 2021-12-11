@@ -1,3 +1,5 @@
+import mergeStyles from "../../../helpers/mergeStyles";
+import { CustomElementPropertyMetadata } from "../../../interfaces";
 import styles from "./DirectionMixin.css";
 
 const DirectionMixin = Base =>
@@ -6,12 +8,24 @@ const DirectionMixin = Base =>
 
         static get styles(): string {
 
-            return [super.styles, styles].join('');
+            return mergeStyles(super.styles, styles);
         }
 
-        get dir(): string {
+        static get properties(): Record<string, CustomElementPropertyMetadata> {
 
-            return super.dir || document.dir;
+            return {
+
+                dir: {
+                    type: String,    
+                    reflect: true,
+                    inherit: true,
+                    options: ['ltr', 'rtl'],
+                    // beforeInitialize: function (value) {
+
+                    //     return value || document.dir;
+                    // }
+                }
+            };
         }
     };
 

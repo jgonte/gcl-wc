@@ -28,8 +28,8 @@ export default class Form extends
     renderButton() {
 
         // Doing onClick=${this.submit} binds the button instead of the form to the submit function
-        return html`<gcl-button key="submit-button" onClick=${() => this.submit()}>
-            Submit
+        return html`<gcl-button key="submit-button" kind="primary" variant="contained" click=${() => this.submit()}>
+            <gcl-text intl-key="submit">Submit</gcl-text>
         </gcl-button>`;
     }
 

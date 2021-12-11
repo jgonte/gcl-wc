@@ -21,14 +21,74 @@ const ParentChildMixin = Base =>
 
             super.connectedCallback?.();
 
-            (this.adoptingParent as any)?.adoptedChildren.add(this); // It might be null for the topmost custom element
+            const {
+                adoptingParent
+            } = this;
+
+            if (adoptingParent === null) {
+
+                return;
+            }
+
+            (adoptingParent as any).adoptedChildren.add(this); // It might be null for the topmost custom element
+
+            this.didAdoptChildCallback?.(adoptingParent, this);
         }
 
         disconnectedCallback() {
 
             super.disconnectedCallback?.();
 
-            (this.adoptingParent as any)?.adoptedChildren.delete(this); // It might be null for the topmost custom element
+            const {
+                adoptingParent
+            } = this;
+
+            if (adoptingParent === null) {
+
+                return;
+            }
+
+            this.willAbandonChildCallback?.(adoptingParent, this);
+
+            (adoptingParent as any).adoptedChildren.delete(this); // It might be null for the topmost custom element
+        }
+
+        didMountCallback() {
+
+            super.didMountCallback?.();
+
+            // Add the slotted children
+            const slot = this.document.querySelector('slot');
+
+            if (slot === null) {
+
+                return; // There is no slot to get the children from
+            }
+
+            const children = slot.assignedElements();
+
+            if (children.length > 0) { // The children have been already loaded
+
+                children.forEach(child => {
+                    
+                    this.adoptedChildren.add(child);
+
+                    this.didAdoptChildCallback?.(this, child);
+                });
+            }
+            else { // Listen for any change in the slot
+
+                slot.addEventListener('slotchange', this.handleSlotChange);
+            }
+
+            const {
+                adoptedChildren
+            } = this;
+
+            if (adoptedChildren.size > 0) {
+
+                this.didAdoptChildrenCallback?.(this, adoptedChildren);
+            }
         }
 
         protected get adoptingParent(): Node {

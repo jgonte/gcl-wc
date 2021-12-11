@@ -20,7 +20,7 @@ const valueConverter = {
             value[value.length - 2] === '(' && value[value.length - 1] === ')' // The function by convention must end in ()
             && type.includes(Function)) {
 
-            var fcn = getGlobalFunction(value);
+            const fcn = getGlobalFunction(value);
 
             if (fcn !== undefined) {
 

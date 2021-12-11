@@ -1,4 +1,5 @@
 import { attributeMarkerPrefix } from "../../../renderer/createTemplate";
+import findPropertyValueUp from "../../helpers/findParentProperty";
 import valueConverter from "../../helpers/valueConverter";
 import { CustomElementPropertyMetadata } from "../../interfaces";
 import PropertyMetadataInitializerMixin from "./PropertyMetadataInitializerMixin";
@@ -17,32 +18,10 @@ const AttributeChangeHandlerMixin = Base =>
          */
         private _changedProperties: Map<string, CustomElementPropertyMetadata> = new Map<string, CustomElementPropertyMetadata>();
 
-        constructor() {
-
-            super();
-
-            this._initializePropertiesWithDefaultValues((this.constructor as any).metadata.properties);
-        }
-
         /**
-         * Initializes the properties that have a default value
-         * @param propertiesMetadata 
+         * The properties that by the time the component gets connected, do not have any attribute explicitly set in the markup
          */
-        private _initializePropertiesWithDefaultValues(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
-
-            for (const [name, property] of propertiesMetadata) {
-
-                const {
-                    value
-                } = property;
-
-                if (this._properties[name] === undefined &&
-                    value !== undefined) {
-
-                    this.setProperty(name, value);
-                }
-            }
-        }
+        private _initiallyUndefinedProperties: Set<string> = new Set<string>();
 
         connectedCallback() {
 
@@ -52,30 +31,48 @@ const AttributeChangeHandlerMixin = Base =>
                 properties
             } = (this.constructor as any).metadata;
 
+            this._initializeDefaultProperties(properties);
+
             this._validateRequiredProperties(properties);
         }
 
-        // Without defining this method, the observedAttributes getter will not be called
-        // Also no need to check that the property was configured because if it is not configured, 
-        // it will not generate the observedAttribute and therefore this method won't be called for that attribute
         /**
-         * Called when there is a change in an attribute
-         * @param attributeName
-         * @param oldValue 
-         * @param newValue 
+         * Initializes the properties that have a default value
+         * @param propertiesMetadata 
          */
-        attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null) {
+        private _initializeDefaultProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
 
-            super.attributeChangedCallback?.(attributeName, oldValue, newValue);
+            for (const [name, property] of propertiesMetadata) {
 
-            this._setAttribute(attributeName, newValue);
+                const {
+                    value: defaultValue,
+                    //beforeInitialize
+                } = property;
+
+                if (this._properties[name] === undefined) { // Not explicitly set
+
+                    this._initiallyUndefinedProperties.add(name);
+
+                    // if (beforeInitialize !== undefined) {
+
+                    //     const value = beforeInitialize.call(this, defaultValue); // Perform extra initialization
+    
+                    //     this.setProperty(name, value);
+                    // }
+                    // else 
+                    if (defaultValue !== undefined) { // Set the default value
+
+                        this.setProperty(name, defaultValue);
+                    }
+                }
+            }
         }
 
         /**
          * Validates that all the required properties have been set
          * @param propertiesMetadata 
          */
-        private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
+         private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
 
             const missingValueAttributes: string[] = [];
 
@@ -98,6 +95,83 @@ const AttributeChangeHandlerMixin = Base =>
                 throw Error(`The attributes: [${missingValueAttributes.join(', ')}] must have a value`)
             }
         }
+
+        /**
+         * Called when the component added a child or it was added as a child
+         * @param parent 
+         * @param child 
+         */
+         didAdoptChildCallback(parent: HTMLElement, child: HTMLElement) {
+
+            const {
+                metadata
+            } = child.constructor as any;
+
+            if (metadata === undefined) { // Probably not a custom component
+
+                return;
+            }
+
+            const {
+                properties
+            } = metadata;
+
+            (child as any).setInheritedProperties(properties, parent);
+        }
+
+        /**
+         * Sets the properties that can be inherited from the value of the parent if any
+         * @param propertiesMetadata 
+         */
+         protected setInheritedProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>, parent: HTMLElement) {
+             
+             for (const [name, property] of propertiesMetadata) {
+                 
+                 const {
+                     value,
+                     inherit
+                    } = property;
+                    
+                    if (inherit !== true) {
+                        
+                        continue; // Not inheritable
+                    }
+
+                if (this._initiallyUndefinedProperties.has(name) === false) {
+
+                    continue; // Its value was initially set in the attribute markup
+                }
+
+                const parentValue = findPropertyValueUp(parent as any, name);
+
+                if (parentValue !== undefined) {
+
+                    this.setProperty(name, parentValue);
+                }
+                else if (this[name] !== value) { // It is different from the default value
+
+                    this.setProperty(name, parentValue);
+                }
+            }
+        }
+
+        // Without defining this method, the observedAttributes getter will not be called
+        // Also no need to check that the property was configured because if it is not configured, 
+        // it will not generate the observedAttribute and therefore this method won't be called for that attribute
+        /**
+         * Called when there is a change in an attribute
+         * @param attributeName
+         * @param oldValue 
+         * @param newValue 
+         */
+        attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null) {
+
+            super.attributeChangedCallback?.(attributeName, oldValue, newValue);
+
+            this._setAttribute(attributeName, newValue);
+        }
+
+        
 
         // /**
         //  * Overrides the parent method to verify that it is accessing a configured property
@@ -122,7 +196,7 @@ const AttributeChangeHandlerMixin = Base =>
 
                 return false;
             }
-    
+
             // Verify that the property is one of the configured in the custom element
             let propertyMetadata = (this.constructor as any).metadata.propertiesByAttribute.get(attribute);
 
@@ -133,7 +207,7 @@ const AttributeChangeHandlerMixin = Base =>
 
             value = valueConverter.toProperty(value, type); // Convert from the value returned by the parameter
 
-            return this.setProperty(name, value);           
+            return this.setProperty(name, value);
         }
 
         protected setProperty(name: string, value: any): boolean {

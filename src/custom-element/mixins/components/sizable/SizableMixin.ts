@@ -1,10 +1,11 @@
+import mergeStyles from "../../../helpers/mergeStyles";
 import styles from "./SizableMixin.css";
 
 const SizableMixin = Base =>
 
     class Sizable extends Base {
 
-        static get styles() : string {
+        static get styles(): string {
 
             if (this.atomic === true) { // Do not include the SizableMixin styles
 
@@ -12,7 +13,7 @@ const SizableMixin = Base =>
             }
             else {
 
-                return [super.styles, styles].join('');
+                return mergeStyles(super.styles, styles);
             }
         }
 
@@ -25,8 +26,8 @@ const SizableMixin = Base =>
                     value: 'medium',
                     mutable: true,
                     reflect: true,
-                    //passToChildren: true,
-                    options: ['large', 'medium', 'small']
+                    inherit: true,
+                    options: ['small', 'large', 'medium']
                 }
             };
         }

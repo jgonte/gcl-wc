@@ -1,5 +1,6 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
+import mergeStyles from "../../custom-element/helpers/mergeStyles";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
@@ -19,7 +20,7 @@ export default class Text extends
 
     static get styles(): string {
 
-        return [super.styles, styles].join('');
+        return mergeStyles(super.styles, styles);
     }
 
     static get properties(): Record<string, CustomElementPropertyMetadata> {
@@ -56,7 +57,7 @@ export default class Text extends
 
         if (intlKey !== undefined) {
 
-            value = appCtrl.intlProvider.getTranslation(lang, intlKey);
+            value = appCtrl.intlProvider?.getTranslation(lang, intlKey);
         }
 
         if (value === undefined) {

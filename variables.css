@@ -1,20 +1,33 @@
 :root {
-    /* Colors */
     --gcl-font-family: Arial, Helvetica, sans-serif;
+
+    /* Colors */
     --gcl-color-primary: #3880ff;
+    --gcl-color-on-primary: #fff;
+
     --gcl-color-secondary: #0cd1e8;
+    --gcl-color-on-secondary: #032517;
+
     --gcl-color-tertiary: #f4a942;
-    --gcl-background-color-info: #e6f7ff;
-    --gcl-color-info: #1f87b8;
-    --gcl-background-color-success: #f6ffed;
-    --gcl-color-success: #10dc60;
-    --gcl-background-color-warning: #fffbe6;
-    --gcl-color-warning: #ffce00;
-    --gcl-background-color-danger: #fff2f0;
-    --gcl-color-danger: #f14141;
+    --gcl-color-on-tertiary: #4419aa;
+
+    --gcl-color-info: #e6f7ff;
+    --gcl-color-on-info: #1f87b8;
+
+    --gcl-color-success: #f6ffed;
+    --gcl-color-on-success: #10dc60;
+
+    --gcl-color-warning: #fffbe6;
+    --gcl-color-on-warning: #ffce00;
+
+    --gcl-color-danger: #fff2f0;
+    --gcl-color-on-danger: #f14141;
+    
     --gcl-color-light: #f4f5f8;
     --gcl-color-medium: #989aa2;
     --gcl-color-dark: #222428;
+
+    --gcl-background-color:#fff;
 
     --gcl-hoverable-background-color:rgb(211, 227, 233);
     --gcl-hoverable-color: black;

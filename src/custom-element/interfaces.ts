@@ -46,9 +46,9 @@ export interface CustomElementPropertyMetadata {
     reflect?: boolean;
 
     /**
-     * Whether the value of the parent property needs to be passed th the children nodes when they are initialized
+     * Whether to request the value of the property in the parent if it is not set in the child. e.g., size, kind, etc.
      */
-    //passToChildren: boolean;
+    inherit?: boolean;
 
     /**
      * The range to restrict the values of the property
@@ -59,6 +59,11 @@ export interface CustomElementPropertyMetadata {
      * Whether the property must have a value by the time the connectedCallback method is called
      */
     required?: boolean;
+
+    /**
+     * Hook to allow for conditional initialization of the property when the component is connected
+     */
+    beforeInitialize?: (value: any) => any;
 
     /**
      * Called when the property has changed but after the DOM has been updated
