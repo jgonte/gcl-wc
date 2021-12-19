@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../../variables.css">
+    <script type="module" src="../../../../../../dist/bundle.js"></script>
+
+    <script>
+
+        function onCloseAlert() {
+
+            alert('Trying to close alert!');
+        }
+
+    </script>
+
+    <title>Alert demo</title>
+
+    div 
+
+</head>
+
+<body>
+    <h4>Icon and text</h4>
+    <gcl-alert size="large" kind="info" close="onCloseAlert()">Some info alert</gcl-alert>
+    <gcl-alert kind="success" close="onCloseAlert()">Some success alert</gcl-alert>
+    <gcl-alert kind="warning" dir="rtl" close="onCloseAlert()">Some warning alert</gcl-alert>
+    <gcl-alert kind="error" size="small" close="onCloseAlert()">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam aspernatur amet, nesciunt illum fugiat accusamus quasi accusantium, officiis nobis totam iste sequi! Sed iure sunt earum eveniet placeat velit? Accusamus! error alert</gcl-alert>
+
+    <h4>Icon and text</h4>
+    <gcl-alert size="large" kind="info" close="onCloseAlert()">
+        <gcl-text>Some info alert</gcl-text>
+    </gcl-alert>
+
+    <gcl-alert kind="success" close="onCloseAlert()">
+        <gcl-text>Some success alert</gcl-text>
+    </gcl-alert>
+
+    <gcl-alert kind="warning" dir="rtl" close="onCloseAlert()">
+        <gcl-text>Some warning alert</gcl-text>
+    </gcl-alert>
+    
+    <gcl-alert kind="error" size="small" close="onCloseAlert()">
+        <gcl-text>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ipsam aspernatur amet, nesciunt illum fugiat accusamus quasi accusantium, officiis nobis totam iste sequi! Sed iure sunt earum eveniet placeat velit? Accusamus! error alert
+        </gcl-text>
+    </gcl-alert>
+</body>
+
+</html>

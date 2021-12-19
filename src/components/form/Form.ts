@@ -4,7 +4,8 @@ import SubmitableMixin from "../../custom-element/mixins/data/SubmitableMixin";
 import ErrorableMixin from "../../custom-element/mixins/components/ErrorableMixin";
 import { html } from "../../renderer/renderer";
 import DataRecord from "../../utils/data/record/DataRecord";
-import { changeEvent } from "../fields/Field";
+import { changeEvent, fieldAddedEvent } from "../fields/Field";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 export default class Form extends
     SubmitableMixin(
@@ -12,6 +13,8 @@ export default class Form extends
             CustomElement
         )
     ) {
+
+    private _fields: HTMLElement[] = [];
 
     private _record: DataRecord = new DataRecord();
 
@@ -21,15 +24,16 @@ export default class Form extends
             ${this.renderError()}
             <form key="form">
                 <slot key="form-fields-slot"></slot>
-                ${this.renderButton()}
+                ${this._renderButton()}
             </form>`;
     }
 
-    renderButton() {
+    private _renderButton() : NodePatchingData {
 
         // Doing onClick=${this.submit} binds the button instead of the form to the submit function
         return html`<gcl-button key="submit-button" kind="primary" variant="contained" click=${() => this.submit()}>
-            <gcl-text intl-key="submit">Submit</gcl-text>
+           <gcl-text intl-key="submit">Submit</gcl-text>
+           <gcl-icon name="box-arrow-right"></gcl-icon>
         </gcl-button>`;
     }
 
@@ -50,11 +54,11 @@ export default class Form extends
         }
     }
 
-    handleSubmitResponse(data: any) {
+    handleSubmitResponse(data: Record<string, any>) {
 
         console.log(JSON.stringify(data));
 
-        this._record.setData(data);
+        this._record.setData(data.payload ?? data);
     }
 
     validate(): boolean {
@@ -66,6 +70,8 @@ export default class Form extends
 
         super.connectedCallback?.();
 
+        this.addEventListener(fieldAddedEvent, this.handleFieldAdded);
+
         this.addEventListener(changeEvent, this.handleChange);
     }
 
@@ -73,7 +79,35 @@ export default class Form extends
 
         super.disconnectedCallback?.();
 
+        this.removeEventListener(fieldAddedEvent, this.handleFieldAdded);
+
         this.removeEventListener(changeEvent, this.handleChange);
+    }
+
+    handleFieldAdded(event: CustomEvent): void  {
+
+        const {
+            field
+        } = event.detail;
+
+        this._fields.push[field];
+
+        const {
+            name,
+            type,
+            value
+        } = field;
+
+        if (value !== undefined) { // Set the initial value of the field
+
+            this._record.addField({
+                name,
+                type,
+                value
+            });
+        }
+
+        event.stopPropagation();
     }
 
     handleChange(event: CustomEvent): void {
@@ -87,7 +121,7 @@ export default class Form extends
 
         this._record.setData({
             [name]: value
-        })
+        });
 
         event.stopPropagation();
     }

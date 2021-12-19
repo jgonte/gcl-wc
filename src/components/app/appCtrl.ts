@@ -1,3 +1,5 @@
+import AppErrorHandler from "../../error/AppErrorHandler";
+import ErrorHandler from "../../error/ErrorHandler";
 import IntlProvider from "./services/IntlProvider";
 
 /**
@@ -12,7 +14,7 @@ class AppCtrl {
 	/**
 	 * The error handler of the application
 	 */
-	//onError?: (error: Error) => void;
+	errorHandler: ErrorHandler;
 
 	/**
 	 * The logged in user of the application
@@ -29,12 +31,13 @@ class AppCtrl {
 	 */
 	init() {
 
-		console.log('Initializing appCtrl');
+		console.log('Initializing appCtrl...');
 
 		if ((window as any).getAppConfig !== undefined) {
 
 			const {
 				// auth,
+				errorHandler,
 				intl
 			} = (window as any).getAppConfig();
 
@@ -47,6 +50,14 @@ class AppCtrl {
 
 				appCtrl.intlProvider = new IntlProvider(intl.lang, intl.data);
 			}
+
+			appCtrl.errorHandler = errorHandler !== undefined ?
+				errorHandler :
+				new AppErrorHandler();
+		}
+		else { // No configuration was provided
+
+			appCtrl.errorHandler = new AppErrorHandler();
 		}
 	}
 }

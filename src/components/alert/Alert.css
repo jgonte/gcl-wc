@@ -1,0 +1,36 @@
+:host {
+    display: flex;
+    align-items: center;  
+    justify-content: space-between;
+    border-style: solid;
+    border-width: var(--gcl-border-width);
+    column-gap: 1rem;
+    border-radius: 4px;
+    max-width: 80%;
+    padding: 1rem;
+    word-break: normal;
+}
+
+:host([kind='info']) {
+    background-color: var(--gcl-color-info);
+    color: var(--gcl-color-on-info);
+    border-color: var(--gcl-color-on-info);
+}
+
+:host([kind='success']) {
+    background-color: var(--gcl-color-success);
+    color: var(--gcl-color-on-success);
+    border-color: var(--gcl-color-on-success);
+}
+
+:host([kind='warning']) {
+    background-color: var(--gcl-color-warning);
+    color: var(--gcl-color-on-warning);
+    border-color: var(--gcl-color-on-warning);
+}
+
+:host([kind='error']) {
+    background-color: var(--gcl-color-danger);
+    color: var(--gcl-color-on-danger);
+    border-color: var(--gcl-color-on-danger);
+}

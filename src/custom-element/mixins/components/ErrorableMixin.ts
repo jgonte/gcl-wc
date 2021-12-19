@@ -1,4 +1,4 @@
-export const errorEvent = "errorEvent";
+import { errorEvent } from "../../../error/ErrorHandler";
 
 /**
  * Mixin that handles errors

@@ -1,6 +1,7 @@
 import clearCustomElements from "../utils/clearCustomElements";
 import defineCustomElement from "../../helpers/defineCustomElement";
 import MetadataInitializerMixin from "../../mixins/core/MetadataInitializerMixin";
+import { CustomElementPropertyMetadata } from "../../interfaces";
 
 beforeEach(() => {
 
@@ -14,7 +15,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -49,7 +50,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
 
         // Attach it to the DOM
         document.body.innerHTML = '<test-a></test-a>';
-        
+
         // Test the element
         const component: any = document.querySelector('test-a');
 
@@ -71,7 +72,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -88,7 +89,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         //@ts-ignore
         class B extends A {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -140,17 +141,14 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
                     type: {
                         type: String,
-                        value: "a", // Options: "a" | "b" | "c"
-                        change: function() {
-
-                            this.refreshType(this.type);
-                        }                            
+                        value: "a", 
+                        options: ['a', 'b', 'c']         
                     },
 
                     showType: {
@@ -164,10 +162,6 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
                         type: Boolean
                     }
                 };
-            }
-
-            refreshType(type: string) {
-
             }
         };
 
@@ -197,14 +191,14 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
                     type: {
                         type: String,
                         value: "a", // Options: "a" | "b" | "c"
-                        afterUpdate: function() {
+                        afterUpdate: function () {
 
                             this.refreshType(this.type);
                         }
@@ -222,7 +216,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         //@ts-ignore
         class B extends A {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -274,7 +268,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         const Property1Mixin = Base =>
             class Property1 extends Base {
 
-                static get properties() {
+                static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                     return {
 
@@ -288,7 +282,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
         const Property2Mixin = Base =>
             class Property2 extends Base {
 
-                static get properties() {
+                static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                     return {
 
@@ -307,7 +301,7 @@ describe("MetadataInitializerMixin tests of the functionality of the properties"
                 )
             )
         {
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 

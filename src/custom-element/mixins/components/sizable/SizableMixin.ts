@@ -1,4 +1,5 @@
 import mergeStyles from "../../../helpers/mergeStyles";
+import { CustomElementPropertyMetadata } from "../../../interfaces";
 import styles from "./SizableMixin.css";
 
 const SizableMixin = Base =>
@@ -17,7 +18,7 @@ const SizableMixin = Base =>
             }
         }
 
-        static get properties() {
+        static get properties(): Record<string, CustomElementPropertyMetadata> {
 
             return {
 

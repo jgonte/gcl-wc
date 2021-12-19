@@ -145,7 +145,7 @@ export default class DataRecord implements DataProvider, DataSetter, Subscriber 
         return Object.keys(this._modifiedFields).length > 0;
     }
 
-    setData(data: any): void {
+    setData(data: Record<string, any>): void {
 
         for (const key in data) {
 

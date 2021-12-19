@@ -56,7 +56,7 @@ const AttributeChangeHandlerMixin = Base =>
                     // if (beforeInitialize !== undefined) {
 
                     //     const value = beforeInitialize.call(this, defaultValue); // Perform extra initialization
-    
+
                     //     this.setProperty(name, value);
                     // }
                     // else 
@@ -72,7 +72,7 @@ const AttributeChangeHandlerMixin = Base =>
          * Validates that all the required properties have been set
          * @param propertiesMetadata 
          */
-         private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
+        private _validateRequiredProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>) {
 
             const missingValueAttributes: string[] = [];
 
@@ -84,7 +84,8 @@ const AttributeChangeHandlerMixin = Base =>
                 } = property;
 
                 if (required === true &&
-                    this.attributes[attribute] === undefined) { // The attribute for that property has not been set
+                    (this.attributes[attribute] === undefined &&
+                        this[attribute] === undefined)) { // The attribute for that property has not been set
 
                     missingValueAttributes.push(attribute);
                 }
@@ -101,7 +102,7 @@ const AttributeChangeHandlerMixin = Base =>
          * @param parent 
          * @param child 
          */
-         didAdoptChildCallback(parent: HTMLElement, child: HTMLElement) {
+        didAdoptChildCallback(parent: HTMLElement, child: HTMLElement) {
 
             const {
                 metadata
@@ -123,19 +124,19 @@ const AttributeChangeHandlerMixin = Base =>
          * Sets the properties that can be inherited from the value of the parent if any
          * @param propertiesMetadata 
          */
-         protected setInheritedProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>, parent: HTMLElement) {
-             
-             for (const [name, property] of propertiesMetadata) {
-                 
-                 const {
-                     value,
-                     inherit
-                    } = property;
-                    
-                    if (inherit !== true) {
-                        
-                        continue; // Not inheritable
-                    }
+        protected setInheritedProperties(propertiesMetadata: Map<string, CustomElementPropertyMetadata>, parent: HTMLElement) {
+
+            for (const [name, property] of propertiesMetadata) {
+
+                const {
+                    value,
+                    inherit
+                } = property;
+
+                if (inherit !== true) {
+
+                    continue; // Not inheritable
+                }
 
                 if (this._initiallyUndefinedProperties.has(name) === false) {
 
@@ -171,8 +172,6 @@ const AttributeChangeHandlerMixin = Base =>
             this._setAttribute(attributeName, newValue);
         }
 
-        
-
         // /**
         //  * Overrides the parent method to verify that it is accessing a configured property
         //  * @param attribute 
@@ -192,7 +191,8 @@ const AttributeChangeHandlerMixin = Base =>
 
         private _setAttribute(attribute: string, value: any): boolean {
 
-            if (value.startsWith(attributeMarkerPrefix)) { // Coming from a template ... ignore
+            if (value !== null &&
+                value.startsWith(attributeMarkerPrefix)) { // Coming from a template ... ignore
 
                 return false;
             }

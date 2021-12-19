@@ -1,3 +1,4 @@
+import { CustomElementPropertyMetadata } from "../../../interfaces";
 import styles from "./KindMixin.css";
 
 /**
@@ -9,18 +10,19 @@ const KindMixin = Base =>
 
     class Kind extends Base {
 
-        static get styles() : string {
+        static get styles(): string {
 
             return styles as any;
         }
-   
-        static get properties() {
+
+        static get properties(): Record<string, CustomElementPropertyMetadata> {
 
             return {
 
                 kind: {
                     type: String,
-                    inherit: true
+                    inherit: true,
+                    options: ['primary', 'secondary', 'tertiary', 'info', 'success', 'warning', 'error']
                     // mutable: true,
                     // reflect: true,
                 }

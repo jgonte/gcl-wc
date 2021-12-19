@@ -26,9 +26,9 @@ export interface CustomElementPropertyMetadata {
     attribute?: string;
 
     /**
-     * The type of the property
+     * The type of the property. If not provided it defaults to a string
      */
-    type: Function | Function[];
+    type?: Function | Function[];
 
     /**
      * The default value of the property if no attribute is set in HTML
@@ -80,7 +80,7 @@ export interface CustomElementStateMetadata {
     /**
      * The name of the property in the state object
      */
-    name: string;
+    name?: string;
 
     /**
      * The default value of the state

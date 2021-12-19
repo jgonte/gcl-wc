@@ -4,6 +4,8 @@ import styles from "./Field.css";
 
 export const changeEvent = "changeEvent";
 
+export const fieldAddedEvent = "fieldAddedEvent";
+
 export abstract class Field extends CustomElement {
 
     static get styles(): string {
@@ -45,6 +47,15 @@ export abstract class Field extends CustomElement {
                 reflect: true
             }
         };
+    }
+
+    didAdoptChildCallback(parent, child) {
+
+        super.didAdoptChildCallback?.(parent, child);
+
+        this.dispatchCustomEvent(fieldAddedEvent, {
+            field: child
+        });
     }
 
     handleBlur(event) {

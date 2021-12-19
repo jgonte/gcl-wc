@@ -1,13 +1,13 @@
 import { html } from "../../../renderer/renderer";
 import Fetcher from "../../../utils/data/transfer/Fetcher";
 import { ErrorResponse } from "../../../utils/data/transfer/interfaces";
-import { Callback } from "../../interfaces";
+import { Callback, CustomElementPropertyMetadata, CustomElementStateMetadata } from "../../interfaces";
 
 const SubmitableMixin = Base =>
 
     class Submitable extends Base {
 
-        static get properties() {
+        static get properties(): Record<string, CustomElementPropertyMetadata> {
 
             return {
 
@@ -27,7 +27,7 @@ const SubmitableMixin = Base =>
             };
         }
 
-        static get state() {
+        static get state(): Record<string, CustomElementStateMetadata> {
 
             return {
 
@@ -81,7 +81,7 @@ const SubmitableMixin = Base =>
             });
         }
 
-        getMethod(data: any) {
+        getMethod(data: Record<string, any>) {
 
             const {
                 method

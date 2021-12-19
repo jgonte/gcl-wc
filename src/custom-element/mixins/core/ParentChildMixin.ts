@@ -25,7 +25,7 @@ const ParentChildMixin = Base =>
                 adoptingParent
             } = this;
 
-            if (adoptingParent === null) {
+            if (adoptingParent === null) { // In slotted elements the parent is null when connected
 
                 return;
             }
@@ -60,9 +60,20 @@ const ParentChildMixin = Base =>
             // Add the slotted children
             const slot = this.document.querySelector('slot');
 
-            if (slot === null) {
+            if (slot === null) { // There is no slot to get the children from
 
-                return; // There is no slot to get the children from
+                const {
+                    adoptingParent
+                } = this;
+
+                if (adoptingParent !== null) {
+
+                    (adoptingParent as any).adoptedChildren.add(this); // It might be null for the topmost custom element
+
+                    this.didAdoptChildCallback?.(adoptingParent, this);
+
+                    return; 
+                }               
             }
 
             const children = slot.assignedElements();

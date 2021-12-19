@@ -49,7 +49,7 @@ describe("form tests", () => {
 
         expect(component.shadowRoot.innerHTML).toBe(
 `<!--_$node_-->
-            <!--_$node_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\" kind=\"primary\" variant=\"contained\"><gcl-text intl-key=\"submit\">Submit</gcl-text></gcl-button><!--_$node_--></form>`
+            <!--_$node_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\" kind=\"primary\" variant=\"contained\"><gcl-text intl-key=\"submit\">Submit</gcl-text><gcl-icon name="box-arrow-right"></gcl-icon></gcl-button><!--_$node_--></form>`
         );
     });
 

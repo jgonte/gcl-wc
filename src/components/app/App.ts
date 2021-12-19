@@ -1,6 +1,6 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
-import { errorEvent } from "../../custom-element/mixins/components/ErrorableMixin";
+import { errorEvent } from "../../error/ErrorHandler";
 import { html } from "../../renderer/renderer";
 
 /**

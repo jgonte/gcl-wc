@@ -41,7 +41,7 @@ describe("custom element render tests", () => {
 
         class A extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 
@@ -77,7 +77,7 @@ describe("custom element render tests", () => {
 
         class A extends CustomElement {
 
-            static get properties() {
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
 
                 return {
 

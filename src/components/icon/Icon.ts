@@ -41,7 +41,6 @@ export default class Icon extends
              */
             name: {
                 type: String,
-                value: '',
                 required: true
             }
         };
