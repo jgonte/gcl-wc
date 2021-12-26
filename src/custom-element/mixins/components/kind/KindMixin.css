@@ -1,3 +1,4 @@
+/* KindMixin */
 /* host applies to the text component*/
 :host([kind='primary']),
 *[kind='primary'] {

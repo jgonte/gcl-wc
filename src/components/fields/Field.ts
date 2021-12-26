@@ -1,16 +1,29 @@
 import CustomElement from "../../custom-element/CustomElement";
+import mergeStyles from "../../custom-element/helpers/mergeStyles";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
+import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
+import ValidatableMixin from "../../custom-element/mixins/components/validatable/ValidatableMixin";
+import RequiredValidator from "../../utils/validation/validators/field/RequiredValidator";
 import styles from "./Field.css";
 
 export const changeEvent = "changeEvent";
 
 export const fieldAddedEvent = "fieldAddedEvent";
 
-export abstract class Field extends CustomElement {
+export abstract class Field extends
+    SizableMixin(
+        ValidatableMixin(
+            CustomElement
+        )
+    ) {
+
+    // The temporary value being validated on input
+    // Since it is not the final one there is no need to refresh
+    private _tempValue: any = undefined;
 
     static get styles(): string {
 
-        return styles as any;
+        return mergeStyles(super.styles, styles);
     }
 
     static get properties(): Record<string, CustomElementPropertyMetadata> {
@@ -31,8 +44,7 @@ export abstract class Field extends CustomElement {
             value: {
                 type: [String, Object], // Ideally is a string but could be a more complex object
                 mutable: true,
-                reflect: true,
-                value: ''
+                reflect: true
             },
 
             disabled: {
@@ -92,7 +104,38 @@ export abstract class Field extends CustomElement {
 
     }
 
+    createValidationContext() /*: ValidationContext */ {
+
+        const label = this.getLabel();
+
+        const value = this._tempValue ?? this.value;
+
+        return {
+            label,
+            value,
+            warnings: [],
+            errors: []
+        };
+    }
+
+    initializeValidator(validator: string) {
+
+        switch(validator) {
+
+            case 'required': return new RequiredValidator();
+            default: throw new Error(`initializeValidator is not implemented for validator: '${validator}'`);
+        }
+    }
+
+    getLabel() : string {
+
+        return "kuku";
+    }
+
     handleChange(event): void {
+
+        // Reset the temporary value
+        this._tempValue = undefined;
 
         // Retrieve the new value
         const target = event.target as HTMLInputElement;
@@ -166,15 +209,5 @@ export abstract class Field extends CustomElement {
         }
 
         return value;
-    }
-
-    /**
-     * Validates a field against a given value
-     * @param value The value to validate
-     * @returns true is the value is valid, false otherwise
-     */
-    validate(value: string): boolean {
-
-        return true;
     }
 }

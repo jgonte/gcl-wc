@@ -1,22 +1,38 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import SubmitableMixin from "../../custom-element/mixins/data/SubmitableMixin";
-import ErrorableMixin from "../../custom-element/mixins/components/ErrorableMixin";
+import ErrorableMixin from "../../custom-element/mixins/components/errorable/ErrorableMixin";
+import LoadableMixin from "../../custom-element/mixins/data/LoadableMixin";
 import { html } from "../../renderer/renderer";
 import DataRecord from "../../utils/data/record/DataRecord";
-import { changeEvent, fieldAddedEvent } from "../fields/Field";
+import { changeEvent, Field, fieldAddedEvent } from "../fields/Field";
 import { NodePatchingData } from "../../renderer/NodePatcher";
+import ValidatableMixin from "../../custom-element/mixins/components/validatable/ValidatableMixin";
+import { ValidationContext } from "../../utils/validation/Interfaces";
 
 export default class Form extends
     SubmitableMixin(
-        ErrorableMixin(
-            CustomElement
+        ValidatableMixin(
+            LoadableMixin(
+                ErrorableMixin(
+                    CustomElement
+                )
+            )
         )
     ) {
 
-    private _fields: HTMLElement[] = [];
+    private _fields: Map<string, Field> = new Map<string, Field>();
 
     private _record: DataRecord = new DataRecord();
+
+    constructor() {
+
+        super();
+
+        this.handleFieldAdded = this.handleFieldAdded.bind(this);
+
+        this.handleChange = this.handleChange.bind(this);
+    }
 
     render() {
 
@@ -28,7 +44,7 @@ export default class Form extends
             </form>`;
     }
 
-    private _renderButton() : NodePatchingData {
+    private _renderButton(): NodePatchingData {
 
         // Doing onClick=${this.submit} binds the button instead of the form to the submit function
         return html`<gcl-button key="submit-button" kind="primary" variant="contained" click=${() => this.submit()}>
@@ -54,16 +70,87 @@ export default class Form extends
         }
     }
 
+    createValidationContext() : ValidationContext {
+
+        return {
+            warnings: [],
+            errors:[]
+        }
+    }
+
+    /**
+     * Handles the data that was loaded from the server
+     * @param data The data returned by the server
+     */
+    handleLoadedData(data: Record<string, any>) {
+
+        console.log(JSON.stringify(data));
+
+        const d = data.payload ?? data;
+
+        this._record.initialize(d); // Fill the record without seting any modified fields
+
+        this._populateFields(d); // Update the form with the returned values
+    }
+
+    /**
+     * Called when a response from a submission is received from a server
+     * @param data The data returned by the server
+     */
     handleSubmitResponse(data: Record<string, any>) {
 
         console.log(JSON.stringify(data));
 
-        this._record.setData(data.payload ?? data);
+        const d = data.payload ?? data;
+
+        this._record.setData(d); // Fill the record without seting any modified fields
+
+        this._populateFields(d); // Update the form with the returned values
+    }
+
+    private _populateFields(data: any) {
+
+        for (const key in data) {
+
+            if (data.hasOwnProperty(key)) {
+
+                const field = this._fields.get(key);
+
+                if (field !== undefined) {
+
+                    field.value = data[key];
+                }
+                else { // The field does not need to exist for the given data member but let the programmer know it is missing
+
+                    console.warn(`Field of name: '${key}' was not found for data member with same name`);
+                }
+            }
+        }
+    }
+
+    initializeValidator(validator: string) {
+
+        switch(validator) {
+
+            default: throw new Error(`initializeValidator is not implemented for validator: '${validator}'`);
+        }
     }
 
     validate(): boolean {
 
-        return true;
+        let valid = super.validate();
+
+        this._fields.forEach(field => {
+
+            const v = field.validate();
+
+            if (valid === true) {
+
+                valid = v;
+            }
+        });
+
+        return valid;
     }
 
     connectedCallback() {
@@ -84,13 +171,11 @@ export default class Form extends
         this.removeEventListener(changeEvent, this.handleChange);
     }
 
-    handleFieldAdded(event: CustomEvent): void  {
+    handleFieldAdded(event: CustomEvent): void {
 
         const {
             field
         } = event.detail;
-
-        this._fields.push[field];
 
         const {
             name,
@@ -98,14 +183,13 @@ export default class Form extends
             value
         } = field;
 
-        if (value !== undefined) { // Set the initial value of the field
+        this._fields.set(name, field); // Add the field to the form
 
-            this._record.addField({
-                name,
-                type,
-                value
-            });
-        }
+        this._record.addField({ // Add the field to the record
+            name,
+            type,
+            value
+        });
 
         event.stopPropagation();
     }

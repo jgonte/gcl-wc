@@ -116,7 +116,7 @@ export class NodePatcher {
         this.keyIndex = keyIndex;
     }
 
-    patchNode(parentNode: Node, rules: CompiledNodePatcherRule[], oldValues: any[] = [], newValues: any[] = []) {
+    patchNode(parentNode: Node, rules: CompiledNodePatcherRule[], oldValues: any[] = [], newValues: any[] = [], compareValues: boolean = true) {
 
         const {
             length
@@ -128,7 +128,8 @@ export class NodePatcher {
 
             let newValue = newValues[i];
 
-            if (areEquivalentValues(oldValue, newValue)) {
+            if (compareValues === true && // False when the node is created to remove placeholders from the attributes
+                areEquivalentValues(oldValue, newValue)) {
 
                 continue;
             }
@@ -140,7 +141,7 @@ export class NodePatcher {
                 name,
                 node
             } = rule;
-
+              
             switch (type) {
 
                 case NodePatcherRuleTypes.PATCH_NODE:
@@ -165,7 +166,11 @@ export class NodePatcher {
                             }
                             else { // newValue === undefined || null
 
-                                removeLeftSibling(node);
+                                if (oldValue !== undefined &&
+                                    oldValue !== null) {
+
+                                    removeLeftSibling(node);
+                                }
                             }
                         }
                     }
@@ -291,22 +296,13 @@ function patchAttribute(node: HTMLElement, name: string, oldValue: string, newVa
     if (newValue === undefined) { // It was removed in the new virtual node
 
         node.removeAttribute(name);
-
-        return true;
     }
     else {
 
-        if (newValue === oldValue) {
-
-            return false;
-        }
-        else {
-
-            setAttribute(node, name, newValue);
-
-            return true;
-        }
+        setAttribute(node, name, newValue);
     }
+
+    return true;
 }
 
 function setAttribute(node: HTMLElement, key: string, value: string) {
@@ -668,7 +664,7 @@ function removeLeftSibling(markerNode: Node) {
 //         if (predicate(node) === true) {
 
 //             return node;
-//         } 
+//         }
 //     }
 
 //     return null;

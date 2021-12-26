@@ -19,11 +19,7 @@ const DirectionMixin = Base =>
                     type: String,    
                     reflect: true,
                     inherit: true,
-                    options: ['ltr', 'rtl'],
-                    // beforeInitialize: function (value) {
-
-                    //     return value || document.dir;
-                    // }
+                    options: ['ltr', 'rtl']
                 }
             };
         }

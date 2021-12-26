@@ -16,7 +16,8 @@ export function createNode(patchingData: NodePatchingData) {
 
     const rules = compileRules(doc, patcher.rules);
     
-    patcher.patchNode(doc, rules, [], values); // No diffing, just populating the node
+    // TODO: Create a more efficient function when the node is created?
+    patcher.patchNode(doc, rules, [], values, /*compareValues*/false); // No diffing, just populating the node
 
     const {
         childNodes

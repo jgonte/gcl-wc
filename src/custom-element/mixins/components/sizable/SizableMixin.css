@@ -1,3 +1,4 @@
+/* SizableMixin */
 /* host applies to the text component */
 :host([size='large']) *{
     padding: var(--gcl-padding-size-large);

@@ -55,7 +55,7 @@ const SubmitableMixin = Base =>
 
             super.connectedCallback?.();
 
-            this._fetcher = new Fetcher({
+            this._submitFetcher = new Fetcher({
                 onData: data => this.handleSubmitData(data),
                 onError: error => this.handleSubmitError(error)
             });
@@ -67,15 +67,10 @@ const SubmitableMixin = Base =>
 
             this.submitting = true;
 
-            const {
-                _fetcher,
-                submitUrl
-            } = this;
-
             const data = this.getSubmitData(); // Overriden by the derived classes
 
-            _fetcher.fetch({
-                url: submitUrl,
+            this._submitFetcher.fetch({
+                url: this.submitUrl,
                 method: this.getMethod(data),
                 data
             });

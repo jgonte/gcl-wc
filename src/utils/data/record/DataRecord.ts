@@ -110,7 +110,7 @@ export default class DataRecord implements DataProvider, DataSetter, Subscriber 
                 if (value != undefined && value != null) {
 
                     data[key] = value;
-                }            
+                }
             }
         }
 
@@ -151,7 +151,16 @@ export default class DataRecord implements DataProvider, DataSetter, Subscriber 
 
             if (data.hasOwnProperty(key)) {
 
-                this._fields[key].value = data[key];
+                const field = this._fields[key];
+
+                if (field !== undefined) {
+
+                    field.value = data[key];
+                }
+                else { // The field does not need to exist for the given data member but let the programmer know it is missing
+
+                    console.warn(`Field of name: '${key}' was not found for data memeber with same name`);
+                }
             }
         }
 

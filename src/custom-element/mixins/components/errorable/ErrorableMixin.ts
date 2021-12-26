@@ -1,4 +1,5 @@
-import { errorEvent } from "../../../error/ErrorHandler";
+import { errorEvent } from "../../../../error/ErrorHandler";
+import { CustomElementStateMetadata } from "../../../interfaces";
 
 /**
  * Mixin that handles errors
@@ -8,7 +9,7 @@ const ErrorableMixin = Base =>
 
     class Errorable extends Base {
 
-        static get state() {
+        static get state() : Record<string, CustomElementStateMetadata> {
 
             return {
 

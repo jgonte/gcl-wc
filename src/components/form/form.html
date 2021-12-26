@@ -34,15 +34,28 @@
 
     <br /> -->
 
-    <gcl-form submit-url="http://localhost:60314/api/contacts/">
+    <h4>Submit only</h4>
+    <gcl-form id="submitOnly" submit-url="http://localhost:60314/api/contacts/">
 
         <gcl-hidden-field name="id" is-id="true"></gcl-hidden-field>
-        
+
         <gcl-form-field>
-            <span slot="label">Name</span>
+            <gcl-text slot="label">Name</gcl-text>
             <gcl-text-field slot="field" id="tf2" name="name" value="Sarah"></gcl-text-field>
         </gcl-form-field>
     </gcl-form>
+
+    <h4>Load and submit</h4>
+    <gcl-form id="loadAndSubmit" load-url="http://localhost:60314/api/contacts/1" submit-url="http://localhost:60314/api/contacts/">
+
+        <gcl-hidden-field name="id" is-id="true"></gcl-hidden-field>
+
+        <gcl-form-field>
+            <gcl-text slot="label">Name</gcl-text>
+            <gcl-text-field slot="field" id="tf2" name="name" validators='["required"]'></gcl-text-field>
+        </gcl-form-field>
+    </gcl-form>
+
 </body>
 
 </html>

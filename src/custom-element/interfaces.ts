@@ -61,9 +61,9 @@ export interface CustomElementPropertyMetadata {
     required?: boolean;
 
     /**
-     * Hook to allow for conditional initialization of the property when the component is connected
+     * Hook to allow for extra manipulation of the property value before being set
      */
-    beforeInitialize?: (value: any) => any;
+    transform?: (value: any) => any;
 
     /**
      * Called when the property has changed but after the DOM has been updated

@@ -45,24 +45,16 @@ const AttributeChangeHandlerMixin = Base =>
             for (const [name, property] of propertiesMetadata) {
 
                 const {
-                    value: defaultValue,
-                    //beforeInitialize
+                    value
                 } = property;
 
                 if (this._properties[name] === undefined) { // Not explicitly set
 
                     this._initiallyUndefinedProperties.add(name);
 
-                    // if (beforeInitialize !== undefined) {
+                    if (value !== undefined) { // Set the default value
 
-                    //     const value = beforeInitialize.call(this, defaultValue); // Perform extra initialization
-
-                    //     this.setProperty(name, value);
-                    // }
-                    // else 
-                    if (defaultValue !== undefined) { // Set the default value
-
-                        this.setProperty(name, defaultValue);
+                        this.setProperty(name, value);
                     }
                 }
             }
@@ -198,14 +190,20 @@ const AttributeChangeHandlerMixin = Base =>
             }
 
             // Verify that the property is one of the configured in the custom element
-            let propertyMetadata = (this.constructor as any).metadata.propertiesByAttribute.get(attribute);
+            let propertyMetadata: CustomElementPropertyMetadata = (this.constructor as any).metadata.propertiesByAttribute.get(attribute);
 
             const {
                 name,
-                type
+                type,
+                transform
             } = propertyMetadata;
 
             value = valueConverter.toProperty(value, type); // Convert from the value returned by the parameter
+
+            if (transform !== undefined) {
+
+                value = transform.call(this, value); // Transform the data if necessary
+            }
 
             return this.setProperty(name, value);
         }

@@ -35,7 +35,8 @@ export function patchNode(node: Node, patchingData: NodePatchingData = null): vo
                     patchChildren(oldValue, newValue);
                 }
             }
-            else if (oldValue === null) {
+            else if (oldValue === undefined ||
+                oldValue === null) {
 
                 oldPatcher.patchNode(node, rules, oldValues, values);
 
