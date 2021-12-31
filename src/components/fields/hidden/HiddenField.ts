@@ -1,6 +1,6 @@
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import { NodePatchingData } from "../../../renderer/NodePatcher";
-import { html } from "../../../renderer/renderer";
+import { html } from "../../../renderer/html";
 import { Field } from "../Field";
 
 export default class HiddenField extends Field {

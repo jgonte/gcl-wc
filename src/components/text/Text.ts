@@ -4,7 +4,7 @@ import mergeStyles from "../../custom-element/helpers/mergeStyles";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 import appCtrl from "../app/appCtrl";
 import styles from "./Text.css";
 

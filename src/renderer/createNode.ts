@@ -5,7 +5,7 @@ import { NodePatchingData, NodePatcherRule, CompiledNodePatcherRule } from "./No
  * @param patchingData 
  * @returns 
  */
-export function createNode(patchingData: NodePatchingData) {
+export function createNode(/*container: ParentNode, */patchingData: NodePatchingData) {
 
     const {
         patcher,

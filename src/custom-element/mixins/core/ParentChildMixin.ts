@@ -71,9 +71,9 @@ const ParentChildMixin = Base =>
                     (adoptingParent as any).adoptedChildren.add(this); // It might be null for the topmost custom element
 
                     this.didAdoptChildCallback?.(adoptingParent, this);
-
-                    return; 
-                }               
+                }  
+                
+                return; // Nothing to do with the slot
             }
 
             const children = slot.assignedElements();

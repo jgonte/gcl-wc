@@ -48,8 +48,8 @@ describe("form tests", () => {
         await component.updateComplete; // Wait for the component to render
 
         expect(component.shadowRoot.innerHTML).toBe(
-`<!--_$node_-->
-            <!--_$node_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\" kind=\"primary\" variant=\"contained\"><gcl-text intl-key=\"submit\">Submit</gcl-text><gcl-icon name="box-arrow-right"></gcl-icon></gcl-button><!--_$node_--></form>`
+`<gcl-row justify-content="center"><!--_$node_-->
+            <!--_$node_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\" kind=\"primary\" variant=\"contained\"><gcl-text intl-key=\"submit\">Submit</gcl-text><gcl-icon name="box-arrow-right"></gcl-icon></gcl-button><!--_$node_--></form></gcl-row>`
         );
     });
 

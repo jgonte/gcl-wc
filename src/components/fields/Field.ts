@@ -75,33 +75,20 @@ export abstract class Field extends
         //this.validate();
     }
 
+    /**
+     * Called every time the input changes
+     * Perform validation to give instantaneous feedback but do not update the current value since it might keep changing
+     * @param event 
+     * @returns 
+     */
     handleInput(event) {
 
         // Retrieve the new value
         const target = event.target as HTMLInputElement;
 
-        const value = this.getNewValue(target);
+        this._tempValue = this.getNewValue(target);
 
-        //this.setValue(value); // Do not update the current value, since it can keep changing
-
-        const valid = this.validate(value); // Validate the field on input
-
-        return valid;
-
-        // if (!valid) {
-
-        //     return;
-        // }
-
-        // const {
-        //     input
-        // } = this.props;
-
-        // if (input !== undefined) {
-
-        //     input(value);
-        // }
-
+        return this.validate(); // Validate the field on input
     }
 
     createValidationContext() /*: ValidationContext */ {

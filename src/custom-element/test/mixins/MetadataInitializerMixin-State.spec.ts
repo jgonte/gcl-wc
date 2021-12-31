@@ -1,6 +1,7 @@
 import clearCustomElements from "../utils/clearCustomElements";
 import defineCustomElement from "../../helpers/defineCustomElement";
 import MetadataInitializerMixin from "../../mixins/core/MetadataInitializerMixin";
+import { CustomElementStateMetadata } from "../../interfaces";
 
 beforeEach(() => {
 
@@ -14,7 +15,7 @@ describe("MetadataInitializerMixin tests of the functionality of the state prope
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get state() {
+            static get state(): Record<string, CustomElementStateMetadata> {
 
                 return {
 
@@ -49,7 +50,7 @@ describe("MetadataInitializerMixin tests of the functionality of the state prope
         //@ts-ignore
         class A extends MetadataInitializerMixin(HTMLElement) {
 
-            static get state() {
+            static get state(): Record<string, CustomElementStateMetadata> {
 
                 return {
 
@@ -65,7 +66,7 @@ describe("MetadataInitializerMixin tests of the functionality of the state prope
         //@ts-ignore
         class B extends A {
 
-            static get state() {
+            static get state(): Record<string, CustomElementStateMetadata> {
 
                 return {
 
@@ -120,7 +121,7 @@ describe("MetadataInitializerMixin tests of the functionality of the state prope
         const State1Mixin = Base =>
             class State1 extends Base {
 
-                static get state() {
+                static get state(): Record<string, CustomElementStateMetadata> {
 
                     return {
 
@@ -134,7 +135,7 @@ describe("MetadataInitializerMixin tests of the functionality of the state prope
         const State2Mixin = Base =>
             class State2 extends Base {
 
-                static get state() {
+                static get state(): Record<string, CustomElementStateMetadata> {
 
                     return {
 
@@ -153,7 +154,7 @@ describe("MetadataInitializerMixin tests of the functionality of the state prope
                 )
             )
         {
-            static get state() {
+            static get state(): Record<string, CustomElementStateMetadata> {
 
                 return {
 

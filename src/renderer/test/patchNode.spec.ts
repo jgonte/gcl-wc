@@ -1,6 +1,6 @@
 import { createNode } from "../createNode";
 import { patchNode } from "../patchNode";
-import { html } from "../renderer";
+import { html } from "../html";
 
 describe("patch node tests", () => {
 

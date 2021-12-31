@@ -1,7 +1,7 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
-import { CustomElementPropertyMetadata } from "../interfaces";
+import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../interfaces";
 
 beforeEach(() => {
 
@@ -44,7 +44,7 @@ describe("custom element tests", () => {
 
         class A extends CustomElement {
 
-            static get state() {
+            static get state(): Record<string, CustomElementStateMetadata> {
 
                 return {
 

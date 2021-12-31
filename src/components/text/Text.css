@@ -1,6 +1,4 @@
 :host {
-    display: inline-block;
-    flex-grow: 1;
     overflow-wrap: break-word;
 }
 

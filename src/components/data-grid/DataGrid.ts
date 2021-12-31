@@ -1,7 +1,7 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 import styles from "./DataGrid.css";
 
 export default class DataGrid extends CustomElement {

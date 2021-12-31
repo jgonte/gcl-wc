@@ -1,6 +1,8 @@
 import { ValidationContext } from "../../../../utils/validation/Interfaces";
 import Validator from "../../../../utils/validation/validators/Validator";
-import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../../../interfaces";
+import { CustomElementPropertyMetadata } from "../../../interfaces";
+
+export const validationFailedEvent = 'validationFailedEvent';
 
 const ValidatableMixin = Base =>
 
@@ -22,20 +24,6 @@ const ValidatableMixin = Base =>
             };
         }
 
-        static get state(): Record<string, CustomElementStateMetadata> {
-
-            return {
-
-                validationErrors: {
-                    value: []
-                },
-
-                validationWarnings: {
-                    value: []
-                }
-            };
-        }
-
         /**
          * Validates a validatable object
          * @returns true is the value is valid, false otherwise
@@ -47,31 +35,27 @@ const ValidatableMixin = Base =>
                 return true; // Nothing to validate
             }
 
-            // Reset warnings and errors
-            this.validationWarnings = [];
-
-            this.validationErrors = [];
-
-            // Create a validation context
+            // Create a new validation context
             const context: ValidationContext = this.createValidationContext();
 
             // Validate
             this.validators.forEach((validator: Validator) => validator.validate(context));
 
-            // Show warnings and errors
-            if (context.warnings.length > 0) {
+            const {
+                warnings,
+                errors
+            } = context;
 
-                this.validationWarnings = context.warnings;
+            if (warnings.length > 0 || 
+                errors.length > 0) {
+
+                    this.dispatchCustomEvent(validationFailedEvent, {
+                        warnings,
+                        errors
+                    });
             }
 
-            if (context.errors.length > 0) {
-
-                this.validationErrors = context.errors;
-
-                return false;
-            }
-
-            return true;
+            return errors.length === 0;
         }
 
         initializeValidators(validators: (Validator | string)[]): Validator[] {

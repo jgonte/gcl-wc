@@ -1,7 +1,8 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
+import { CustomElementStateMetadata } from "../../custom-element/interfaces";
 import { errorEvent } from "../../error/ErrorHandler";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 
 /**
  * The root class of the SPA
@@ -9,7 +10,7 @@ import { html } from "../../renderer/renderer";
  */
 export default class App extends CustomElement {
 
-    static get state() {
+    static get state(): Record<string, CustomElementStateMetadata> {
 
         return {
 

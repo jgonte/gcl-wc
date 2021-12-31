@@ -1,5 +1,6 @@
 import { NodePatchingData } from "../../../renderer/NodePatcher";
-import { render } from "../../../renderer/renderer";
+import { mountChildren, mountNode } from "../../../renderer/mount";
+import { updateChildren, updateNode } from "../../../renderer/update";
 
 /**
  * Updates the element using a virtual DOM approach
@@ -21,22 +22,16 @@ const VirtualDomMixin = Base =>
         /**
          * The old patching node data to patch against
          */
-        private _oldPatchingData: NodePatchingData = null;
+        private _oldPatchingData: NodePatchingData | NodePatchingData[] = null;
 
         protected updateDom() {
 
-            let newPatchingData: NodePatchingData = this.render();
+            let newPatchingData: NodePatchingData | NodePatchingData[] = this.render();
 
-            // if (Array.isArray(newPatchingData)) { // An array of results was returned from an map -> html call
+            if (newPatchingData !== null) { // Only if there is something to render
 
-            //     const wrapperNode = new DocumentFragment();
-
-            //     newPatchingData.forEach(r => wrapperNode.insertBefore(r, null));
-
-            //     newPatchingData = wrapperNode;
-            // }
-
-            newPatchingData = this.beforeRender(newPatchingData); // Modify the original patching data if needed
+                newPatchingData = this.beforeRender(newPatchingData); // Modify the original patching data if needed
+            }
 
             const {
                 document,
@@ -47,7 +42,14 @@ const VirtualDomMixin = Base =>
 
                 if (newPatchingData !== null) { // Mount
 
-                    render(document, null, newPatchingData);
+                    if (Array.isArray(newPatchingData)) {
+
+                        mountChildren(document, newPatchingData);
+                    }
+                    else {
+
+                        mountNode(document, newPatchingData);
+                    }
 
                     this._waitForChildrenToMount();
                 }
@@ -59,7 +61,16 @@ const VirtualDomMixin = Base =>
 
                     this.willUpdateCallback();
 
-                    render(document, _oldPatchingData, newPatchingData);
+                    if (Array.isArray(newPatchingData)) {
+
+                        updateChildren(document, _oldPatchingData as NodePatchingData[], newPatchingData);
+                    }
+                    else {
+
+                        updateNode(document, _oldPatchingData as NodePatchingData, newPatchingData);
+                    }
+
+                    //render(document, _oldPatchingData, newPatchingData);
 
                     this._waitForChildrenToUpdate();
                 }

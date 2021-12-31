@@ -1,6 +1,6 @@
 import { createNode } from "../createNode";
 import { nodeMarker } from "../createTemplate";
-import { html } from "../renderer";
+import { html } from "../html";
 
 describe("create node tests", () => {
 

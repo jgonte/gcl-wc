@@ -3,7 +3,7 @@ import defineCustomElement from "../../custom-element/helpers/defineCustomElemen
 import SubmitableMixin from "../../custom-element/mixins/data/SubmitableMixin";
 import ErrorableMixin from "../../custom-element/mixins/components/errorable/ErrorableMixin";
 import LoadableMixin from "../../custom-element/mixins/data/LoadableMixin";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 import DataRecord from "../../utils/data/record/DataRecord";
 import { changeEvent, Field, fieldAddedEvent } from "../fields/Field";
 import { NodePatchingData } from "../../renderer/NodePatcher";
@@ -36,12 +36,15 @@ export default class Form extends
 
     render() {
 
-        return html`${this.renderSubmitting()}
+        return html`<gcl-row justify-content="center">
+            ${this.renderSubmitting()}
             ${this.renderError()}
             <form key="form">
                 <slot key="form-fields-slot"></slot>
                 ${this._renderButton()}
-            </form>`;
+            </form>
+        </gcl-row>
+            `;
     }
 
     private _renderButton(): NodePatchingData {
@@ -70,11 +73,11 @@ export default class Form extends
         }
     }
 
-    createValidationContext() : ValidationContext {
+    createValidationContext(): ValidationContext {
 
         return {
             warnings: [],
-            errors:[]
+            errors: []
         }
     }
 
@@ -130,7 +133,7 @@ export default class Form extends
 
     initializeValidator(validator: string) {
 
-        switch(validator) {
+        switch (validator) {
 
             default: throw new Error(`initializeValidator is not implemented for validator: '${validator}'`);
         }

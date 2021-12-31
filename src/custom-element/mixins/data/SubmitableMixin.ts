@@ -1,4 +1,4 @@
-import { html } from "../../../renderer/renderer";
+import { html } from "../../../renderer/html";
 import Fetcher from "../../../utils/data/transfer/Fetcher";
 import { ErrorResponse } from "../../../utils/data/transfer/interfaces";
 import { Callback, CustomElementPropertyMetadata, CustomElementStateMetadata } from "../../interfaces";

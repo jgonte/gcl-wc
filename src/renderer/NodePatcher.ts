@@ -517,7 +517,7 @@ function insertBefore(markerNode: Node, newChild: Node | NodePatchingData, rules
             (newChild as NodePatchingData).rules = rules;
         }
 
-        newChild = createNode(newChild as NodePatchingData);
+        newChild = createNode(/*parentNode, */newChild as NodePatchingData);
 
         // Transfer the patching data from the document fragment to the parent node
         (parentNode as any)._$patchingData = (newChild as any)._$patchingData;

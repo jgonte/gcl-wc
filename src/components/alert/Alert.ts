@@ -5,7 +5,7 @@ import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import { NodePatchingData } from "../../renderer/NodePatcher";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 import styles from "./Alert.css";
 
 //@ts-ignore
@@ -46,9 +46,11 @@ export default class Alert extends
 
     render(): NodePatchingData {
 
-        return html`${this._renderIcon()}
-           <slot></slot>
-        ${this._renderCloseTool()}`;
+        return html`<gcl-row>
+            ${this._renderIcon()}
+            <slot></slot>
+            ${this._renderCloseTool()}
+        </gcl-row>`;
     }
 
     private _renderIcon(): NodePatchingData {
@@ -85,7 +87,7 @@ export default class Alert extends
             size,
         } = this;
 
-        if (close === undefined) {
+        if (this.close === undefined) {
 
             return null;
         }

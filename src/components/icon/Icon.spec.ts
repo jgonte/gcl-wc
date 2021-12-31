@@ -40,7 +40,7 @@ describe("Icon tests", () => {
 [object Object]
 
 [object Object]</style><svg role=\"img\">
-                <use href=\"///dist/assets/icons/bootstrap-icons.svg#alarm\"/></svg>`);
+            <use href=\"///dist/assets/icons/bootstrap-icons.svg#alarm\"/></svg>`);
     });
 
 });

@@ -6,7 +6,7 @@ import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import DirectionMixin from "../../custom-element/mixins/components/direction/DirectionMixin";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 import styles from "./Icon.css";
 
 const {
@@ -54,10 +54,9 @@ export default class Icon extends
 
         const iconPath = `${_iconsPath}#${name}`;
 
-        return html`
-            <svg role="img">
-                <use href=${iconPath} />
-            </svg>`;
+        return html`<svg role="img">
+            <use href=${iconPath} />
+        </svg>`;
     }
 }
 

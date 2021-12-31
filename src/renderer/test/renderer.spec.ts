@@ -1,6 +1,6 @@
 import { NodePatcherRuleTypes } from "../NodePatcher";
 import { render } from "../render";
-import { html } from "../renderer";
+import { html } from "../html";
 
 describe("renderer tests", () => {
 

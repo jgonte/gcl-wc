@@ -2,7 +2,7 @@ import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
 import css from "../helpers/css";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 import { CustomElementPropertyMetadata } from "../interfaces";
 
 beforeEach(() => {

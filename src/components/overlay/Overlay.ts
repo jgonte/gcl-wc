@@ -1,6 +1,6 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 import styles from "./Overlay.css";
 
 export default class Overlay extends CustomElement {

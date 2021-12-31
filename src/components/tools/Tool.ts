@@ -2,7 +2,7 @@ import CustomElement from "../../custom-element/CustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
-import { html } from "../../renderer/renderer";
+import { html } from "../../renderer/html";
 
 export default abstract class Tool extends
     SizableMixin(
