@@ -116,6 +116,69 @@ export class NodePatcher {
         this.keyIndex = keyIndex;
     }
 
+    firstPatch(parentNode: Node, rules: CompiledNodePatcherRule[], values: any[] = []) {
+
+        const {
+            length
+        } = rules;
+
+        for (let i = 0; i < length; ++i) { // The index of the values of the rules match 1 to 1 with the number of rules
+
+            let value = values[i];
+
+            const rule = rules[i];
+
+            const {
+                type,
+                name,
+                node
+            } = rule;
+
+            switch (type) {
+
+                case NodePatcherRuleTypes.PATCH_NODE:
+                    {
+                        if (Array.isArray(value)) {
+
+                            throw new Error('Not expected');
+                            //patchChildren(node, oldValue, value);
+                        }
+
+                        insertBefore(node, value, rules);
+                    }
+                    break;
+                case NodePatcherRuleTypes.PATCH_ATTRIBUTE:
+                    {
+                        setAttribute(node as HTMLElement, name, value);
+                    }
+                    break;
+                case NodePatcherRuleTypes.PATCH_EVENT:
+                    {
+                        const eventName: string = name.slice(2).toLowerCase();
+
+                        const nameParts = eventName.split('_'); // Just in case it has the capture parameter in the event
+
+                        const useCapture: boolean = nameParts[1]?.toLowerCase() === 'capture'; // The convention is: eventName_capture for capture. Example onClick_capture
+
+                        if (typeof value === 'string') {
+
+                            value = getGlobalFunction(value);
+                        }
+
+                        if (value !== undefined) {
+
+                            node.addEventListener(eventName, value, useCapture);
+                        }
+
+                        // Remove the attribute from the HTML
+                        (node as HTMLElement).removeAttribute(name);
+                    }
+                    break;
+                default: throw Error(`patch is not implemented for rule type: ${type}`);
+            }
+        }
+    }
+
     patchNode(parentNode: Node, rules: CompiledNodePatcherRule[], oldValues: any[] = [], newValues: any[] = [], compareValues: boolean = true) {
 
         const {
@@ -141,7 +204,7 @@ export class NodePatcher {
                 name,
                 node
             } = rule;
-              
+
             switch (type) {
 
                 case NodePatcherRuleTypes.PATCH_NODE:
@@ -307,7 +370,8 @@ function patchAttribute(node: HTMLElement, name: string, oldValue: string, newVa
 
 function setAttribute(node: HTMLElement, key: string, value: string) {
 
-    if (value === 'undefined' ||
+    if (value === undefined ||
+        value === 'undefined' ||
         value === 'null' ||
         value === '' ||
         value === 'false') {
@@ -540,7 +604,11 @@ function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
             node => node instanceof Text &&
                 (node as Text).textContent === oldChild.toString());
 
-        (oldChildNode as Text).textContent = newChild.toString();
+        if (oldChildNode !== null) { // Otherwise already updated???
+
+            (oldChildNode as Text).textContent = newChild.toString();
+        }
+
     }
     else if ((oldChild as any).patcher !== undefined) { // Patching data
 

@@ -5,7 +5,7 @@ import { NodePatchingData, NodePatcherRule, CompiledNodePatcherRule } from "./No
  * @param patchingData 
  * @returns 
  */
-export function createNode(/*container: ParentNode, */patchingData: NodePatchingData) {
+export function createNode(patchingData: NodePatchingData): Node {
 
     const {
         patcher,
@@ -15,8 +15,10 @@ export function createNode(/*container: ParentNode, */patchingData: NodePatching
     const doc = patcher.template.content.cloneNode(/*deep*/true); // The content of the template is a document fragment
 
     const rules = compileRules(doc, patcher.rules);
-    
-    // TODO: Create a more efficient function when the node is created?
+
+    // Update the rules of the patching data
+    patchingData.rules = rules;
+
     patcher.patchNode(doc, rules, [], values, /*compareValues*/false); // No diffing, just populating the node
 
     const {
@@ -29,20 +31,17 @@ export function createNode(/*container: ParentNode, */patchingData: NodePatching
         childNodes[0].nodeType === Node.ELEMENT_NODE) { // Node is single HTMLElement
 
         node = childNodes[0];
+
+        // Set the node of the patching data
+        patchingData.node = node;
+
+        // Attach the patching data to the node
+        (node as any)._$patchingData = patchingData;
     }
     else { // Node is a collection of nodes
 
         node = doc;
     }
-
-    // Set the node of the patching data
-    patchingData.node = node;
-
-    // Update the rules of the patching data
-    patchingData.rules = rules;
-
-    // Attach the patching data to the node
-    (node as any)._$patchingData = patchingData;
 
     return node;
 }
@@ -53,7 +52,7 @@ export function createNode(/*container: ParentNode, */patchingData: NodePatching
  * @param rules The rules to compile
  * @returns the compiled rules
  */
- function compileRules(node: Node, rules: NodePatcherRule[]): CompiledNodePatcherRule[] {
+function compileRules(node: Node, rules: NodePatcherRule[]): CompiledNodePatcherRule[] {
 
     const compiledRules: CompiledNodePatcherRule[] = [];
 

@@ -14,11 +14,13 @@ describe("create node tests", () => {
 
         expect(node.nodeType).toEqual(Node.DOCUMENT_FRAGMENT_NODE);
 
+        expect((node as any)._$patchingData).toBeUndefined(); // The patching data is not set in a document fragment since it looses its children when added to a parent
+
+        expect(patchingData.node).toBeUndefined(); // No document fragments get the node of its patching data set
+
         const {
             childNodes
         } = node;
-
-        expect((node as any)._$patchingData).toEqual(patchingData);
 
         const text = childNodes[0] as Text;
 

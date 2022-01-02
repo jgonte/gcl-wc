@@ -70,8 +70,6 @@ const VirtualDomMixin = Base =>
                         updateNode(document, _oldPatchingData as NodePatchingData, newPatchingData);
                     }
 
-                    //render(document, _oldPatchingData, newPatchingData);
-
                     this._waitForChildrenToUpdate();
                 }
                 else { // newPatchingData === null - Unmount
