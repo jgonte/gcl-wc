@@ -201,13 +201,13 @@ export default class Form extends
 
         const {
             name,
-            value
+            newValue
         } = event.detail;
 
         console.log('valueChanged: ' + JSON.stringify(event.detail));
 
         this._record.setData({
-            [name]: value
+            [name]: newValue
         });
 
         event.stopPropagation();

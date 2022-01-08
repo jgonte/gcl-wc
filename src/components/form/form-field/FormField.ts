@@ -3,7 +3,7 @@ import defineCustomElement from "../../../custom-element/helpers/defineCustomEle
 import mergeStyles from "../../../custom-element/helpers/mergeStyles";
 import { CustomElementStateMetadata } from "../../../custom-element/interfaces";
 import SizableMixin from "../../../custom-element/mixins/components/sizable/SizableMixin";
-import { validationFailedEvent } from "../../../custom-element/mixins/components/validatable/ValidatableMixin";
+import { validationEvent } from "../../../custom-element/mixins/components/validatable/ValidatableMixin";
 import { NodePatchingData } from "../../../renderer/NodePatcher";
 import { html } from "../../../renderer/html";
 import styles from "./FormField.css";
@@ -53,32 +53,26 @@ export default class FormField extends
 
         super.connectedCallback?.();
 
-        this.addEventListener(validationFailedEvent, this.handleValidationFailed);
+        this.addEventListener(validationEvent, this.handleValidation);
     }
 
     disconnectedCallback() {
 
         super.disconnectedCallback?.();
 
-        this.removeEventListener(validationFailedEvent, this.handleValidationFailed);
+        this.removeEventListener(validationEvent, this.handleValidation);
     }
 
-    handleValidationFailed(event: CustomEvent): void {
+    handleValidation(event: CustomEvent): void {
 
         const {
             warnings,
             errors
         } = event.detail;
 
-        if (warnings.length > 0) {
+        this.warnings = warnings;
 
-            this.warnings = warnings;
-        }
-
-        if (errors.length > 0) {
-
-            this.errors = errors;
-        }
+        this.errors = errors;
 
         event.stopPropagation();
     }

@@ -2,7 +2,7 @@ import { ValidationContext } from "../../../../utils/validation/Interfaces";
 import Validator from "../../../../utils/validation/validators/Validator";
 import { CustomElementPropertyMetadata } from "../../../interfaces";
 
-export const validationFailedEvent = 'validationFailedEvent';
+export const validationEvent = 'validationEvent';
 
 const ValidatableMixin = Base =>
 
@@ -46,14 +46,11 @@ const ValidatableMixin = Base =>
                 errors
             } = context;
 
-            if (warnings.length > 0 || 
-                errors.length > 0) {
-
-                    this.dispatchCustomEvent(validationFailedEvent, {
-                        warnings,
-                        errors
-                    });
-            }
+            // Dispatch the event even if there are no errors to trigger a repaint
+            this.dispatchCustomEvent(validationEvent, {
+                warnings,
+                errors
+            });
 
             return errors.length === 0;
         }
