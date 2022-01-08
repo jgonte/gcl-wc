@@ -129,16 +129,16 @@ export function updateNode(container: Node, oldPatchingData: NodePatchingData, n
 
     if (oldPatcher === patcher) {
 
+        newPatchingData.rules = rules; // Set the compiled rules in the new patched data
+
+        newPatchingData.node = node; // Set the node in the new patching data
+
         if (areEquivalentValues(oldPatchingData.values, newPatchingData.values)) {
 
             return; // Same patcher and same vales mean no changes to apply
         }
 
         oldPatcher.patchNode(node, rules, oldValues, values);
-
-        newPatchingData.rules = rules; // Set the complited rules in the new patched data
-
-        newPatchingData.node = node; // Set the node in the new patching data
 
         (node as any)._$patchingData = newPatchingData;
     }
