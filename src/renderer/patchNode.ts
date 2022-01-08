@@ -1,3 +1,4 @@
+import areEquivalentValues from "./areEquivalentValues";
 import { createNode } from "./createNode";
 import { NodePatchingData } from "./NodePatcher";
 
@@ -22,6 +23,11 @@ export function patchNode(node: Node, patchingData: NodePatchingData = null): vo
 
             const newValue = values[i];
 
+            if (areEquivalentValues(oldValue, newValue)) {
+
+                continue;
+            }
+
             if (Array.isArray(oldValue)) {
 
                 const nonPatchingDataValues = oldValue.filter(v => v.patcher === undefined);
@@ -32,7 +38,7 @@ export function patchNode(node: Node, patchingData: NodePatchingData = null): vo
                 }
                 else {
 
-                    patchChildren(oldValue, newValue);
+                    patchChildren(node, oldValue, newValue);
                 }
             }
             else if (oldValue === undefined ||
@@ -74,18 +80,18 @@ export function patchNode(node: Node, patchingData: NodePatchingData = null): vo
         }
         else { // Different type of node, replace it with a new one
 
-            const newNode = createNode(patchingData);
-
             const {
                 parentNode
             } = node;
+
+            const newNode = createNode(parentNode, patchingData);
 
             parentNode.replaceChild(newNode, node);
         }
     }
 }
 
-export function patchChildren(oldChildren: NodePatchingData[], newChildren: NodePatchingData[]) {
+export function patchChildren(parentNode: Node, oldChildren: NodePatchingData[], newChildren: NodePatchingData[]) {
 
     let { length: oldChildrenCount } = oldChildren;
 
@@ -121,7 +127,7 @@ export function patchChildren(oldChildren: NodePatchingData[], newChildren: Node
 
         if (oldChild === undefined) {
 
-            const node = createNode(newChildren[i]);
+            const node = createNode(parentNode, newChildren[i]);
 
             if (node.nodeType === Node.DOCUMENT_FRAGMENT_NODE) { // Nested children of a child
 

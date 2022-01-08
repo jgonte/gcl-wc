@@ -320,7 +320,7 @@ describe("renderer tests", () => {
         expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span></div>');
 
         // Swap the children
-        data = [        
+        data = [
             {
                 id: 1,
                 name: 'Sarah',
@@ -376,7 +376,7 @@ describe("renderer tests", () => {
         expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span></div>');
 
         // Swap the children
-        data = [              
+        data = [
             {
                 id: 3,
                 name: 'Sasha',
@@ -403,7 +403,7 @@ describe("renderer tests", () => {
         expect(container.outerHTML).toEqual('<div><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span></div>');
     });
 
-    it('should render nested single child', () => {
+    it('should render a container with a nested single child', () => {
 
         // Add the nested child element
         let name = "Sarah";
@@ -478,51 +478,180 @@ describe("renderer tests", () => {
         expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><!--_$node_--></x-container></div>');
     });
 
+    it('should render a container with nested children', () => {
+
+        // Add the nested child element
+        let names = ["Sarah", "Mark", "Sasha"];
+
+        let itemsPatchingData = names.map(name => html`
+            <x-item class="item">
+                My name is: ${name}
+            </x-item>
+        `);
+
+        let containerPatchingData = html`
+            <x-container class="container">       
+                ${itemsPatchingData}
+            </x-container>
+        `;
+
+        const container = document.createElement('div');
+
+        mountNode(container, containerPatchingData);
+
+        // At this time the node should be created, ensure that the patching data has a reference to it
+        const {
+            node: containerNode
+        } = containerPatchingData;
+
+        expect((containerNode as HTMLElement).outerHTML).toEqual(`<x-container class=\"container\"><x-item class=\"item\">
+                My name is: Sarah<!--_$node_--></x-item><x-item class=\"item\">
+                My name is: Mark<!--_$node_--></x-item><x-item class=\"item\">
+                My name is: Sasha<!--_$node_--></x-item><!--_$node_--></x-container>`);
+
+        const {
+            node: itemNode
+        } = itemsPatchingData[0];
+
+        expect(itemNode).toBe(containerNode.childNodes[0]); // it should refer to the same child node
+
+        expect((itemNode as HTMLElement).outerHTML).toEqual('<x-item class=\"item\">\n                My name is: Sarah<!--_$node_--></x-item>');
+
+        expect(container.outerHTML).toEqual(`<div><x-container class=\"container\"><x-item class=\"item\">
+                My name is: Sarah<!--_$node_--></x-item><x-item class=\"item\">
+                My name is: Mark<!--_$node_--></x-item><x-item class=\"item\">
+                My name is: Sasha<!--_$node_--></x-item><!--_$node_--></x-container></div>`);
+
+        // Replace the name of the nested text
+        names = ["Mark", "Sasha", "Sarah"];
+
+        itemsPatchingData = names.map(name => html`
+            <x-item class="item">
+                My name is: ${name}
+            </x-item>
+        `);
+
+        let oldPatchingData = containerPatchingData;
+
+        containerPatchingData = html`
+            <x-container class="container">       
+                ${itemsPatchingData}
+            </x-container>
+        `;
+
+        updateNode(container, oldPatchingData, containerPatchingData);
+
+        expect(container.outerHTML).toEqual(`<div><x-container class=\"container\"><x-item class=\"item\">
+                My name is: Mark<!--_$node_--></x-item><x-item class=\"item\">
+                My name is: Sasha<!--_$node_--></x-item><x-item class=\"item\">
+                My name is: Sarah<!--_$node_--></x-item><!--_$node_--></x-container></div>`);
+
+        // Remove the nested items
+        itemsPatchingData = null;
+
+        oldPatchingData = containerPatchingData;
+
+        containerPatchingData = html`
+            <x-container class="container">       
+                ${itemsPatchingData}
+            </x-container>
+        `;
+
+        updateNode(container, oldPatchingData, containerPatchingData);
+
+        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><!--_$node_--></x-container></div>');
+    });
+
+    it('should render a collection of children before a slot', () => {
+
+        // Add the nested child element
+        let names = ["Sarah", "Mark", "Sasha"];
+
+        let itemsPatchingData = html`
+            ${names.map(name => html`<span>${name}</span>`)}
+            <slot></slot>`;
+
+        let containerPatchingData = html`
+            <x-container class="container">       
+                ${itemsPatchingData}
+            </x-container>
+        `;
+
+        const container = document.createElement('div');
+
+        mountNode(container, containerPatchingData);
+
+        // At this time the node should be created, ensure that the patching data has a reference to it
+        const {
+            node: containerNode
+        } = containerPatchingData;
+
+        expect((containerNode as HTMLElement).outerHTML).toEqual('<x-container class=\"container\"><span>Sarah<!--_$node_--></span><span>Mark<!--_$node_--></span><span>Sasha<!--_$node_--></span><!--_$node_--><slot></slot><!--_$node_--></x-container>');
+
+        const itemNode = itemsPatchingData.values[0][0].node;
+
+        expect(itemNode).toBe(containerNode.childNodes[0]); // it should refer to the same child node
+
+        expect((itemNode as HTMLElement).outerHTML).toEqual('<span>Sarah<!--_$node_--></span>');
+
+        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><span>Sarah<!--_$node_--></span><span>Mark<!--_$node_--></span><span>Sasha<!--_$node_--></span><!--_$node_--><slot></slot><!--_$node_--></x-container></div>');
+
+        // Replace the name of the nested texts
+        names = ["Mark", "Sasha", "Sarah"];
+
+        itemsPatchingData = html`
+            ${names.map(name => html`<span>${name}</span>`)}
+            <slot></slot>`;
+
+        let oldPatchingData = containerPatchingData;
+
+        containerPatchingData = html`
+            <x-container class="container">       
+                ${itemsPatchingData}
+            </x-container>
+        `;
+
+        updateNode(container, oldPatchingData, containerPatchingData);
+
+        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><span>Mark<!--_$node_--></span><span>Sasha<!--_$node_--></span><span>Sarah<!--_$node_--></span><!--_$node_--><slot></slot><!--_$node_--></x-container></div>');
+
+        // Remove the nested item
+        itemsPatchingData = null;
+
+        oldPatchingData = containerPatchingData;
+
+        containerPatchingData = html`
+            <x-container class="container">       
+                ${itemsPatchingData}
+            </x-container>
+        `;
+
+        updateNode(container, oldPatchingData, containerPatchingData);
+
+        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><!--_$node_--></x-container></div>');
+    });
+
+    it('should create a different child element', () => {
+
+        const name = "Sarah";
+
+        const patchingData = html`<span>${name}</span>`;
+
+        const container = document.createElement('div');
+
+        mountNode(container, patchingData);
+
+        expect(container.outerHTML).toEqual('<div><span>Sarah<!--_$node_--></span></div>');
+
+        const newPatchingData = html`<h1>${name}</h1>`;
+
+        updateNode(container, patchingData, newPatchingData);
+
+        expect(container.outerHTML).toEqual('<div><h1>Sarah<!--_$node_--></h1></div>');
+    });
+
     //////////////
-    //     it('should add the nested virtual node as a child of the parent one', () => {
 
-    //         const name = "Sarah";
-
-    //         const nestedResult = html`
-    //             <x-item class="item">
-    //                 My name is: ${name}
-    //             </x-item>
-    //         `;
-
-    //         const nestedVNode = nestedResult.vnode as ElementNode;
-
-    //         expect(nestedVNode.tag).toEqual('x-item');
-
-    //         expect(nestedVNode.attributes).toEqual({
-    //             class: "item",
-    //         });
-
-    //         expect((nestedVNode.children[0] as TextNode).text.toString().trim()).toEqual('My name is: Sarah');
-
-    //         expect(nestedResult.node).toBeDefined();
-
-    //         const result = html`
-    //             <x-container class="container">       
-    //                 ${nestedResult}
-    //             </x-container>
-    //         `;
-
-    //         const vnode = result.vnode as ElementNode;
-
-    //         expect(vnode.tag).toEqual('x-container');
-
-    //         expect(vnode.attributes).toEqual({
-    //             class: "container",
-    //         });
-
-    //         expect(result.node).toBeDefined();
-
-    //         const childVNode = vnode.children[0] as ElementNode;
-
-    //         expect(childVNode).toBe(nestedVNode);
-
-    //         expect((result.node as HTMLElement).childNodes[0]).toBe(nestedResult.node);
-    //     });
 
     //     it('should render a complex object as a value', () => {
 

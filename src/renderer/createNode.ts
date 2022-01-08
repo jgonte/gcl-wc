@@ -5,7 +5,7 @@ import { NodePatchingData, NodePatcherRule, CompiledNodePatcherRule } from "./No
  * @param patchingData 
  * @returns 
  */
-export function createNode(patchingData: NodePatchingData): Node {
+export function createNode(parentNode: Node, patchingData: NodePatchingData): Node {
 
     const {
         patcher,
@@ -14,21 +14,13 @@ export function createNode(patchingData: NodePatchingData): Node {
 
     const doc = patcher.template.content.cloneNode(/*deep*/true); // The content of the template is a document fragment
 
-    const rules = compileRules(doc, patcher.rules);
-
-    // Update the rules of the patching data
-    patchingData.rules = rules;
-
-    patcher.patchNode(doc, rules, [], values, /*compareValues*/false); // No diffing, just populating the node
-
     const {
         childNodes
     } = doc;
 
     let node: Node = undefined;
 
-    if (childNodes.length === 1 &&
-        childNodes[0].nodeType === Node.ELEMENT_NODE) { // Node is single HTMLElement
+    if (patcher.isSingleElement) { // Node is single HTMLElement
 
         node = childNodes[0];
 
@@ -41,7 +33,25 @@ export function createNode(patchingData: NodePatchingData): Node {
     else { // Node is a collection of nodes
 
         node = doc;
+
+        // Set the node of the patching data
+        patchingData.node = parentNode;
+
+        if ((parentNode as any)._$patchingData === undefined &&     
+            (!(parentNode instanceof DocumentFragment) ||
+            parentNode instanceof ShadowRoot)) {
+
+            // Attach the patching data to the node if there is none attached
+            (parentNode as any)._$patchingData = patchingData;
+        }
     }
+
+    const rules = compileRules(doc, patcher.rules);
+
+    // Update the rules of the patching data
+    patchingData.rules = rules;
+
+    patcher.firstPatch(doc, rules, values);
 
     return node;
 }

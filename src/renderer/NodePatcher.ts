@@ -3,6 +3,9 @@ import createTemplate, { attributeMarkerPrefix, eventMarkerPrefix, nodeMarker } 
 import { createNode } from "./createNode";
 import areEquivalentValues from "./areEquivalentValues";
 import getGlobalFunction from "../custom-element/helpers/getGlobalFunction";
+import { mountNode } from "./mount";
+import { patchNode } from "./patchNode";
+import { updateNode } from "./update";
 
 export enum NodePatcherRuleTypes {
     PATCH_NODE = 1, // Patches either a single node or a collection of nodes
@@ -99,6 +102,11 @@ export class NodePatcher {
      */
     keyIndex: number;
 
+    /**
+     * Whether the content of the template has a single element
+     */
+    isSingleElement: boolean;
+
     constructor(strings: TemplateStringsArray) {
 
         const {
@@ -110,6 +118,11 @@ export class NodePatcher {
         this.templateString = templateString; // To make debugging easier
 
         this.template = template;
+
+        const childNodes = template.content.childNodes;
+
+        this.isSingleElement = childNodes.length === 1 &&
+            childNodes[0].nodeType === Node.ELEMENT_NODE;
 
         this.rules = createNodePatcherRules(template.content);
 
@@ -140,11 +153,29 @@ export class NodePatcher {
                     {
                         if (Array.isArray(value)) {
 
-                            throw new Error('Not expected');
-                            //patchChildren(node, oldValue, value);
-                        }
+                            const df = document.createDocumentFragment();
 
-                        insertBefore(node, value, rules);
+                            value.forEach(v => mountNode(df, v));
+
+                            node.parentNode.insertBefore(df, node);
+                        }
+                        else if (value !== null) {
+
+                            const { parentNode } = node;
+
+                            let n = value;
+
+                            if (isPrimitive(value)) {
+
+                                n = document.createTextNode(value.toString());
+                            }
+                            else if ((value as NodePatchingData).patcher !== undefined) {
+
+                                n = createNode(parentNode, value as NodePatchingData);
+                            }
+
+                            parentNode.insertBefore(n, node);
+                        }
                     }
                     break;
                 case NodePatcherRuleTypes.PATCH_ATTRIBUTE:
@@ -174,7 +205,7 @@ export class NodePatcher {
                         (node as HTMLElement).removeAttribute(name);
                     }
                     break;
-                default: throw Error(`patch is not implemented for rule type: ${type}`);
+                default: throw Error(`firstPatch is not implemented for rule type: ${type}`);
             }
         }
     }
@@ -224,7 +255,16 @@ export class NodePatcher {
                                 }
                                 else {
 
-                                    replaceChild(node, newValue, oldValue);
+                                    if (oldValue.patcher !== undefined &&
+                                        oldValue.patcher === newValue.patcher) {
+
+                                        updateNode(node, oldValue, newValue);
+                                    }
+                                    else {
+
+                                        replaceChild(node, newValue, oldValue);
+                                    }
+
                                 }
                             }
                             else { // newValue === undefined || null
@@ -232,7 +272,15 @@ export class NodePatcher {
                                 if (oldValue !== undefined &&
                                     oldValue !== null) {
 
-                                    removeLeftSibling(node);
+                                    if (Array.isArray(oldValue) ||
+                                        oldValue.patcher !== undefined) {
+
+                                        removeAllSiblings(node);
+                                    }
+                                    else {
+
+                                        removeLeftSibling(node);
+                                    }
                                 }
                             }
                         }
@@ -378,7 +426,15 @@ function setAttribute(node: HTMLElement, key: string, value: string) {
 
         node.removeAttribute(key);
 
-        (node as any)[key] = value; // Reset the value in any case
+        // Reset the value in any case
+        if (key === 'value' && value === undefined) { // It fails with undefined for a text field value
+
+            (node as any)[key] = '';
+        }
+        else {
+
+            (node as any)[key] = value;
+        }
     }
     else {
 
@@ -404,9 +460,13 @@ function setAttribute(node: HTMLElement, key: string, value: string) {
             }
             else { // Any other type
 
+                if (key === 'value') { // Set the value besides setting the attribute
+
+                    (node as HTMLInputElement).value = value;
+                }
+                
                 node.setAttribute(key, value);
             }
-
         }
     }
 }
@@ -450,16 +510,7 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
 
             if (newChildKey === oldChildKey) {
 
-                if (oldChild.nodeType === newChild.nodeType &&
-                    oldChild.tagName === newChild.tagName) { // Nodes match
-
-                    //patch(oldChild, newChild);
-                }
-                else { //Nodes do not match
-
-                    replaceChild(markerNode, newChild, oldChild);
-                }
-
+                patchNode((oldChild as any).node, newChild as any);
             }
             else { // newChildKey !== oldChildKey
 
@@ -575,16 +626,7 @@ function insertBefore(markerNode: Node, newChild: Node | NodePatchingData, rules
     }
     else if ((newChild as NodePatchingData).patcher !== undefined) {
 
-        // Set the compiled rules
-        if (rules !== null) {
-
-            (newChild as NodePatchingData).rules = rules;
-        }
-
-        newChild = createNode(/*parentNode, */newChild as NodePatchingData);
-
-        // Transfer the patching data from the document fragment to the parent node
-        (parentNode as any)._$patchingData = (newChild as any)._$patchingData;
+        newChild = createNode(parentNode, newChild as NodePatchingData);
     }
 
     parentNode.insertBefore(newChild as Node, markerNode);
@@ -723,6 +765,22 @@ function removeLeftSibling(markerNode: Node) {
     } = markerNode;
 
     parentNode.removeChild(previousSibling);
+}
+
+function removeAllSiblings(markerNode: Node) {
+
+    const {
+        parentNode
+    } = markerNode;
+
+    let sibling = markerNode.previousSibling;
+
+    while (sibling !== null) {
+
+        parentNode.removeChild(sibling);
+
+        sibling = markerNode.previousSibling;
+    }
 }
 
 // function findParentNode(parentNode: Node, predicate: (node: any) => boolean) : Node {

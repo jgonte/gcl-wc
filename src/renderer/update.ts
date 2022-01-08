@@ -116,13 +116,6 @@ export function updateNode(container: Node, oldPatchingData: NodePatchingData, n
         throw new Error('There must be an existing node');
     }
 
-    //node = node !== undefined ? node : (container as ShadowRoot).host;
-
-    if (areEquivalentValues(oldPatchingData.values, newPatchingData.values)) {
-
-        return;
-    }
- 
     const {
         patcher: oldPatcher,
         values: oldValues,
@@ -136,6 +129,11 @@ export function updateNode(container: Node, oldPatchingData: NodePatchingData, n
 
     if (oldPatcher === patcher) {
 
+        if (areEquivalentValues(oldPatchingData.values, newPatchingData.values)) {
+
+            return; // Same patcher and same vales mean no changes to apply
+        }
+
         oldPatcher.patchNode(node, rules, oldValues, values);
 
         newPatchingData.rules = rules; // Set the complited rules in the new patched data
@@ -146,22 +144,7 @@ export function updateNode(container: Node, oldPatchingData: NodePatchingData, n
     }
     else { // Different type of node, replace it with a new one
 
-        const newNode = createNode(newPatchingData);
-
-        if ((node as any)._$patchingData === undefined) { // More than one node are created
-
-            // Set the node of the patching data
-            newPatchingData.node = container;
-    
-            //TODO: Remove this if never happens
-            if ((container as any)._$patchingData !== undefined) {
-    
-                throw new Error('Container has already patching data');
-            }
-    
-            // Attach the patching data to the container
-            (container as any)._$patchingData = newPatchingData;
-        }
+        const newNode = createNode(container, newPatchingData);
 
         container.replaceChild(newNode, node);
     }

@@ -10,13 +10,17 @@ describe("create node tests", () => {
 
         const patchingData = html`${name}`;
 
-        const node = createNode(patchingData);
+        const fragment = document.createDocumentFragment();
+
+        const node = createNode(fragment, patchingData);
 
         expect(node.nodeType).toEqual(Node.DOCUMENT_FRAGMENT_NODE);
 
         expect((node as any)._$patchingData).toBeUndefined(); // The patching data is not set in a document fragment since it looses its children when added to a parent
 
-        expect(patchingData.node).toBeUndefined(); // No document fragments get the node of its patching data set
+        // TODO: Verify the assumption below if not, the do not allow document fragments as a parent node
+        // The parent node is a fragment. Shadow DOMs are document fragments
+        expect(patchingData.node).toEqual(fragment); 
 
         const {
             childNodes
@@ -39,7 +43,7 @@ describe("create node tests", () => {
 
         const patchingData = html`<span>literal</span>`;
 
-        const node = createNode(patchingData) as HTMLElement;
+        const node = createNode(undefined, patchingData) as HTMLElement;
 
         expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
 
@@ -54,7 +58,7 @@ describe("create node tests", () => {
 
         const patchingData = html`<span>${name}</span>`;
 
-        const node = createNode(patchingData);
+        const node = createNode(undefined, patchingData);
 
         expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
 
@@ -90,7 +94,7 @@ describe("create node tests", () => {
             key=${field}>
         </gcl-data-cell>`;
 
-        const node = createNode(patchingData) as HTMLElement;
+        const node = createNode(undefined, patchingData) as HTMLElement;
 
         // Verify the patching data
         const {
@@ -163,7 +167,7 @@ describe("create node tests", () => {
                 <use href=${iconPath} />
             </svg>`;
 
-        const node = createNode(patchingData) as HTMLElement;
+        const node = createNode(undefined, patchingData) as HTMLElement;
 
         // Verify the patching data
         const {
