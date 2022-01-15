@@ -16,7 +16,7 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('<!--_$bm_--><!--_$em_-->');
+        expect(templateString).toEqual("<!--_$bm_--><!--_$em_-->");
 
         const {
             childNodes
@@ -74,7 +74,7 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('<!--_$bm_--><!--_$em_--><!--_$bm_--><!--_$em_-->');
+        expect(templateString).toEqual("<!--_$bm_--><!--_$em_--><!--_$bm_--><!--_$em_-->");
 
         const {
             childNodes
@@ -109,7 +109,7 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('Name: <!--_$bm_--><!--_$em_-->');
+        expect(templateString).toEqual("Name: <!--_$bm_--><!--_$em_-->");
 
         const {
             childNodes
@@ -148,15 +148,15 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('\n            <x-item class=\"item\">\n                My name is: <!--_$bm_--><!--_$em_-->\n            </x-item>\n        ');
+        expect(templateString).toEqual("<x-item class=\"item\">\n                My name is: <!--_$bm_--><!--_$em_--></x-item>");
 
         const {
             childNodes
         } = template.content;
 
-        expect(childNodes.length).toEqual(3);
+        expect(childNodes.length).toEqual(1);
 
-        const node = childNodes[1];
+        const node = childNodes[0];
 
         expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
 
@@ -165,7 +165,36 @@ describe("create template tests", () => {
         expect(keyIndex).toEqual(undefined);
     });
 
-    it('should create an element template with one attribute', () => {
+    it('should create a self-closing element template with one attribute', () => {
+
+        const href = "some-ref";
+
+        const strings = extractTemplateStringArrays`<use href=${href} />`;
+
+        const {
+            templateString,
+            template,
+            keyIndex
+        } = createTemplate(strings);
+
+        expect(templateString).toEqual("<use href=\"_$attr:href\" />");
+
+        const {
+            childNodes
+        } = template.content;
+
+        expect(childNodes.length).toEqual(1);
+
+        const node = childNodes[0];
+
+        expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
+
+        expect((node as HTMLElement).tagName).toEqual('USE');
+
+        expect(keyIndex).toEqual(undefined);
+    });
+
+    it('should create an element template with one attribute and a child text node', () => {
 
         const name = "Sarah";
 
@@ -183,15 +212,15 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('\n            <x-item class=\"item\" age=\"_$attr:age\">\n                My name is: <!--_$bm_--><!--_$em_-->\n            </x-item>\n        ');
+        expect(templateString).toEqual("<x-item class=\"item\" age=\"_$attr:age\">\n                My name is: <!--_$bm_--><!--_$em_--></x-item>");
 
         const {
             childNodes
         } = template.content;
 
-        expect(childNodes.length).toEqual(3);
+        expect(childNodes.length).toEqual(1);
 
-        const node = childNodes[1];
+        const node = childNodes[0];
 
         expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
 
@@ -220,15 +249,15 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('\n            <x-item class=\"item\" age=\"_$attr:age\" description=\"_$attr:description\">\n                My name is: <!--_$bm_--><!--_$em_-->\n            </x-item>\n        ');
+        expect(templateString).toEqual("<x-item class=\"item\" age=\"_$attr:age\" description=\"_$attr:description\">\n                My name is: <!--_$bm_--><!--_$em_--></x-item>");
 
         const {
             childNodes
         } = template.content;
 
-        expect(childNodes.length).toEqual(3);
+        expect(childNodes.length).toEqual(1);
 
-        const node = childNodes[1];
+        const node = childNodes[0];
 
         expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
 
@@ -253,15 +282,15 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('\n            <x-item class=\"item\" name=\"_$attr:name\" description=\"_$attr:description\" />\n        ');
+        expect(templateString).toEqual("<x-item class=\"item\" name=\"_$attr:name\" description=\"_$attr:description\" />");
 
         const {
             childNodes
         } = template.content;
 
-        expect(childNodes.length).toEqual(3);
+        expect(childNodes.length).toEqual(1);
 
-        const node = childNodes[1];
+        const node = childNodes[0];
 
         expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
 
@@ -292,13 +321,13 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('\n            <!--_$bm_--><!--_$em_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_--><!--_$em_-->\n            </x-item>\n            <!--_$bm_--><!--_$em_-->\n        ');
+        expect(templateString).toEqual("<!--_$bm_--><!--_$em_--><x-item class=\"item\">\n                My name is: <!--_$bm_--><!--_$em_--></x-item><!--_$bm_--><!--_$em_-->");
 
         const {
             childNodes
         } = template.content;
 
-        expect(childNodes.length).toEqual(9);
+        expect(childNodes.length).toEqual(5);
 
         expect(keyIndex).toEqual(undefined);
     });
@@ -325,13 +354,13 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('\n            Header: <!--_$bm_--><!--_$em_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_--><!--_$em_-->\n            </x-item>\n            Footer: <!--_$bm_--><!--_$em_-->\n        ');
+        expect(templateString).toEqual("\n            Header: <!--_$bm_--><!--_$em_--><x-item class=\"item\">\n                My name is: <!--_$bm_--><!--_$em_--></x-item>\n            Footer: <!--_$bm_--><!--_$em_-->");
 
         const {
             childNodes
         } = template.content;
 
-        expect(childNodes.length).toEqual(9);
+        expect(childNodes.length).toEqual(7);
 
         expect(keyIndex).toEqual(undefined);
     });
@@ -354,13 +383,13 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual('\n            Header: <!--_$bm_--><!--_$em_-->\n            <x-item class=\"item\" />\n            Footer: <!--_$bm_--><!--_$em_-->\n        ');
+        expect(templateString).toEqual("\n            Header: <!--_$bm_--><!--_$em_--><x-item class=\"item\" />\n            Footer: <!--_$bm_--><!--_$em_-->");
 
         const {
             childNodes
         } = template.content;
 
-        expect(childNodes.length).toEqual(9);
+        expect(childNodes.length).toEqual(7);
 
         expect(keyIndex).toEqual(undefined);
     });

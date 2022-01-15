@@ -65,6 +65,8 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
 
         s = strings[i];
 
+        s = trimNode(s);
+
         if (s.endsWith('=')) { // It is an attribute or an event
 
             const name = getAttributeName(s);
@@ -108,12 +110,34 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
 
     s = strings[length];
 
+    s = trimNode(s);
+
     parts.push(s);
 
     return {
         templateString: parts.join(''),
         keyIndex
     };
+}
+
+function trimNode(s: string) : string {
+
+    const trimmedStart = s.trimStart();
+
+    if (trimmedStart.startsWith('<') ||
+        trimmedStart === '') {
+
+        s = trimmedStart; // Remove any empty text nodes at the start so there are not extra unnecessary children
+    }
+
+    const trimmedEnd = s.trimEnd();
+
+    if (trimmedEnd.endsWith('>')) {
+
+        s = trimmedEnd;
+    }
+
+    return s;
 }
 
 function getAttributeName(s: string): string {

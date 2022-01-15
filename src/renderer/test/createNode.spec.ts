@@ -136,7 +136,7 @@ describe("create node tests", () => {
             keyIndex,
         } = patcher;
 
-        expect(templateString).toEqual('<gcl-data-cell \n            field=\"_$attr:field\" \n            record=\"_$attr:record\" \n            key=\"_$attr:key\"></gcl-data-cell>');
+        expect(templateString).toEqual("<gcl-data-cell \n            field=\"_$attr:field\" \n            record=\"_$attr:record\" \n            key=\"_$attr:key\">\n        </gcl-data-cell>");
 
         const {
             childNodes: templateChildren
@@ -155,7 +155,7 @@ describe("create node tests", () => {
             childNodes
         } = node;
 
-        expect(childNodes.length).toEqual(0);
+        expect(childNodes.length).toEqual(1);
 
         expect(node.attributes.length).toEqual(3);
 
@@ -203,7 +203,7 @@ describe("create node tests", () => {
             keyIndex,
         } = patcher;
 
-        expect(templateString).toEqual('<svg role=\"img\">\n                <use href=\"_$attr:href\" /></svg>');
+        expect(templateString).toEqual("<svg role=\"img\">\n                <use href=\"_$attr:href\" />\n            </svg>");
 
         const {
             childNodes: templateChildren
@@ -218,7 +218,7 @@ describe("create node tests", () => {
 
         expect((node as any)._$patchingData).toEqual(patchingData);
 
-        expect(node.outerHTML).toEqual('<svg role=\"img\">\n                <use href=\"/dist/assets/icons#alarm\"/></svg>');
+        expect(node.outerHTML).toEqual("<svg role=\"img\">\n                <use href=\"/dist/assets/icons#alarm\"/>\n            </svg>");
     });
 
 });

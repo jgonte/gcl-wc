@@ -22,7 +22,7 @@ describe("App tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<!--_$bm_--><!--_$em_-->\n            <slot></slot>");
+        expect(component.shadowRoot.innerHTML).toBe("<!--_$bm_--><!--_$em_--><slot></slot>");
     });
 
     it('should render the errors', async () => {
@@ -47,7 +47,7 @@ describe("App tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<!--_$bm_--><gcl-overlay>\n                <!--_$bm_--><span><!--_$bm_-->error 1<!--_$em_--></span><span><!--_$bm_-->error 2<!--_$em_--></span><!--_$em_-->\n            </gcl-overlay><!--_$em_-->\n            <slot></slot>");
+        expect(component.shadowRoot.innerHTML).toBe("<!--_$bm_--><gcl-overlay><!--_$bm_--><span><!--_$bm_-->error 1<!--_$em_--></span><span><!--_$bm_-->error 2<!--_$em_--></span><!--_$em_--></gcl-overlay><!--_$em_--><slot></slot>");
     });
 
 });

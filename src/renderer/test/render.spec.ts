@@ -435,22 +435,20 @@ describe("renderer tests", () => {
 
         // At this time the node should be created, ensure that the patching data has a reference to it
         const {
-            node: containerNode // DIV
+            node: containerNode
         } = containerPatchingData;
 
-        expect((containerNode as HTMLElement).outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
+        expect((containerNode as HTMLElement).outerHTML).toEqual("<x-container class=\"container\"><!--_$bm_--><x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_--></x-item><!--_$em_--></x-container>");
 
         const {
-            node: itemNode // X-CONTAINER
+            node: itemNode
         } = itemPatchingData;
 
         expect(itemNode).toBe(containerNode.childNodes[1]); // it should refer to the same child node
 
-        const childNode = itemNode.childNodes[3];
+        expect((itemNode as HTMLElement).outerHTML).toEqual("<x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_--></x-item>");
 
-        expect((childNode as HTMLElement).outerHTML).toEqual('<x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>');
-
-        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_--></x-item><!--_$em_--></x-container></div>");
 
         // Replace the name of the nested text
         name = "Mark";
@@ -471,7 +469,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_--></x-item><!--_$em_--></x-container></div>");
 
         // Remove the nested item
         itemPatchingData = null;
@@ -486,7 +484,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_--><!--_$em_-->\n            </x-container>\n        </div>');
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><!--_$em_--></x-container></div>");
     });
 
     it('should render a container with nested children', () => {
@@ -515,7 +513,7 @@ describe("renderer tests", () => {
             node: containerNode
         } = containerPatchingData;
 
-        expect((containerNode as HTMLElement).outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sasha<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
+        expect((containerNode as HTMLElement).outerHTML).toEqual("<x-container class=\"container\"><!--_$bm_--><x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_--></x-item><x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_--></x-item><x-item class=\"item\">\n                My name is: <!--_$bm_-->Sasha<!--_$em_--></x-item><!--_$em_--></x-container>");
 
         // Replace the name of the nested text
         names = ["Mark", "Sasha", "Sarah"];
@@ -536,7 +534,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sasha<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_--></x-item><x-item class=\"item\">\n                My name is: <!--_$bm_-->Sasha<!--_$em_--></x-item><x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_--></x-item><!--_$em_--></x-container></div>");
 
         // Remove the nested items
         itemsPatchingData = null;
@@ -551,7 +549,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_--><!--_$em_-->\n            </x-container>\n        </div>');
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><!--_$em_--></x-container></div>");
     });
 
     it('should render a collection of children before a slot', () => {
@@ -573,7 +571,7 @@ describe("renderer tests", () => {
 
         mountNode(container, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <!--_$bm_--><span><!--_$bm_-->Sarah<!--_$em_--></span><span><!--_$bm_-->Mark<!--_$em_--></span><span><!--_$bm_-->Sasha<!--_$em_--></span><!--_$em_-->\n            <slot></slot><!--_$em_-->\n            </x-container>\n        </div>');
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><!--_$bm_--><span><!--_$bm_-->Sarah<!--_$em_--></span><span><!--_$bm_-->Mark<!--_$em_--></span><span><!--_$bm_-->Sasha<!--_$em_--></span><!--_$em_--><slot></slot><!--_$em_--></x-container></div>");
 
         // Replace the name of the nested texts
         names = ["Mark", "Sasha", "Sarah"];
@@ -592,7 +590,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <!--_$bm_--><span><!--_$bm_-->Mark<!--_$em_--></span><span><!--_$bm_-->Sasha<!--_$em_--></span><span><!--_$bm_-->Sarah<!--_$em_--></span><!--_$em_-->\n            <slot></slot><!--_$em_-->\n            </x-container>\n        </div>');
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><!--_$bm_--><span><!--_$bm_-->Mark<!--_$em_--></span><span><!--_$bm_-->Sasha<!--_$em_--></span><span><!--_$bm_-->Sarah<!--_$em_--></span><!--_$em_--><slot></slot><!--_$em_--></x-container></div>");
 
         // Remove the nested item
         itemsPatchingData = null;
@@ -673,7 +671,7 @@ describe("renderer tests", () => {
 
         mountNode(container, patchingData);
 
-        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_-->\n            <!--_$bm_--><!--_$em_--></div>");
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_--><!--_$bm_--><!--_$em_--></div>");
 
         name = "Sarah";
 
@@ -684,7 +682,7 @@ describe("renderer tests", () => {
 
         updateNode(container, patchingData, newPatchingData);
 
-        expect(container.outerHTML).toEqual("<div><!--_$bm_--><span style=\"color: green;\">Special for Sarah</span><!--_$em_-->\n            <!--_$bm_--><span style=\"color: green;\">You are too young</span><!--_$em_--></div>");
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><span style=\"color: green;\">Special for Sarah</span><!--_$em_--><!--_$bm_--><span style=\"color: green;\">You are too young</span><!--_$em_--></div>");
 
         patchingData = newPatchingData;
 
@@ -697,7 +695,7 @@ describe("renderer tests", () => {
 
         updateNode(container, patchingData, newPatchingData);
 
-        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_-->\n            <!--_$bm_--><span style=\"color: green;\">You are too young</span><!--_$em_--></div>");
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_--><!--_$bm_--><span style=\"color: green;\">You are too young</span><!--_$em_--></div>");
 
         name = "Jorge";
 
@@ -708,7 +706,7 @@ describe("renderer tests", () => {
 
         updateNode(container, patchingData, newPatchingData);
 
-        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_-->\n            <!--_$bm_--><!--_$em_--></div>");
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_--><!--_$bm_--><!--_$em_--></div>");
     });
 
     //////////////
@@ -804,10 +802,7 @@ describe("renderer tests", () => {
 
         mountNode(container, patchingData);
 
-        expect(container.outerHTML).toEqual(`<div><span><gcl-localized-text>Name: Sarah<!--_$em_--></gcl-localized-text>
-                Text: Some text<!--_$em_--></span></div>`);
-
-
+        expect(container.outerHTML).toEqual("<div><span>\n                <gcl-localized-text>Name: <!--_$bm_-->Sarah<!--_$em_--></gcl-localized-text>\n                Text: <!--_$bm_-->Some text<!--_$em_--></span></div>");
     });
 
     //     it('should render from nested calls to the "html" function', () => {
@@ -879,8 +874,7 @@ describe("renderer tests", () => {
 
         mountNode(container, patchingData);
 
-        expect(container.outerHTML).toEqual(`<div><gcl-list-item value=\"1\"><span><gcl-localized-text>Name: Sarah</gcl-localized-text>
-                    Some text</span><gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text><gcl-localized-text>Reputation: 10</gcl-localized-text><gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text><img style=\"width: 64px; height: 64px; border-radius: 50%;\" src=\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z\"/></gcl-list-item></div>`);
+        expect(container.outerHTML).toEqual("<div><gcl-list-item value=\"1\">       \n                <span>\n                    <gcl-localized-text>Name: <!--_$bm_-->Sarah<!--_$em_--></gcl-localized-text>\n                    Some text\n                </span>\n                <gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text>\n\n                <gcl-localized-text>Reputation: 10</gcl-localized-text>\n\n                <gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text>\n                <img style=\"width: 64px; height: 64px; border-radius: 50%;\" src=\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z\"/>\n            </gcl-list-item></div>");
 
         // const vnode = markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true }).vnode as ElementNode;
 
