@@ -47,10 +47,7 @@ describe("form tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(
-`<gcl-row justify-content="center"><!--_$em_-->
-            <!--_$em_--><form key=\"form\"><slot key=\"form-fields-slot\"></slot><gcl-button key=\"submit-button\" kind=\"primary\" variant=\"contained\"><gcl-localized-text resource-key=\"submit\">Submit</gcl-localized-text><gcl-icon name="box-arrow-right"></gcl-icon></gcl-button><!--_$em_--></form></gcl-row>`
-        );
+        expect(component.shadowRoot.innerHTML).toBe("<gcl-row justify-content=\"center\"><!--_$bm_--><!--_$em_--><!--_$bm_--><!--_$em_--><form key=\"form\">\n                <slot key=\"form-fields-slot\"></slot><!--_$bm_--><gcl-button key=\"submit-button\" kind=\"primary\" variant=\"contained\">\n           <gcl-localized-text resource-key=\"submit\">Submit</gcl-localized-text>\n           <gcl-icon name=\"box-arrow-right\"></gcl-icon>\n        </gcl-button><!--_$em_--></form>\n        </gcl-row>");
     });
 
     // it('should render when the data of the attributes is provided via functions', async () => {

@@ -554,12 +554,10 @@ describe("renderer tests", () => {
 
     it('should render a collection of children before a slot', () => {
 
-        // Add the nested child element
-        let names = ["Sarah", "Mark", "Sasha"];
+        const container = document.createElement('div');
 
-        let itemsPatchingData = html`
-            ${names.map(name => html`<span>${name}</span>`)}
-            <slot></slot>`;
+        // Add empty container
+        let itemsPatchingData = null;
 
         let containerPatchingData = html`
             <x-container class="container">       
@@ -567,9 +565,26 @@ describe("renderer tests", () => {
             </x-container>
         `;
 
-        const container = document.createElement('div');
-
         mountNode(container, containerPatchingData);
+
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><!--_$em_--></x-container></div>");
+
+        // Add the nested child element
+        let names = ["Sarah", "Mark", "Sasha"];
+
+        itemsPatchingData = html`
+            ${names.map(name => html`<span>${name}</span>`)}
+            <slot></slot>`;
+
+        let oldPatchingData = containerPatchingData;
+
+        containerPatchingData = html`
+            <x-container class="container">       
+                ${itemsPatchingData}
+            </x-container>
+        `;
+
+        updateNode(container, oldPatchingData, containerPatchingData);
 
         expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><!--_$bm_--><span><!--_$bm_-->Sarah<!--_$em_--></span><span><!--_$bm_-->Mark<!--_$em_--></span><span><!--_$bm_-->Sasha<!--_$em_--></span><!--_$em_--><slot></slot><!--_$em_--></x-container></div>");
 
@@ -580,7 +595,7 @@ describe("renderer tests", () => {
             ${names.map(name => html`<span>${name}</span>`)}
             <slot></slot>`;
 
-        let oldPatchingData = containerPatchingData;
+        oldPatchingData = containerPatchingData;
 
         containerPatchingData = html`
             <x-container class="container">       
@@ -605,7 +620,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual("");
+        expect(container.outerHTML).toEqual("<div><x-container class=\"container\"><!--_$bm_--><!--_$em_--></x-container></div>");
     });
 
     it('should render a different child element', () => {
