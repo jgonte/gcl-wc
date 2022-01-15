@@ -6,10 +6,10 @@ import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import { html } from "../../renderer/html";
 import appCtrl from "../app/appCtrl";
-import styles from "./Text.css";
+import styles from "./LocalizedText.css";
 
 //@ts-ignore
-export default class Text extends
+export default class LocalizedText extends
     SizableMixin(
         KindMixin(
             CustomElement
@@ -30,8 +30,8 @@ export default class Text extends
             /**
              * The key to retrieve a localized value from an i18n provider
              */
-            intlKey: {
-                attribute: 'intl-key',
+            resourceKey: {
+                attribute: 'resource-key',
                 type: String
             },
 
@@ -42,23 +42,59 @@ export default class Text extends
                 type: String,
                 mutable: true,
                 reflect: true
+            },
+
+            /**
+             * The value of the translated resource
+             */
+            value: {
+                type: String,
+                mutable: true,
+                reflect: true
             }
         };
+    }
+
+    connectedCallback() {
+
+        super.connectedCallback?.();
+
+        const {
+            lang,
+            resourceKey
+        } = this;
+
+        if (resourceKey !== undefined) {
+
+            const {
+                intlProvider
+            } = appCtrl;
+
+            intlProvider.subscribe(this);
+
+            this.value = intlProvider.getTranslation(lang, resourceKey);
+        }
+    }
+
+    disconnectedCallback() {
+
+        super.disconnectedCallback?.();
+
+        const { 
+            resourceKey 
+        } = this;
+
+        if (resourceKey) {
+
+            appCtrl.intlProvider.unsubscribe(this);
+        }
     }
 
     render() {
 
         const {
-            intlKey,
-            lang
+            value
         } = this;
-
-        let value; // The value of the text is retrieved dynamically from the language
-
-        if (intlKey !== undefined) {
-
-            value = appCtrl.intlProvider?.getTranslation(lang, intlKey);
-        }
 
         if (value === undefined) {
 
@@ -72,9 +108,13 @@ export default class Text extends
 
     handleLanguageChanged(provider) {
 
-        this.setValue(provider.getTranslation(this.lang, this.intlKey));
-    }
+        const {
+            resourceKey,
+            lang
+        } = this;
 
+        this.value = provider.getTranslation(lang, resourceKey);
+    }
 }
 
-defineCustomElement('gcl-text', Text);
+defineCustomElement('gcl-localized-text', LocalizedText);

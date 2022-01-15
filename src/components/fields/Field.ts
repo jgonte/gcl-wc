@@ -4,7 +4,10 @@ import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import ValidatableMixin from "../../custom-element/mixins/components/validatable/ValidatableMixin";
 import RequiredValidator from "../../utils/validation/validators/field/RequiredValidator";
+import LocalizedText from "../localized-text/LocalizedText";
 import styles from "./Field.css";
+
+export const inputEvent = "inputEvent";
 
 export const changeEvent = "changeEvent";
 
@@ -55,10 +58,56 @@ export abstract class Field extends
 
             required: {
                 type: Boolean,
+                inherit: true,
                 mutable: true,
                 reflect: true
             }
         };
+    }
+
+    attributeChangedCallback(attributeName: string, oldValue: string, newValue: string) {
+
+        if (attributeName === 'required') {
+
+            if (newValue !== "false") { // Add a required validator
+
+                if (!this.hasRequiredValidator()) {
+
+                    const {
+                        validators = []
+                    } = this;
+
+                    this.validators = [...validators, new RequiredValidator()];
+                }
+            }
+            else { // remove any existing required validator
+
+                if (this.hasRequiredValidator()) {
+
+                    const {
+                        validators
+                    } = this;
+
+                    const requiredValidator = validators.filter(v => v instanceof RequiredValidator)[0];
+
+                    if (requiredValidator !== undefined) {
+
+                        const index = validators.indexOf(requiredValidator);
+
+                        validators.splice(index, 1);
+
+                        this.validators = validators;
+                    }
+                }
+            }
+        }
+
+        super.attributeChangedCallback(attributeName, oldValue, newValue);
+    }
+
+    hasRequiredValidator(): boolean {
+
+        return this.validators.filter(v => v instanceof RequiredValidator).length > 1;
     }
 
     didAdoptChildCallback(parent, child) {
@@ -83,12 +132,13 @@ export abstract class Field extends
      */
     handleInput(event) {
 
-        // Retrieve the new value
-        const target = event.target as HTMLInputElement;
+        this._tempValue = this.getNewValue(event.target);
 
-        this._tempValue = this.getNewValue(target);
+        this.validate(); // Validate the field on input
 
-        return this.validate(); // Validate the field on input
+        this.dispatchCustomEvent(inputEvent, {
+            modified: !this.dataField.hasSameInitialValue(this._tempValue)
+        });
     }
 
     createValidationContext() /*: ValidationContext */ {
@@ -116,7 +166,20 @@ export abstract class Field extends
 
     getLabel() : string {
 
-        return "kuku";
+        const {
+            adoptingParent
+        } = this;
+
+        const lt = Array.from(adoptingParent.children).filter(c => c instanceof LocalizedText);
+
+        if (lt.length > 0) {
+
+            return (lt[0] as LocalizedText).innerHTML;
+        }
+        else {
+
+            throw new Error('Not implemented');
+        }
     }
 
     handleChange(event): void {
@@ -136,15 +199,11 @@ export abstract class Field extends
             value
         } = this;
 
-        setTimeout(() => { // Repaint before dispatching the event
-
-            this.dispatchCustomEvent(changeEvent, {
-                name,
-                oldValue,
-                newValue: value
-            });
-
-        }, 0);
+        this.dispatchCustomEvent(changeEvent, {
+            name,
+            oldValue,
+            newValue: value
+        });
     }
 
     getNewValue(input: HTMLInputElement): any {

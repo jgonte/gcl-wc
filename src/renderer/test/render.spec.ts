@@ -27,14 +27,12 @@ describe("renderer tests", () => {
 
         expect(content).toBeInstanceOf(DocumentFragment);
 
-        expect(content.childNodes[0].textContent).toEqual('_$node_');
-
         // Insert a child
         const container = document.createElement('span');
 
         mountNode(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<span>Sarah<!--_$node_--></span>');
+        expect(container.outerHTML).toEqual('<span><!--_$bm_-->Sarah<!--_$em_--></span>');
 
         const {
             rules
@@ -47,10 +45,10 @@ describe("renderer tests", () => {
 
         expect(rule.type).toEqual(NodePatcherRuleTypes.PATCH_NODE);
 
-        expect(rule.node).toEqual(container.childNodes[1]);
+        expect(rule.node).toEqual(container.childNodes[2]);
 
-        // Modify the child
-        name = "Mark";
+        // Test that no changes are made if the same value is kept
+        name = "Sarah";
 
         let oldPatchingData = patchingData;
 
@@ -58,7 +56,18 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<span>Mark<!--_$node_--></span>');
+        expect(container.outerHTML).toEqual('<span><!--_$bm_-->Sarah<!--_$em_--></span>');
+
+        // Modify the child
+        name = "Mark";
+
+        oldPatchingData = patchingData;
+
+        patchingData = html`${name}`;
+
+        updateNode(container, oldPatchingData, patchingData);
+
+        expect(container.outerHTML).toEqual('<span><!--_$bm_-->Mark<!--_$em_--></span>');
 
         // Remove the child
         name = null;
@@ -69,7 +78,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<span><!--_$node_--></span>');
+        expect(container.outerHTML).toEqual('<span><!--_$bm_--><!--_$em_--></span>');
 
         // Add a child again to ensure that state is conserved
         name = "Sarah";
@@ -80,7 +89,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<span>Sarah<!--_$node_--></span>');
+        expect(container.outerHTML).toEqual('<span><!--_$bm_-->Sarah<!--_$em_--></span>');
     });
 
     it('should render a collection of non-keyed nodes', () => {
@@ -102,7 +111,7 @@ describe("renderer tests", () => {
 
         mountChildren(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><span age=\"31\">Mark<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span></div>');
 
         // Swap the children
         data = [
@@ -122,7 +131,7 @@ describe("renderer tests", () => {
 
         updateChildren(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$node_--></span><span age=\"19\">Sarah<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span><span age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span></div>');
 
         // Remove the children
         data = [];
@@ -153,7 +162,7 @@ describe("renderer tests", () => {
 
         updateChildren(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><span age=\"31\">Mark<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span></div>');
     });
 
     it('should render a collection of keyed nodes', () => {
@@ -177,7 +186,7 @@ describe("renderer tests", () => {
 
         mountChildren(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span></div>');
 
         // Swap the children
         data = [
@@ -199,7 +208,7 @@ describe("renderer tests", () => {
 
         updateChildren(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span></div>');
 
         // Remove the children
         data = [];
@@ -232,7 +241,7 @@ describe("renderer tests", () => {
 
         updateChildren(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span></div>');
     });
 
     it('should render a collection of keyed nodes swap two first elements', () => {
@@ -261,7 +270,7 @@ describe("renderer tests", () => {
 
         mountChildren(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span><span key=\"3\" age=\"1\"><!--_$bm_-->Sasha<!--_$em_--></span></div>');
 
         // Swap the children
         data = [
@@ -288,7 +297,7 @@ describe("renderer tests", () => {
 
         updateChildren(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span key=\"3\" age=\"1\"><!--_$bm_-->Sasha<!--_$em_--></span></div>');
     });
 
     it('should render a collection of keyed nodes swap two last elements', () => {
@@ -317,7 +326,7 @@ describe("renderer tests", () => {
 
         mountChildren(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span><span key=\"3\" age=\"1\"><!--_$bm_-->Sasha<!--_$em_--></span></div>');
 
         // Swap the children
         data = [
@@ -344,7 +353,7 @@ describe("renderer tests", () => {
 
         updateChildren(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span key=\"3\" age=\"1\"><!--_$bm_-->Sasha<!--_$em_--></span><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span></div>');
     });
 
     it('should render a collection of keyed nodes swap first and last elements', () => {
@@ -373,7 +382,7 @@ describe("renderer tests", () => {
 
         mountChildren(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span><span key=\"3\" age=\"1\"><!--_$bm_-->Sasha<!--_$em_--></span></div>');
 
         // Swap the children
         data = [
@@ -400,13 +409,13 @@ describe("renderer tests", () => {
 
         updateChildren(container, oldPatchingData, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span key=\"3\" age=\"1\">Sasha<!--_$node_--></span><span key=\"2\" age=\"31\">Mark<!--_$node_--></span><span key=\"1\" age=\"19\">Sarah<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span key=\"3\" age=\"1\"><!--_$bm_-->Sasha<!--_$em_--></span><span key=\"2\" age=\"31\"><!--_$bm_-->Mark<!--_$em_--></span><span key=\"1\" age=\"19\"><!--_$bm_-->Sarah<!--_$em_--></span></div>');
     });
 
     it('should render a container with a nested single child', () => {
 
-        // Add the nested child element
         let name = "Sarah";
+        // Add the nested child element
 
         let itemPatchingData = html`
             <x-item class="item">
@@ -426,20 +435,22 @@ describe("renderer tests", () => {
 
         // At this time the node should be created, ensure that the patching data has a reference to it
         const {
-            node: containerNode
+            node: containerNode // DIV
         } = containerPatchingData;
 
-        expect((containerNode as HTMLElement).outerHTML).toEqual('<x-container class=\"container\"><x-item class=\"item\">\n                My name is: Sarah<!--_$node_--></x-item><!--_$node_--></x-container>');
+        expect((containerNode as HTMLElement).outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
 
         const {
-            node: itemNode
+            node: itemNode // X-CONTAINER
         } = itemPatchingData;
 
-        expect(itemNode).toBe(containerNode.childNodes[0]); // it should refer to the same child node
+        expect(itemNode).toBe(containerNode.childNodes[1]); // it should refer to the same child node
 
-        expect((itemNode as HTMLElement).outerHTML).toEqual('<x-item class=\"item\">\n                My name is: Sarah<!--_$node_--></x-item>');
+        const childNode = itemNode.childNodes[3];
 
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><x-item class=\"item\">\n                My name is: Sarah<!--_$node_--></x-item><!--_$node_--></x-container></div>');
+        expect((childNode as HTMLElement).outerHTML).toEqual('<x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>');
+
+        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
 
         // Replace the name of the nested text
         name = "Mark";
@@ -460,7 +471,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><x-item class=\"item\">\n                My name is: Mark<!--_$node_--></x-item><!--_$node_--></x-container></div>');
+        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
 
         // Remove the nested item
         itemPatchingData = null;
@@ -475,7 +486,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><!--_$node_--></x-container></div>');
+        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_--><!--_$em_-->\n            </x-container>\n        </div>');
     });
 
     it('should render a container with nested children', () => {
@@ -504,23 +515,7 @@ describe("renderer tests", () => {
             node: containerNode
         } = containerPatchingData;
 
-        expect((containerNode as HTMLElement).outerHTML).toEqual(`<x-container class=\"container\"><x-item class=\"item\">
-                My name is: Sarah<!--_$node_--></x-item><x-item class=\"item\">
-                My name is: Mark<!--_$node_--></x-item><x-item class=\"item\">
-                My name is: Sasha<!--_$node_--></x-item><!--_$node_--></x-container>`);
-
-        const {
-            node: itemNode
-        } = itemsPatchingData[0];
-
-        expect(itemNode).toBe(containerNode.childNodes[0]); // it should refer to the same child node
-
-        expect((itemNode as HTMLElement).outerHTML).toEqual('<x-item class=\"item\">\n                My name is: Sarah<!--_$node_--></x-item>');
-
-        expect(container.outerHTML).toEqual(`<div><x-container class=\"container\"><x-item class=\"item\">
-                My name is: Sarah<!--_$node_--></x-item><x-item class=\"item\">
-                My name is: Mark<!--_$node_--></x-item><x-item class=\"item\">
-                My name is: Sasha<!--_$node_--></x-item><!--_$node_--></x-container></div>`);
+        expect((containerNode as HTMLElement).outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sasha<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
 
         // Replace the name of the nested text
         names = ["Mark", "Sasha", "Sarah"];
@@ -541,10 +536,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual(`<div><x-container class=\"container\"><x-item class=\"item\">
-                My name is: Mark<!--_$node_--></x-item><x-item class=\"item\">
-                My name is: Sasha<!--_$node_--></x-item><x-item class=\"item\">
-                My name is: Sarah<!--_$node_--></x-item><!--_$node_--></x-container></div>`);
+        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Mark<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sasha<!--_$em_-->\n            </x-item>\n        \n            <x-item class=\"item\">\n                My name is: <!--_$bm_-->Sarah<!--_$em_-->\n            </x-item>\n        <!--_$em_-->\n            </x-container>\n        </div>');
 
         // Remove the nested items
         itemsPatchingData = null;
@@ -559,7 +551,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><!--_$node_--></x-container></div>');
+        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_--><!--_$em_-->\n            </x-container>\n        </div>');
     });
 
     it('should render a collection of children before a slot', () => {
@@ -581,20 +573,7 @@ describe("renderer tests", () => {
 
         mountNode(container, containerPatchingData);
 
-        // At this time the node should be created, ensure that the patching data has a reference to it
-        const {
-            node: containerNode
-        } = containerPatchingData;
-
-        expect((containerNode as HTMLElement).outerHTML).toEqual('<x-container class=\"container\"><span>Sarah<!--_$node_--></span><span>Mark<!--_$node_--></span><span>Sasha<!--_$node_--></span><!--_$node_--><slot></slot><!--_$node_--></x-container>');
-
-        const itemNode = itemsPatchingData.values[0][0].node;
-
-        expect(itemNode).toBe(containerNode.childNodes[0]); // it should refer to the same child node
-
-        expect((itemNode as HTMLElement).outerHTML).toEqual('<span>Sarah<!--_$node_--></span>');
-
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><span>Sarah<!--_$node_--></span><span>Mark<!--_$node_--></span><span>Sasha<!--_$node_--></span><!--_$node_--><slot></slot><!--_$node_--></x-container></div>');
+        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <!--_$bm_--><span><!--_$bm_-->Sarah<!--_$em_--></span><span><!--_$bm_-->Mark<!--_$em_--></span><span><!--_$bm_-->Sasha<!--_$em_--></span><!--_$em_-->\n            <slot></slot><!--_$em_-->\n            </x-container>\n        </div>');
 
         // Replace the name of the nested texts
         names = ["Mark", "Sasha", "Sarah"];
@@ -613,7 +592,7 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><span>Mark<!--_$node_--></span><span>Sasha<!--_$node_--></span><span>Sarah<!--_$node_--></span><!--_$node_--><slot></slot><!--_$node_--></x-container></div>');
+        expect(container.outerHTML).toEqual('<div>\n            <x-container class=\"container\">       \n                <!--_$bm_-->\n            <!--_$bm_--><span><!--_$bm_-->Mark<!--_$em_--></span><span><!--_$bm_-->Sasha<!--_$em_--></span><span><!--_$bm_-->Sarah<!--_$em_--></span><!--_$em_-->\n            <slot></slot><!--_$em_-->\n            </x-container>\n        </div>');
 
         // Remove the nested item
         itemsPatchingData = null;
@@ -628,10 +607,10 @@ describe("renderer tests", () => {
 
         updateNode(container, oldPatchingData, containerPatchingData);
 
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\"><!--_$node_--></x-container></div>');
+        expect(container.outerHTML).toEqual("");
     });
 
-    it('should create a different child element', () => {
+    it('should render a different child element', () => {
 
         const name = "Sarah";
 
@@ -641,53 +620,195 @@ describe("renderer tests", () => {
 
         mountNode(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><span>Sarah<!--_$node_--></span></div>');
+        expect(container.outerHTML).toEqual('<div><span><!--_$bm_-->Sarah<!--_$em_--></span></div>');
 
         const newPatchingData = html`<h1>${name}</h1>`;
 
         updateNode(container, patchingData, newPatchingData);
 
-        expect(container.outerHTML).toEqual('<div><h1>Sarah<!--_$node_--></h1></div>');
+        expect(container.outerHTML).toEqual('<div><h1><!--_$bm_-->Sarah<!--_$em_--></h1></div>');
+    });
+
+    it('should render a conditional element', () => {
+
+        let name: string = "Jorge";
+
+        let patchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}`;
+
+        const container = document.createElement('div');
+
+        mountNode(container, patchingData);
+
+        expect(container.outerHTML).toEqual('<div><!--_$bm_--><!--_$em_--></div>');
+
+        name = "Sarah";
+
+        let newPatchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}`;
+
+        updateNode(container, patchingData, newPatchingData);
+
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><span style=\"color: green;\">Special for Sarah</span><!--_$em_--></div>");
+
+        patchingData = newPatchingData;
+
+        name = "Jorge";
+
+        newPatchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}`;
+
+        updateNode(container, patchingData, newPatchingData);
+
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_--></div>");
+    });
+
+    it('should render two conditional elements side by side', () => {
+
+        let name: string = "Jorge";
+
+        let age: number = 55;
+
+        let patchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}
+            ${age < 50 ? html`<span style="color: green;">You are too young</span>` : null}`;
+
+        const container = document.createElement('div');
+
+        mountNode(container, patchingData);
+
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_-->\n            <!--_$bm_--><!--_$em_--></div>");
+
+        name = "Sarah";
+
+        age = 19;
+
+        let newPatchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}
+            ${age < 50 ? html`<span style="color: green;">You are too young</span>` : null}`;
+
+        updateNode(container, patchingData, newPatchingData);
+
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><span style=\"color: green;\">Special for Sarah</span><!--_$em_-->\n            <!--_$bm_--><span style=\"color: green;\">You are too young</span><!--_$em_--></div>");
+
+        patchingData = newPatchingData;
+
+        name = "Jorge";
+
+        age = 45;
+
+        newPatchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}
+            ${age < 50 ? html`<span style="color: green;">You are too young</span>` : null}`;
+
+        updateNode(container, patchingData, newPatchingData);
+
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_-->\n            <!--_$bm_--><span style=\"color: green;\">You are too young</span><!--_$em_--></div>");
+
+        name = "Jorge";
+
+        age = 55;
+
+        newPatchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}
+            ${age < 50 ? html`<span style="color: green;">You are too young</span>` : null}`;
+
+        updateNode(container, patchingData, newPatchingData);
+
+        expect(container.outerHTML).toEqual("<div><!--_$bm_--><!--_$em_-->\n            <!--_$bm_--><!--_$em_--></div>");
     });
 
     //////////////
 
+    // it('should transition from two conditional elements side by side to a single one', () => {
 
-    //     it('should render a complex object as a value', () => {
+    //     let name: string = "Jorge";
 
-    //         const data = {
-    //             name: "Sarah",
-    //             age: 19,
-    //             description: "Smart and beautiful"
-    //         }
+    //     let age: number = 55;
 
-    //         const result = html`<x-container class="container" record=${data}></x-container>`;
+    //     let patchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}
+    //     ${age < 50 ? html`<span style="color: green;">You are too young</span>` : null}`;
 
-    //         const vnode = result.vnode as ElementNode;
+    //     const container = document.createElement('div');
 
-    //         expect(vnode.tag).toEqual('x-container');
+    //     mountNode(container, patchingData);
 
-    //         expect(vnode.attributes).toEqual({
-    //             class: "container",
-    //             record: "{\"name\":\"Sarah\",\"age\":19,\"description\":\"Smart and beautiful\"}"
-    //         });
+    //     expect(container.outerHTML).toEqual(`<div><!--_$em_-->
+    //     <!--_$em_--></div>`);
 
-    //     });
+    //     name = "Sarah";
 
-    //     it('should attach events to the DOM node and remove the function name from the markup', () => {
+    //     let newPatchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}`;
 
-    //         const handleClick = () => { };
+    //     updateNode(container, patchingData, newPatchingData);
 
-    //         const result = html`<x-item onClick=${handleClick}></x-item>`;
+    //     expect(container.outerHTML).toEqual('<div><span style=\"color: green;\">Special for Sarah</span><!--_$em_--></div>');
 
-    //         const vnode = result.vnode as ElementNode;
+    //     patchingData = newPatchingData;
 
-    //         expect(vnode.tag).toEqual('x-item');
+    //     name = "Jorge";
 
-    //         expect(vnode.attributes).toEqual(null); // The handler is not part of the attributes
+    //     newPatchingData = html`${name === "Sarah" ? html`<span style="color: green;">Special for Sarah</span>` : null}`;
 
-    //         expect((result.node as any)._listeners['click']).toEqual([handleClick]);
-    //     });
+    //     updateNode(container, patchingData, newPatchingData);
+
+    //     expect(container.outerHTML).toEqual('<div><!--_$em_--></div>');
+    // });
+
+    it('should render a complex object as a value', () => {
+
+        const data = {
+            name: "Sarah",
+            age: 19,
+            description: "Smart and beautiful"
+        }
+
+        const patchingData = html`<x-container class="container" record=${data}></x-container>`;
+
+        const container = document.createElement('div');
+
+        mountNode(container, patchingData);
+
+        expect(container.outerHTML).toEqual('<div><x-container class=\"container\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\"></x-container></div>');
+
+        expect(container.children[0].attributes[1].value).toEqual("{\"name\":\"Sarah\",\"age\":19,\"description\":\"Smart and beautiful\"}");
+
+    });
+
+    it('should attach events to the DOM node and remove the function name from the markup', () => {
+
+        const handleClick = () => { };
+
+        const patchingData = html`<x-item onClick=${handleClick}></x-item>`;
+
+        const container = document.createElement('div');
+
+        mountNode(container, patchingData);
+
+        expect(container.outerHTML).toEqual('<div><x-item></x-item></div>');
+
+        const child = container.children[0];
+
+        expect(child.attributes.length).toEqual(0); // The handler is not part of the attributes
+
+        expect((child as any)._listeners['click']).toEqual([handleClick]);
+    });
+
+    it('should render a container with nested child and sibling text', () => {
+
+        const name = 'Sarah';
+
+        const text = 'Some text';
+
+        const patchingData = html`
+            <span>
+                <gcl-localized-text>Name: ${name}</gcl-localized-text>
+                Text: ${text}
+            </span>
+        `;
+
+        const container = document.createElement('div');
+
+        mountNode(container, patchingData);
+
+        expect(container.outerHTML).toEqual(`<div><span><gcl-localized-text>Name: Sarah<!--_$em_--></gcl-localized-text>
+                Text: Some text<!--_$em_--></span></div>`);
+
+
+    });
 
     //     it('should render from nested calls to the "html" function', () => {
 
@@ -735,66 +856,74 @@ describe("renderer tests", () => {
 
     //     });
 
-    //it('should create a virtual node tree from html markup', () => {
+    it('should render a node with several children', () => {
 
-    //         const markup =
-    //             `
-    //                 <gcl-list-item value=1>       
-    //                     <span>
-    //                         <gcl-text>Name: Sarah</gcl-text>
-    //                         Some text
-    //                     </span>
-    //                     <gcl-text>Date of Birth: 6/26/2003</gcl-text>
+        const name = 'Sarah';
 
-    //                     <gcl-text>Reputation: 10</gcl-text>
+        const patchingData = html`
+            <gcl-list-item value=1>       
+                <span>
+                    <gcl-localized-text>Name: ${name}</gcl-localized-text>
+                    Some text
+                </span>
+                <gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text>
 
-    //                     <gcl-text>Description: Very beautiful and smart</gcl-text>
-    //                     <img style="width: 64px; height: 64px; border-radius: 50%;" src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z />
-    //                 </gcl-list-item>
-    //             `;
+                <gcl-localized-text>Reputation: 10</gcl-localized-text>
 
-    //         const vnode = markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true }).vnode as ElementNode;
+                <gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text>
+                <img style="width: 64px; height: 64px; border-radius: 50%;" src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z />
+            </gcl-list-item>
+        `;
 
-    //         expect(vnode.tag).toEqual('gcl-list-item');
+        const container = document.createElement('div');
 
-    //         expect(vnode.attributes).toMatchObject({
-    //             value: '1'
-    //         });
+        mountNode(container, patchingData);
 
-    //         expect(vnode.children.length).toEqual(5);
+        expect(container.outerHTML).toEqual(`<div><gcl-list-item value=\"1\"><span><gcl-localized-text>Name: Sarah</gcl-localized-text>
+                    Some text</span><gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text><gcl-localized-text>Reputation: 10</gcl-localized-text><gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text><img style=\"width: 64px; height: 64px; border-radius: 50%;\" src=\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z\"/></gcl-list-item></div>`);
 
-    //         const spanVNode = vnode.children[0] as ElementNode;
+        // const vnode = markupToVirtualNode(markup, 'html', { excludeTextWithWhiteSpacesOnly: true }).vnode as ElementNode;
 
-    //         expect(spanVNode.tag).toEqual('span');
+        // expect(vnode.tag).toEqual('gcl-list-item');
 
-    //         const gclTextVNode = spanVNode.children[0] as ElementNode;
+        // expect(vnode.attributes).toMatchObject({
+        //     value: '1'
+        // });
 
-    //         expect(gclTextVNode.tag).toEqual('gcl-text');
+        // expect(vnode.children.length).toEqual(5);
 
-    //         const textVNode = gclTextVNode.children[0] as TextNode;
+        // const spanVNode = vnode.children[0] as ElementNode;
 
-    //         expect(textVNode).toEqual({ "text": "Name: Sarah" });
+        // expect(spanVNode.tag).toEqual('span');
 
-    //         const imgVNode = vnode.children[4] as ElementNode;
+        // const gclTextVNode = spanVNode.children[0] as ElementNode;
 
-    //         expect(imgVNode.tag).toEqual('img');
+        // expect(gclTextVNode.tag).toEqual('gcl-localized-text');
 
-    //         expect(imgVNode.attributes).toMatchObject({
-    //             src: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z",
-    //             style: "width: 64px; height: 64px; border-radius: 50%;",
-    //         });
-    //     });
+        // const textVNode = gclTextVNode.children[0] as TextNode;
+
+        // expect(textVNode).toEqual({ "text": "Name: Sarah" });
+
+        // const imgVNode = vnode.children[4] as ElementNode;
+
+        // expect(imgVNode.tag).toEqual('img');
+
+        // expect(imgVNode.attributes).toMatchObject({
+        //     src: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z",
+        //     style: "width: 64px; height: 64px; border-radius: 50%;",
+        // });
+    });
 
     //     it('should throw an error when there is a script tag but the options are not set to allowScripts', () => {
 
     //         const markup =
     //             `
     //             <gcl-list-item value=1>       
-    //                 <span><gcl-text>Name: Sarah</gcl-text>Some text</span>
+    //                 <span><gcl-localized-text>Name: Sarah</gcl-localized-text>Some text</span>
     //                 <script></script>
-    //                 <gcl-text>Date of Birth: 6/26/2003</gcl-text>
-    //                 <gcl-text>Reputation: 10</gcl-text>
-    //                 <gcl-text>Description: Very beautiful and smart</gcl-text>
+    //                 <gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text>
+    //                 <gcl-localized-text>Reputation: 10</gcl-localized-text>
+    //                 <gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text>
     //                 <img style="width: 64px; height: 64px; border-radius: 50%;" src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z />
     //             </gcl-list-item>
 
@@ -809,10 +938,10 @@ describe("renderer tests", () => {
     //         const markup =
     //             `<gcl-list-item value=1>  
     //         <script></script>     
-    //         <span><gcl-text>Name: Sarah</gcl-text>Some text</span>
-    //         <gcl-text>Date of Birth: 6/26/2003</gcl-text>
-    //         <gcl-text>Reputation: 10</gcl-text>
-    //         <gcl-text>Description: Very beautiful and smart</gcl-text>
+    //         <span><gcl-localized-text>Name: Sarah</gcl-localized-text>Some text</span>
+    //         <gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text>
+    //         <gcl-localized-text>Reputation: 10</gcl-localized-text>
+    //         <gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text>
     //         <img style="width: 64px; height: 64px; border-radius: 50%;" src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z />
     //     </gcl-list-item>`;
 
@@ -839,10 +968,10 @@ describe("renderer tests", () => {
 
     //         const markup =
     //             `  
-    //         <span><gcl-text>Name: Sarah</gcl-text>Some text</span>
-    //         <gcl-text>Date of Birth: 6/26/2003</gcl-text>
-    //         <gcl-text>Reputation: 10</gcl-text>
-    //         <gcl-text>Description: Very beautiful and smart</gcl-text>
+    //         <span><gcl-localized-text>Name: Sarah</gcl-localized-text>Some text</span>
+    //         <gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text>
+    //         <gcl-localized-text>Reputation: 10</gcl-localized-text>
+    //         <gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text>
     //         <img style="width: 64px; height: 64px; border-radius: 50%;" src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z />
     //     `;
 
@@ -861,11 +990,11 @@ describe("renderer tests", () => {
 
     //         expect((vnode.children[0] as ElementNode).tag).toEqual('span');
 
-    //         expect((vnode.children[1] as ElementNode).tag).toEqual('gcl-text');
+    //         expect((vnode.children[1] as ElementNode).tag).toEqual('gcl-localized-text');
 
-    //         expect((vnode.children[2] as ElementNode).tag).toEqual('gcl-text');
+    //         expect((vnode.children[2] as ElementNode).tag).toEqual('gcl-localized-text');
 
-    //         expect((vnode.children[3] as ElementNode).tag).toEqual('gcl-text');
+    //         expect((vnode.children[3] as ElementNode).tag).toEqual('gcl-localized-text');
 
     //         expect((vnode.children[4] as ElementNode).tag).toEqual('img');
     //     });
@@ -875,10 +1004,10 @@ describe("renderer tests", () => {
 
     //     //     const markup = 
     //     // `<gcl-list-item value=1>       
-    //     //     <gcl-text>Name: Sarah</gcl-text>
-    //     //     <gcl-text>Date of Birth: 6/26/2003</gcl-text>
-    //     //     <gcl-text>Reputation: 10</gcl-text>
-    //     //     <gcl-text>Description: Very beautiful and smart</gcl-text>
+    //     //     <gcl-localized-text>Name: Sarah</gcl-localized-text>
+    //     //     <gcl-localized-text>Date of Birth: 6/26/2003</gcl-localized-text>
+    //     //     <gcl-localized-text>Reputation: 10</gcl-localized-text>
+    //     //     <gcl-localized-text>Description: Very beautiful and smart</gcl-localized-text>
     //     //     <img style="width: 64px; height: 64px; border-radius: 50%;" src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgyPC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjL/wAARCAAZABMDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD2rVNTg0ixa6uBIw3KiRxLueR2OFRR6kkD09SBzWfbeJTLrFvpl3o2pWFxco7xG4ETIwUZPzRyMAenHWpPEjaO1hBbazcm3iublI4JBI0bLN95Crj7pyuQemeO+KpJLqWkeJdN06TVpdThvllLpdRRLLCEXO9TEqDaSVUgg8suCOhypwi4arXXv0XT9bmknY6aiiiucZXvLCz1CERXtpBcxg5CTRhwDgjofYkfQmoNO0PSNHaRtM0uysjIAJDbW6R78dM7QM9TV+iqU5Jct9ACiiipA//Z />
     //     // </gcl-list-item>`;
 
@@ -1058,7 +1187,7 @@ describe("renderer tests", () => {
 
     //     const node = html`<span age=${age}>${name}</span>` as HTMLElement;
 
-    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"19\">Sarah<!--_$node_--></span>');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"19\">Sarah<!--_$em_--></span>');
 
     //     const {
     //         patcher,
@@ -1074,7 +1203,7 @@ describe("renderer tests", () => {
 
     //     expect(content).toBeInstanceOf(DocumentFragment);
 
-    //     expect((content.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age="_$attr:age"><!--_$node_--></span>');
+    //     expect((content.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age="_$attr:age"><!--_$em_--></span>');
 
     //     expect(rules.length).toEqual(2);
 
@@ -1103,9 +1232,9 @@ describe("renderer tests", () => {
 
     //     const node = html`<span age=${age}>${name}</span><style>${style}</style>` as HTMLElement;
 
-    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"19\">Sarah<!--_$node_--></span>');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age=\"19\">Sarah<!--_$em_--></span>');
 
-    //     expect((node.childNodes[1] as HTMLStyleElement).outerHTML).toEqual('<style>background-color:green;<!--_$node_--></style>');
+    //     expect((node.childNodes[1] as HTMLStyleElement).outerHTML).toEqual('<style>background-color:green;<!--_$em_--></style>');
 
     //     const {
     //         patcher,
@@ -1121,9 +1250,9 @@ describe("renderer tests", () => {
 
     //     expect(content).toBeInstanceOf(DocumentFragment);
 
-    //     expect((content.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age="_$attr:age"><!--_$node_--></span>');
+    //     expect((content.childNodes[0] as HTMLElement).outerHTML).toEqual('<span age="_$attr:age"><!--_$em_--></span>');
 
-    //     expect((content.childNodes[1] as HTMLElement).outerHTML).toEqual('<style><!--_$node_--></style>');
+    //     expect((content.childNodes[1] as HTMLElement).outerHTML).toEqual('<style><!--_$em_--></style>');
 
     //     expect(rules.length).toEqual(3);
 
@@ -1158,7 +1287,7 @@ describe("renderer tests", () => {
 
     //     const node = html`<div><span age=${age}>${name}</span><style>${style}</style></div>` as HTMLElement;
 
-    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$em_--></span><style>background-color:green;<!--_$em_--></style></div>');
 
     //     const {
     //         patcher,
@@ -1174,7 +1303,7 @@ describe("renderer tests", () => {
 
     //     expect(content).toBeInstanceOf(DocumentFragment);
 
-    //     expect((content.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"_$attr:age\"><!--_$node_--></span><style><!--_$node_--></style></div>');
+    //     expect((content.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"_$attr:age\"><!--_$em_--></span><style><!--_$em_--></style></div>');
 
     //     expect(rules.length).toEqual(3);
 
@@ -1218,9 +1347,9 @@ describe("renderer tests", () => {
 
     //     const node = html`${children}` as HTMLElement;
 
-    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$node_--></span><style>background-color:green;<!--_$node_--></style></div>');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<div><span age=\"19\">Sarah<!--_$em_--></span><style>background-color:green;<!--_$em_--></style></div>');
 
-    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$node_--></span><style>background-color:yelow;<!--_$node_--></style></div>');
+    //     expect((node.childNodes[1] as HTMLElement).outerHTML).toEqual('<div><span age=\"31\">Mark<!--_$em_--></span><style>background-color:yelow;<!--_$em_--></style></div>');
 
     //     const {
     //         patcher,

@@ -1,10 +1,9 @@
 import { isPrimitive } from "../utils/shared";
-import createTemplate, { attributeMarkerPrefix, eventMarkerPrefix, nodeMarker } from "./createTemplate";
+import createTemplate, { attributeMarkerPrefix, eventMarkerPrefix, endMarker, beginMarker } from "./createTemplate";
 import { createNode } from "./createNode";
 import areEquivalentValues from "./areEquivalentValues";
 import getGlobalFunction from "../custom-element/helpers/getGlobalFunction";
 import { mountNode } from "./mount";
-import { patchNode } from "./patchNode";
 import { updateNode } from "./update";
 
 export enum NodePatcherRuleTypes {
@@ -272,10 +271,21 @@ export class NodePatcher {
                                 if (oldValue !== undefined &&
                                     oldValue !== null) {
 
-                                    if (Array.isArray(oldValue) ||
-                                        oldValue.patcher !== undefined) {
+                                    if (Array.isArray(oldValue)) {
 
-                                        removeAllSiblings(node);
+                                        removeLeftSiblings(node);
+                                    }
+                                    else if (oldValue.patcher !== undefined) {
+
+                                        if (oldValue.values.length > 0) {
+
+                                            //updateChildren(parentNode, oldValue.values, null);
+                                            removeLeftSiblings(node);
+                                        }
+                                        else {
+
+                                            removeLeftSiblings(node);
+                                        }
                                     }
                                     else {
 
@@ -325,6 +335,13 @@ export class NodePatcher {
     }
 }
 
+/**
+ * Creates the rules for the node patcher
+ * @param node 
+ * @param path 
+ * @param rules 
+ * @returns 
+ */
 function createNodePatcherRules(node: Node, path: number[] = [], rules: NodePatcherRule[] = []): NodePatcherRule[] {
 
     const {
@@ -336,7 +353,7 @@ function createNodePatcherRules(node: Node, path: number[] = [], rules: NodePatc
     } = childNodes;
 
     if (node.nodeType === Node.COMMENT_NODE &&
-        (node as Text).data === nodeMarker) {
+        (node as Text).data === endMarker) {
 
         rules.push({
             type: NodePatcherRuleTypes.PATCH_NODE,
@@ -464,7 +481,7 @@ function setAttribute(node: HTMLElement, key: string, value: string) {
 
                     (node as HTMLInputElement).value = value;
                 }
-                
+
                 node.setAttribute(key, value);
             }
         }
@@ -510,18 +527,13 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
 
             if (newChildKey === oldChildKey) {
 
-                patchNode((oldChild as any).node, newChild as any);
+                updateNode((oldChild as any).node, oldChild as any, newChild as any);
             }
             else { // newChildKey !== oldChildKey
 
                 if (keyedNodes.has(newChildKey)) { // Find an existing keyed node
 
                     const keyedOldNode = keyedNodes.get(newChildKey);
-
-                    // if (vnode.patchDom(newNode as any) === true) {
-
-                    //     updated = true;
-                    // }
 
                     if (oldChildrenCount >= newChildrenCount) {
 
@@ -544,69 +556,6 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
                 }
             }
         }
-
-        // if (newChildrenCount > oldChildrenCount) { // Insert the children
-
-        //     appendChildren(markerNode, newChildren);
-        // }
-        // else { // There are old children
-
-        //     throw new Error('patchChildren is not implemented');
-        // }
-
-        // if (childNode === undefined) { // The node does not have any child at that path
-
-        //     childNode = node as HTMLElement;
-        // }
-
-        // const parentNode = (childNode.parentNode !== null ?
-        //     childNode.parentNode :
-        //     childNode) as HTMLElement;
-
-        // let { childNodes } = parentNode;
-
-        // if (Array.isArray(newValue)) { // Collection of nodes
-
-        //     if (
-        //         childNode.nodeType === Node.COMMENT_NODE &&
-        //         (childNode as Comment).data === nodeMarker
-        //     ) {
-
-        //         parentNode.replaceChildren(...newValue); // Replace the marker with the children
-
-        //         // If the newValue is an array of document fragments, they will lose their children after replacement
-        //         // Ensure the children have the instance of the patching data
-        //         childNodes = parentNode.childNodes;
-
-        //         const length = childNodes.length;
-
-        //         for (let i = 0; i < length; ++i) {
-
-        //             const instancePatchingData = newValue[i].__instancePatchingData__;
-
-        //             if (instancePatchingData !== undefined) {
-
-        //                 (childNodes[i] as any).__instancePatchingData__ = instancePatchingData;
-        //             }
-        //         }
-        //         // Restore the values
-        //         newValuesHolder.newValues = [Array.from(childNodes)];
-        //     }
-        //     else { // Parent node has children
-
-        //         patchChildren(parentNode, newValue); // Patch the existing children
-        //     }
-        // }
-        // else { // Single value or node
-
-        //     if (newValue instanceof DocumentFragment) {
-
-        //         parentNode.replaceChild(newValue, childNode);
-        //     }
-        //     else {
-
-        //         parentNode.replaceChild(document.createTextNode(newValue), childNode);
-        //     }
     }
 
     // Remove the extra nodes
@@ -727,7 +676,7 @@ function findPreviousSibling(markerNode: Node, predicate: (node: any) => boolean
     } = markerNode;
 
     while (previousSibling !== null &&
-        (previousSibling as Comment).textContent !== nodeMarker) {
+        (previousSibling as Comment).textContent !== endMarker) {
 
         if (predicate(previousSibling) === true) {
 
@@ -767,7 +716,23 @@ function removeLeftSibling(markerNode: Node) {
     parentNode.removeChild(previousSibling);
 }
 
-function removeAllSiblings(markerNode: Node) {
+// function removeAllSiblings(markerNode: Node) {
+
+//     const {
+//         parentNode
+//     } = markerNode;
+
+//     let sibling = markerNode.previousSibling;
+
+//     while (sibling !== null) {
+
+//         parentNode.removeChild(sibling);
+
+//         sibling = markerNode.previousSibling;
+//     }
+// }
+
+function removeLeftSiblings(markerNode: Node) {
 
     const {
         parentNode
@@ -777,21 +742,13 @@ function removeAllSiblings(markerNode: Node) {
 
     while (sibling !== null) {
 
+        if ((sibling as Comment).data === beginMarker) {
+
+            break; // Got the begin marker ... done
+        }
+
         parentNode.removeChild(sibling);
 
         sibling = markerNode.previousSibling;
     }
 }
-
-// function findParentNode(parentNode: Node, predicate: (node: any) => boolean) : Node {
-
-//     for (let node = parentNode; node !== null; node = node.parentNode) {
-
-//         if (predicate(node) === true) {
-
-//             return node;
-//         }
-//     }
-
-//     return null;
-// }

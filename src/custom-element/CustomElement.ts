@@ -22,10 +22,14 @@ export default class CustomElement extends
 
     dispatchCustomEvent(type: string, detail: Record<string, any>) {
 
-        this.dispatchEvent(new CustomEvent(type, {
-            detail: detail,
-            bubbles: true,
-            composed: true // To bubble through the shadow DOM
-        }));
+        setTimeout(() => { // Repaint before dispatching the event
+
+            this.dispatchEvent(new CustomEvent(type, {
+                detail: detail,
+                bubbles: true,
+                composed: true // To bubble through the shadow DOM
+            }));
+
+        }, 0);  
     }
 }

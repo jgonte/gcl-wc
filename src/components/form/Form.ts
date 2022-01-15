@@ -43,15 +43,14 @@ export default class Form extends
                 <slot key="form-fields-slot"></slot>
                 ${this._renderButton()}
             </form>
-        </gcl-row>
-            `;
+        </gcl-row>`;
     }
 
     private _renderButton(): NodePatchingData {
 
         // Doing onClick=${this.submit} binds the button instead of the form to the submit function
         return html`<gcl-button key="submit-button" kind="primary" variant="contained" click=${() => this.submit()}>
-           <gcl-text intl-key="submit">Submit</gcl-text>
+           <gcl-localized-text resource-key="submit">Submit</gcl-localized-text>
            <gcl-icon name="box-arrow-right"></gcl-icon>
         </gcl-button>`;
     }
@@ -188,11 +187,13 @@ export default class Form extends
 
         this._fields.set(name, field); // Add the field to the form
 
-        this._record.addField({ // Add the field to the record
+        const dataField = this._record.addField({ // Add the field to the record
             name,
             type,
             value
         });
+
+        field.dataField = dataField; // Set the data field in the field so it "knows" if tis value changed from the initial one
 
         event.stopPropagation();
     }

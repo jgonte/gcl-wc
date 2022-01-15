@@ -1,15 +1,23 @@
-export const nodeMarker = "_$node_";
+/**
+ * Marks the end of a string and the beginning of a value
+ */
+export const beginMarker = "_$bm_";
+
+/**
+ * Marks the end of a value and the beginning of a string
+ */
+export const endMarker = "_$em_";
 
 // Referenced to avoid converting the value of the attribute for templates
 export const attributeMarkerPrefix = "_$attr:";
 
 export const eventMarkerPrefix = "_$evt:";
 
-export interface TemplateData { 
-    
+export interface TemplateData {
+
     templateString: string;
 
-    template: HTMLTemplateElement; 
+    template: HTMLTemplateElement;
 
     keyIndex: number;
 }
@@ -38,28 +46,36 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
 
     const parts: string[] = [];
 
+    if (strings.length === 1) { // No values ... literal only
+
+        return {
+            templateString: strings[0],
+            keyIndex
+        };
+    }
+
     const length = strings.length - 1; // Exclude the last one
 
     let s: string = undefined;
+
+    // Flag to indicate state whether we are dealing with a value for an attribute or an event
+    let beginAttributeOrEvent: boolean = false;
 
     for (let i = 0; i < length; ++i) {
 
         s = strings[i];
 
-        if (i === 0) {
-
-            s = s.trimStart();
-        }
-
-        if (s.endsWith('=')) { // It is an attribute
+        if (s.endsWith('=')) { // It is an attribute or an event
 
             const name = getAttributeName(s);
+
+            beginAttributeOrEvent = true;
 
             if (name[0] === 'o' && name[1] === 'n') { // It is an event handler
 
                 parts.push(`${s}"${eventMarkerPrefix}${name}"`);
             }
-            else {
+            else { // Not an event
 
                 if (name === 'key') {
 
@@ -69,18 +85,28 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
                 parts.push(`${s}"${attributeMarkerPrefix}${name}"`);
             }
         }
-        else if (!noSelfClosingTagAfter(strings, i)) { // Ensure the marker is not placed inside an auto-closing node
+        else { // It is the beginning of a text or element
 
-            s = minify(s);
+            if (beginAttributeOrEvent === true) {
 
-            parts.push(`${s}<!--${nodeMarker}-->`);
+                beginAttributeOrEvent = false; // Clear the attribute flag
+            }
+            else if (i > 0) { // Ignore the first string
+
+                parts.push(`<!--${endMarker}-->`); // End the previous node
+            }
+
+            parts.push(`${s}<!--${beginMarker}-->`);
         }
     }
 
     // Add the ending string
-    s = strings[length].trimEnd();
+    if (beginAttributeOrEvent === false) { // End of a text or element
 
-    s = minify(s);
+        parts.push(`<!--${endMarker}-->`);
+    }
+
+    s = strings[length];
 
     parts.push(s);
 
@@ -105,25 +131,4 @@ function getAttributeName(s: string): string {
     }
 
     return b.join('');
-}
-
-const regexSelfClosingTag = /\/>/;
-
-function noSelfClosingTagAfter(strings: TemplateStringsArray, i: number): boolean {
-
-    for (; i < strings.length; ++i) {
-
-        if (regexSelfClosingTag.test(strings[i])) {
-
-            return true;
-        }
-    }
-
-    return false;
-}
-
-function minify(s: string) {
-
-    return s.replace(/[\t\n ]+\</g, '<') // Remove whitespace before opening tags
-        .replace(/\>[\t\n ]+$/g, '>'); // Remove whitespace after tags
 }

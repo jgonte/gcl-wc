@@ -90,7 +90,7 @@ const valueConverter = {
 
         if (type === 'boolean') {
 
-            return value ? '' : 'false';
+            return value ? 'true' : 'false';
         }
 
         if (type === 'object' || Array.isArray(value)) {

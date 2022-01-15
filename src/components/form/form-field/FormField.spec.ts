@@ -31,8 +31,13 @@ describe("form tests", () => {
         expect(component.shadowRoot.innerHTML).toBe(
 `<style>[object Object]
 
-[object Object]</style><gcl-row justify-content=\"start\">
-            <slot name=\"label\">Label</slot>
+[object Object]</style><gcl-row id="field-row" justify-content=\"start\">
+            <gcl-form-label>
+                <slot name="label">Label</slot>
+            </gcl-form-label>
+            <slot name="tools"></slot>
+            :
+            <span style="display:inline-block; padding: 0 1rem 0 0;"></span>
             <slot name=\"field\"></slot>
         </gcl-row>
         <gcl-validation-summary warnings=\"[]\" errors=\"[]\"></gcl-validation-summary>`

@@ -1,12 +1,13 @@
 import CustomElement from "../../../custom-element/CustomElement";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import mergeStyles from "../../../custom-element/helpers/mergeStyles";
-import { CustomElementStateMetadata } from "../../../custom-element/interfaces";
+import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../../../custom-element/interfaces";
 import SizableMixin from "../../../custom-element/mixins/components/sizable/SizableMixin";
 import { validationEvent } from "../../../custom-element/mixins/components/validatable/ValidatableMixin";
 import { NodePatchingData } from "../../../renderer/NodePatcher";
 import { html } from "../../../renderer/html";
 import styles from "./FormField.css";
+import { inputEvent } from "../../fields/Field";
 
 export default class FormField extends
     SizableMixin(
@@ -18,9 +19,33 @@ export default class FormField extends
         return mergeStyles(super.styles, styles);
     }
 
+    static get properties(): Record<string, CustomElementPropertyMetadata> {
+
+        return {
+
+            /** 
+             * Whether the form field is required
+             * If true it sets a field indicator as required and adds a required validator to the field
+             */
+            required: {
+                type: Boolean,
+                mutable: true,
+                reflect: true,
+                value: false
+            }
+        };
+    }
+
     static get state(): Record<string, CustomElementStateMetadata> {
 
         return {
+
+            /**
+             * Whether the field has been modified (Its value differs from the initial/loaded one)
+             */
+            modified: {
+                value: false
+            },
 
             warnings: {
                 value: []
@@ -35,13 +60,24 @@ export default class FormField extends
     render(): NodePatchingData {
 
         const {
+            required,
+            modified,
             warnings,
             errors
         } = this;
 
-        return html`<gcl-row justify-content="start">
-            <slot name="label">Label</slot>
-            <slot name="field"></slot>
+        return html`<gcl-row id="field-row" justify-content="start">    
+            <gcl-form-label>
+                <slot name="label">Label</slot>
+                ${required && html`<span style="color: red;">*</span>`}     
+                <span style="display:inline-block; width: 1rem;">
+                    ${modified === true ? html`<span style="color: blue;">M</span>` : null}
+                </span>    
+            </gcl-form-label>
+            <slot name="tools"></slot>
+            :
+            <span style="display:inline-block; padding: 0 1rem 0 0;"></span>
+            <slot name="field"></slot>      
         </gcl-row>
         <gcl-validation-summary
             warnings=${warnings} 
@@ -53,6 +89,8 @@ export default class FormField extends
 
         super.connectedCallback?.();
 
+        this.addEventListener(inputEvent, this.handleInput);
+
         this.addEventListener(validationEvent, this.handleValidation);
     }
 
@@ -60,7 +98,20 @@ export default class FormField extends
 
         super.disconnectedCallback?.();
 
+        this.removeEventListener(inputEvent, this.handleInput);
+
         this.removeEventListener(validationEvent, this.handleValidation);
+    }
+
+    handleInput(event: CustomEvent): void {
+
+        const {
+           modified
+        } = event.detail;
+
+        this.modified = modified;
+
+        event.stopPropagation();
     }
 
     handleValidation(event: CustomEvent): void {

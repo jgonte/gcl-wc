@@ -2,7 +2,6 @@ import areEquivalentValues from "./areEquivalentValues";
 import { createNode } from "./createNode";
 import { mountNode } from "./mount";
 import { NodePatchingData } from "./NodePatcher"
-import { patchNode } from "./patchNode";
 
 export function updateChildren(container: Node, oldPatchingData: NodePatchingData[], newPatchingData: NodePatchingData[]) {
 
@@ -63,7 +62,7 @@ export function updateChildren(container: Node, oldPatchingData: NodePatchingDat
 
             if (oldChildKey === valueKey) { // If the keys are the same patch the node with that patching data    
 
-                patchNode(oldChild, newChildPatchingData);
+                updateNode(oldChild, oldPatchingData[i], newChildPatchingData);
             }
             else { // oldChildKey !== valueKey - Find the node that corresponds with the keyed patching data
 
@@ -87,12 +86,12 @@ export function updateChildren(container: Node, oldPatchingData: NodePatchingDat
                     }
                     else { // Some value has changed, patch the existing node
 
-                        patchNode(oldChild, (keyedNode as any)._$patchingData);
+                        updateNode(oldChild, oldPatchingData[i], (keyedNode as any)._$patchingData);
                     }
                 }
                 else { // No keyed node found, set the new child
 
-                    patchNode(oldChild, newChildPatchingData);
+                    updateNode(oldChild, oldPatchingData[i], newChildPatchingData);
                 }
             }
         }

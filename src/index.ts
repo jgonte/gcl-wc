@@ -1,7 +1,7 @@
 import defineCustomElement from "./custom-element/helpers/defineCustomElement";
 import CustomElement from "./custom-element/CustomElement";
 import Icon from "./components/icon/Icon";
-import Text from "./components/text/Text";
+import Text from "./components/localized-text/LocalizedText";
 import Tool from "./components/tools/Tool";
 import CloseTool from "./components/tools/close/CloseTool";
 import Alert from "./components/alert/Alert";
@@ -16,6 +16,7 @@ import DataGrid from "./components/data-grid/DataGrid";
 import TextField from "./components/fields/text/TextField";
 import HiddenField from "./components/fields/hidden/HiddenField";
 import Slider from "./components/fields/slider/Slider";
+import FormLabel from "./components/form/form-label/FormLabel";
 import FormField from "./components/form/form-field/FormField";
 import Form from "./components/form/Form";
 import ValidationSummary from "./components/validation-summary/ValidationSummary";
@@ -45,6 +46,7 @@ export {
     HiddenField,
     Slider,
     // Forms
+    FormLabel,
     FormField,
     Form,
     ValidationSummary,

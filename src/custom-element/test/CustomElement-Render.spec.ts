@@ -70,7 +70,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML.trim()).toBe('<span>Hello, my name is Sarah<!--_$node_--></span>');
+        expect(component.shadowRoot.innerHTML.trim()).toBe('<span>Hello, my name is <!--_$bm_-->Sarah<!--_$em_--></span>');
     });
 
     it('should render the HTML with the set property', async () => {
@@ -106,7 +106,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML.trim()).toBe('<span>Hello, my name is Mark<!--_$node_--></span>');
+        expect(component.shadowRoot.innerHTML.trim()).toBe('<span>Hello, my name is <!--_$bm_-->Mark<!--_$em_--></span>');
     });
 
     it('should render the HTML with the default property and the style attached', async () => {
@@ -153,7 +153,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<style>:host { background-color: yellowgreen; }</style><span>Hello, my name is Sarah<!--_$node_--></span><span>My age is 19<!--_$node_--></span>`);
+        expect(component.shadowRoot.innerHTML).toBe("<style>:host { background-color: yellowgreen; }</style>\n                    <span>Hello, my name is <!--_$bm_-->Sarah<!--_$em_--></span>\n                    <span>My age is <!--_$bm_-->19<!--_$em_--></span>\n                ");
     });
 
     it('should render the HTML with the set property and the style attached', async () => {
@@ -200,7 +200,7 @@ describe("custom element render tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<style>:host { background-color: yellowgreen; }</style><span>Hello, my name is Mark<!--_$node_--></span><span>My age is 31<!--_$node_--></span>`);
+        expect(component.shadowRoot.innerHTML).toBe("<style>:host { background-color: yellowgreen; }</style>\n                    <span>Hello, my name is <!--_$bm_-->Mark<!--_$em_--></span>\n                    <span>My age is <!--_$bm_-->31<!--_$em_--></span>\n                ");
     });
 
 });

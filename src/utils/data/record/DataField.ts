@@ -96,14 +96,18 @@ export default class DataField implements IDataField {
         );
     }
 
-    get value() {
+    get value(): any {
 
         return this._value;
     }
 
-    reset() {
+    reset(): void {
 
         this.value = this._initialValue;
     }
 
+    hasSameInitialValue(value: any): boolean {
+
+        return this._initialValue === value
+    }
 }

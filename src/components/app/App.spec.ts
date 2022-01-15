@@ -15,14 +15,14 @@ describe("App tests", () => {
         defineCustomElement('gcl-app', App);
 
         // Attach it to the DOM
-        document.body.innerHTML = `<gcl-app></gcl-app>`;
+        document.body.innerHTML = '<gcl-app></gcl-app>';
 
         // Test the element
         const component: any = document.querySelector('gcl-app');
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe('<!--_$node_--><slot></slot>');
+        expect(component.shadowRoot.innerHTML).toBe("<!--_$bm_--><!--_$em_-->\n            <slot></slot>");
     });
 
     it('should render the errors', async () => {
@@ -31,7 +31,7 @@ describe("App tests", () => {
         defineCustomElement('gcl-app', App);
 
         // Attach it to the DOM
-        document.body.innerHTML = `<gcl-app></gcl-app>`;
+        document.body.innerHTML = '<gcl-app></gcl-app>';
 
         // Test the element
         const component: any = document.querySelector('gcl-app');
@@ -47,7 +47,7 @@ describe("App tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(`<gcl-overlay><span>error 1<!--_$node_--></span><span>error 2<!--_$node_--></span><!--_$node_--></gcl-overlay><!--_$node_--><slot></slot>`);
+        expect(component.shadowRoot.innerHTML).toBe("<!--_$bm_--><gcl-overlay>\n                <!--_$bm_--><span><!--_$bm_-->error 1<!--_$em_--></span><span><!--_$bm_-->error 2<!--_$em_--></span><!--_$em_-->\n            </gcl-overlay><!--_$em_-->\n            <slot></slot>");
     });
 
 });

@@ -11,28 +11,28 @@
 
         window.addEventListener('change', event => alert(
             `
-        Event type: 'change'
-        Field name: '${event.detail.name}'
-        Field old value: '${event.detail.oldValue}'
-        Field new value: '${event.detail.newValue}'
-`));
+                Event type: 'change'
+                Field name: '${event.detail.name}'
+                Field old value: '${event.detail.oldValue}'
+                Field new value: '${event.detail.newValue}'
+        `));
 
     </script>
 
-    <title><Form></Form> field demo</title>
+    <title>Form field demo</title>
 
 </head>
 
 <body>
-    <gcl-form-field>
+    <gcl-form-field required>
         <span slot="label">Name</span>
         <gcl-text-field slot="field" id="tf1" name="name"></gcl-text-field>
     </gcl-form-field>
     <br />
-    <gcl-form-field>
+    <!-- <gcl-form-field>
         <span slot="label">Name</span>
         <gcl-text-field slot="field" id="tf2" name="name" value="Sarah"></gcl-text-field>
-    </gcl-form-field>
+    </gcl-form-field> -->
 </body>
 
 </html>

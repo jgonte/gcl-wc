@@ -1,5 +1,5 @@
 import { createNode } from "../createNode";
-import { nodeMarker } from "../createTemplate";
+import { beginMarker, endMarker } from "../createTemplate";
 import { html } from "../html";
 
 describe("create node tests", () => {
@@ -26,17 +26,23 @@ describe("create node tests", () => {
             childNodes
         } = node;
 
-        const text = childNodes[0] as Text;
+        let comment = childNodes[0] as Comment;
+
+        expect(comment.nodeType).toEqual(Node.COMMENT_NODE);
+
+        expect(comment.data).toEqual(beginMarker);
+
+        const text = childNodes[1] as Text;
 
         expect(text.nodeType).toEqual(Node.TEXT_NODE);
 
         expect(text.textContent).toEqual('Sarah');
 
-        const comment = childNodes[1] as Comment;
+        comment = childNodes[2] as Comment;
 
         expect(comment.nodeType).toEqual(Node.COMMENT_NODE);
 
-        expect(comment.data).toEqual(nodeMarker);
+        expect(comment.data).toEqual(endMarker);
     });
 
     it('should create a literal', () => {
@@ -68,17 +74,23 @@ describe("create node tests", () => {
             childNodes
         } = node;
 
-        const text = childNodes[0] as Text;
+        let comment = childNodes[0] as Comment;
+
+        expect(comment.nodeType).toEqual(Node.COMMENT_NODE);
+
+        expect(comment.data).toEqual(beginMarker);
+
+        const text = childNodes[1] as Text;
 
         expect(text.nodeType).toEqual(Node.TEXT_NODE);
 
         expect(text.textContent).toEqual('Sarah');
 
-        const comment = childNodes[1] as Comment;
+        comment = childNodes[2] as Comment;
 
         expect(comment.nodeType).toEqual(Node.COMMENT_NODE);
 
-        expect(comment.data).toEqual(nodeMarker);
+        expect(comment.data).toEqual(endMarker);
     });
 
     it('should create an element with attributes', () => {
