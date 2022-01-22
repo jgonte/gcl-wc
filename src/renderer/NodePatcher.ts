@@ -1,38 +1,15 @@
 import { isPrimitive } from "../utils/shared";
-import createTemplate, { attributeMarkerPrefix, eventMarkerPrefix, endMarker, beginMarker } from "./createTemplate";
+import createTemplate, { NodePatcherRuleTypes } from "./createTemplate";
 import { createNode } from "./createNode";
 import areEquivalentValues from "./areEquivalentValues";
 import getGlobalFunction from "../custom-element/helpers/getGlobalFunction";
 import { mountNode } from "./mount";
 import { updateNode } from "./update";
-
-export enum NodePatcherRuleTypes {
-    PATCH_NODE = 1, // Patches either a single node or a collection of nodes
-    PATCH_ATTRIBUTE,
-    PATCH_EVENT
-}
-
-/**
- * The rule to "compile" to patch the DOM node
- */
-export interface NodePatcherRule {
-
-    /**
-     * The type of patching to do to that node
-     */
-    type: NodePatcherRuleTypes;
-
-    /**
-     * The path to locate the node
-     */
-    path: number[];
-
-    /**
-     * The name of the attribute to patch
-     * Only populated if it is an attribute or an event
-     */
-    name?: string;
-}
+import createNodePatcherRules, { NodePatcherRule } from "./createNodePatcherRules";
+import { setAttribute } from "./dom/setAttribute";
+import { removeLeftSiblings } from "./dom/removeLeftSiblings";
+import { removeLeftSibling } from "./dom/removeLeftSibling";
+import { replaceChild } from "./dom/replaceChild";
 
 export interface CompiledNodePatcherRule {
 
@@ -263,7 +240,6 @@ export class NodePatcher {
 
                                         replaceChild(node, newValue, oldValue);
                                     }
-
                                 }
                             }
                             else { // newValue === undefined || null
@@ -271,21 +247,10 @@ export class NodePatcher {
                                 if (oldValue !== undefined &&
                                     oldValue !== null) {
 
-                                    if (Array.isArray(oldValue)) {
+                                    if (Array.isArray(oldValue) ||
+                                        oldValue.patcher !== undefined) {
 
                                         removeLeftSiblings(node);
-                                    }
-                                    else if (oldValue.patcher !== undefined) {
-
-                                        if (oldValue.values.length > 0) {
-
-                                            //updateChildren(parentNode, oldValue.values, null);
-                                            removeLeftSiblings(node);
-                                        }
-                                        else {
-
-                                            removeLeftSiblings(node);
-                                        }
                                     }
                                     else {
 
@@ -298,7 +263,7 @@ export class NodePatcher {
                     break;
                 case NodePatcherRuleTypes.PATCH_ATTRIBUTE:
                     {
-                        patchAttribute(node as HTMLElement, name, oldValue, newValue);
+                        setAttribute(node as HTMLElement, name, newValue);
                     }
                     break;
                 case NodePatcherRuleTypes.PATCH_EVENT:
@@ -335,160 +300,9 @@ export class NodePatcher {
     }
 }
 
-/**
- * Creates the rules for the node patcher
- * @param node 
- * @param path 
- * @param rules 
- * @returns 
- */
-function createNodePatcherRules(node: Node, path: number[] = [], rules: NodePatcherRule[] = []): NodePatcherRule[] {
-
-    const {
-        childNodes
-    } = node;
-
-    const {
-        length
-    } = childNodes;
-
-    if (node.nodeType === Node.COMMENT_NODE &&
-        (node as Text).data === endMarker) {
-
-        rules.push({
-            type: NodePatcherRuleTypes.PATCH_NODE,
-            path: [...path]
-        });
-
-        return rules; // Comments do not have attributes and children so we are done
-    }
-    else if (node.nodeType === Node.TEXT_NODE) {
-
-        return rules; // No need to create rules for a text literal
-    }
-    else {
-
-        const attributes = (node as HTMLElement).attributes;
-
-        if (attributes !== undefined) {
-
-            rules = createAttributePatcherRules(attributes, path, rules);
-        }
-    }
-
-    for (let i = 0; i < length; ++i) {
-
-        rules = createNodePatcherRules(childNodes[i], [...path, i], rules);
-    }
-
-    return rules;
-}
-
-function createAttributePatcherRules(attributes: NamedNodeMap, path: number[], rules: NodePatcherRule[]): NodePatcherRule[] {
-
-    const {
-        length
-    } = attributes;
-
-    for (let i = 0; i < length; ++i) {
-
-        const value = attributes[i].value;
-
-        if (value.startsWith(attributeMarkerPrefix)) {
-
-            const name = value.split(':')[1];
-
-            rules.push({
-                type: NodePatcherRuleTypes.PATCH_ATTRIBUTE,
-                path,
-                name
-            });
-        }
-        else if (value.startsWith(eventMarkerPrefix)) {
-
-            const name = value.split(':')[1];
-
-            rules.push({
-                type: NodePatcherRuleTypes.PATCH_EVENT,
-                path,
-                name
-            });
-        }
-    }
-
-    return rules;
-}
-
-function patchAttribute(node: HTMLElement, name: string, oldValue: string, newValue: string): boolean {
-
-    if (newValue === undefined) { // It was removed in the new virtual node
-
-        node.removeAttribute(name);
-    }
-    else {
-
-        setAttribute(node, name, newValue);
-    }
-
-    return true;
-}
-
-function setAttribute(node: HTMLElement, key: string, value: string) {
-
-    if (value === undefined ||
-        value === 'undefined' ||
-        value === 'null' ||
-        value === '' ||
-        value === 'false') {
-
-        node.removeAttribute(key);
-
-        // Reset the value in any case
-        if (key === 'value' && value === undefined) { // It fails with undefined for a text field value
-
-            (node as any)[key] = '';
-        }
-        else {
-
-            (node as any)[key] = value;
-        }
-    }
-    else {
-
-        if (value === 'true') {
-
-            node.setAttribute(key, '');
-        }
-        else {
-
-            const type = typeof value;
-
-            if (type === 'function') {
-
-                node.removeAttribute(key); // It is similar to an event. Do not show as attribute
-
-                (node as any)[key] = value; // Bypass the stringification of the attribute
-            }
-            else if (type === 'object') {
-
-                value = JSON.stringify(value);
-
-                node.setAttribute(key, value);
-            }
-            else { // Any other type
-
-                if (key === 'value') { // Set the value besides setting the attribute
-
-                    (node as HTMLInputElement).value = value;
-                }
-
-                node.setAttribute(key, value);
-            }
-        }
-    }
-}
-
 function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any = []): void {
+
+    oldChildren = oldChildren || [];
 
     let { length: oldChildrenCount } = oldChildren;
 
@@ -579,169 +393,4 @@ function insertBefore(markerNode: Node, newChild: Node | NodePatchingData, rules
     }
 
     parentNode.insertBefore(newChild as Node, markerNode);
-}
-
-function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
-
-    const {
-        parentNode
-    } = markerNode;
-
-    if (isPrimitive(newChild) &&
-        isPrimitive(oldChild)) {
-
-        // Find the node whose old value matches the old child
-        const oldChildNode = findPreviousSibling(markerNode,
-            node => node instanceof Text &&
-                (node as Text).textContent === oldChild.toString());
-
-        if (oldChildNode !== null) { // Otherwise already updated???
-
-            (oldChildNode as Text).textContent = newChild.toString();
-        }
-
-    }
-    else if ((oldChild as any).patcher !== undefined) { // Patching data
-
-        // Find the node whose patching data matches this one
-        let oldChildNode = null;
-
-        findPreviousSibling(
-            markerNode,
-            node => testThisOrAnyParent(node, n => {
-
-                if (n._$patchingData === undefined) {
-
-                    return false;
-                }
-
-                const {
-                    patcher,
-                    values
-                } = n._$patchingData;
-
-                const {
-                    patcher: otherPatcher,
-                    values: otherValues
-                } = oldChild as any;
-
-                const r = patcher === otherPatcher &&
-                    values === otherValues;
-
-                if (r === true) {
-
-                    oldChildNode = n;
-                }
-
-                return r;
-            }));
-
-        const {
-            patcher: oldPatcher,
-            rules,
-            values: oldValues
-        } = (oldChildNode as any)._$patchingData;
-
-        const {
-            patcher,
-            values
-        } = (newChild as any);
-
-        if (patcher === oldPatcher) {
-
-            if ((newChild as any).rules === null) {
-
-                (newChild as any).rules = rules; // Transfer the compiled rules
-            }
-
-            oldPatcher.patchNode(oldChildNode, rules, oldValues, values);
-
-            (oldChildNode as any)._$patchingData.values = values; // Update the latest values 
-        }
-        else {
-
-            throw new Error('Not implemented');
-        }
-    }
-    else {
-
-        parentNode.replaceChild(newChild, oldChild);
-    }
-}
-
-function findPreviousSibling(markerNode: Node, predicate: (node: any) => boolean): Node {
-
-    let {
-        previousSibling
-    } = markerNode;
-
-    while (previousSibling !== null &&
-        (previousSibling as Comment).textContent !== endMarker) {
-
-        if (predicate(previousSibling) === true) {
-
-            return previousSibling;
-        }
-
-        previousSibling = previousSibling.previousSibling;
-    }
-
-    return null;
-}
-
-function testThisOrAnyParent(node: Node, predicate: (n: any) => boolean): boolean {
-
-    let parentNode = node;
-
-    while (parentNode !== null) {
-
-        if (predicate(parentNode) === true) {
-
-            return true;
-        }
-
-        parentNode = parentNode.parentNode;
-    }
-
-    return false;
-}
-
-function removeLeftSibling(markerNode: Node) {
-
-    const {
-        parentNode,
-        previousSibling
-    } = markerNode;
-
-    parentNode.removeChild(previousSibling);
-}
-
-function removeLeftSiblings(markerNode: Node) {
-
-    const {
-        parentNode
-    } = markerNode;
-
-    let sibling = markerNode.previousSibling;
-
-    // Keep the count of end markers to know how many beign markers to remove, which should correspond to the number of end markers found
-    let endMarkersCount: number = 1; // The marker node should be the first end marker found
-
-    while (sibling !== null) {
-
-        if ((sibling as Comment).data === endMarker) {
-
-            ++endMarkersCount;
-        }
-
-        if ((sibling as Comment).data === beginMarker &&
-            --endMarkersCount === 0) { // Decrements the end marker 
-
-            break; // Got the desired begin marker ... done
-        }
-
-        parentNode.removeChild(sibling);
-
-        sibling = markerNode.previousSibling;
-    }
 }

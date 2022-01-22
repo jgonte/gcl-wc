@@ -5,6 +5,7 @@ import { Callback, CustomElementPropertyMetadata } from "../../custom-element/in
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import { html } from "../../renderer/html";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 import styles from "./Button.css";
 
 //@ts-ignore
@@ -44,7 +45,7 @@ export default class Button extends
         };
     }
 
-    render() {
+    render(): NodePatchingData {
 
         return html`
         <button

@@ -1,4 +1,3 @@
-import { NodePatcherRuleTypes } from "../NodePatcher";
 import { html } from "../html";
 import { mountChildren, mountNode } from "../mount";
 import { updateChildren, updateNode } from "../update";
@@ -33,19 +32,6 @@ describe("renderer tests", () => {
         mountNode(container, patchingData);
 
         expect(container.outerHTML).toEqual('<span><!--_$bm_-->Sarah<!--_$em_--></span>');
-
-        const {
-            rules
-        } = (container as any)._$patchingData;
-
-        // Check there are compiled rules
-        expect(rules.length).toEqual(1);
-
-        const rule = rules[0];
-
-        expect(rule.type).toEqual(NodePatcherRuleTypes.PATCH_NODE);
-
-        expect(rule.node).toEqual(container.childNodes[2]);
 
         // Test that no changes are made if the same value is kept
         name = "Sarah";

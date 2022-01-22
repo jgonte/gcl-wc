@@ -2,6 +2,7 @@ import CustomElement from "../../../custom-element/CustomElement";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../../custom-element/interfaces";
 import { html } from "../../../renderer/html";
+import { NodePatchingData } from "../../../renderer/NodePatcher";
 import styles from "./Slider-css"
 
 export default class Slider extends CustomElement {
@@ -30,7 +31,7 @@ export default class Slider extends CustomElement {
         }
     }
 
-    render() {
+    render(): NodePatchingData {
 
         return html`
             <div class="bg-overlay"></div>

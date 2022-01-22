@@ -1,4 +1,5 @@
 import createTemplate, { beginMarker, endMarker } from "../createTemplate";
+import createNodePatcherRules from "../createNodePatcherRules";
 
 const extractTemplateStringArrays = (strings: TemplateStringsArray, ...values: any): TemplateStringsArray => strings;
 
@@ -64,7 +65,7 @@ describe("create template tests", () => {
 
         const name = "Sarah";
 
-        const age = 19; 
+        const age = 19;
 
         const strings = extractTemplateStringArrays`${name}${age}`;
 
@@ -297,6 +298,104 @@ describe("create template tests", () => {
         expect((node as HTMLElement).tagName).toEqual('X-ITEM');
 
         expect(keyIndex).toEqual(undefined);
+    });
+
+    it('should create a template with null values', () => {
+
+        const strings = extractTemplateStringArrays`
+            ${null}     
+            <span style="display:inline-block; width: 1rem;">
+                ${null}
+            </span>
+        `;
+
+        const {
+            templateString,
+            template,
+            keyIndex
+        } = createTemplate(strings);
+
+        expect(templateString).toEqual("<!--_$bm_--><!--_$em_--><span style=\"display:inline-block; width: 1rem;\"><!--_$bm_--><!--_$em_--></span>");
+
+        const {
+            childNodes
+        } = template.content;
+
+        expect(childNodes.length).toEqual(3);
+
+        expect(keyIndex).toEqual(undefined);
+
+        const rules = createNodePatcherRules(template.content);
+
+        expect(rules.length).toEqual(2);
+    });
+
+    it('should create a template with attribute values after node values', () => {
+
+        const strings = extractTemplateStringArrays`
+        <div>
+            ${null}     
+            <span>
+                ${null}
+            </span>    
+        </div>
+        <div items=${[]}></div>`; // Transitioning to attributes
+
+        const {
+            templateString,
+            template,
+            keyIndex
+        } = createTemplate(strings);
+
+        expect(templateString).toEqual("<div><!--_$bm_--><!--_$em_--><span><!--_$bm_--><!--_$em_--></span>    \n        </div>\n        <div items=\"_$attr:items\"></div>");
+
+        const {
+            childNodes
+        } = template.content;
+
+        expect(childNodes.length).toEqual(3);
+
+        expect(keyIndex).toEqual(undefined);
+
+        const rules = createNodePatcherRules(template.content);
+
+        expect(rules.length).toEqual(3);
+    });
+
+    it('should create a template with attribute values mixed with node values', () => {
+
+        const strings = extractTemplateStringArrays`
+        <div>
+            ${null}     
+            <span>
+                ${null}
+            </span>    
+        </div>
+        <div items=${[]}></div>
+        <span>
+            ${null}
+        </span>
+        <div name=${'Sarah'}></div>`;
+
+        const {
+            templateString,
+            template,
+            keyIndex
+        } = createTemplate(strings);
+
+        expect(templateString).toEqual("<div><!--_$bm_--><!--_$em_--><span><!--_$bm_--><!--_$em_--></span>    \n        </div>\n        <div items=\"_$attr:items\"></div>\n        <span><!--_$bm_--><!--_$em_--></span>\n        <div name=\"_$attr:name\"></div>");
+
+        const {
+            childNodes
+        } = template.content;
+
+        expect(childNodes.length).toEqual(7);
+
+        expect(keyIndex).toEqual(undefined);
+
+        const rules = createNodePatcherRules(template.content);
+
+        expect(rules.length).toEqual(5);
     });
 
     it('should create a template with several nodes (1)', () => {

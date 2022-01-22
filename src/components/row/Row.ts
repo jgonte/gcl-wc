@@ -2,6 +2,7 @@ import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import { html } from "../../renderer/html";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 import styles from "./Row.css";
 
 export default class Row extends CustomElement {
@@ -15,9 +16,9 @@ export default class Row extends CustomElement {
 
         return {
 
-        /**
-         * Content justification
-         */
+            /**
+             * Content justification
+             */
             justifyContent: {
                 attribute: 'justify-content',
                 type: String,
@@ -28,7 +29,7 @@ export default class Row extends CustomElement {
         };
     }
 
-    render() {
+    render(): NodePatchingData {
 
         return html`<slot></slot>`;
     }

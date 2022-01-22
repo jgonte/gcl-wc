@@ -7,6 +7,7 @@ import DirectionMixin from "../../custom-element/mixins/components/direction/Dir
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import { html } from "../../renderer/html";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 import styles from "./Icon.css";
 
 const {
@@ -46,7 +47,7 @@ export default class Icon extends
         };
     }
 
-    render() {
+    render(): NodePatchingData {
 
         const {
             name

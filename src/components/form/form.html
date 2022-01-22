@@ -35,7 +35,7 @@
                 }
             };
         }
-        
+
     </script>
 
     <script type="module" src="../../../../../../dist/bundle.js"></script>
@@ -76,18 +76,37 @@
             <gcl-localized-text slot="label">First (SurName) Name</gcl-localized-text>
             <gcl-text-field slot="field" name="name" value="Sarah"></gcl-text-field>
         </gcl-form-field>
+
+        <gcl-form-field>
+            <gcl-localized-text slot="label">Avatar</gcl-localized-text>
+            <gcl-file-field slot="field" name="avatar"></gcl-file-field>
+        </gcl-form-field>
     </gcl-form>
 
     <h4>Load and submit</h4>
-    <gcl-form id="loadAndSubmit" load-url="http://localhost:60314/api/contacts/1" submit-url="http://localhost:60314/api/contacts/">
+    <gcl-form id="loadAndSubmit" load-url="http://localhost:60314/api/contacts/1"
+        submit-url="http://localhost:60314/api/contacts/">
 
         <gcl-hidden-field name="id" is-id="true"></gcl-hidden-field>
-        
+
         <gcl-form-field required>
             <gcl-localized-text slot="label">First Name</gcl-localized-text>
             <!-- <span slot="tools">!</span> -->
             <gcl-text-field slot="field" name="name"></gcl-text-field>
         </gcl-form-field>
+
+        <gcl-form-field required>
+            <gcl-localized-text slot="label">Date of Birth</gcl-localized-text>
+            <!-- <span slot="tools">!</span> -->
+            <gcl-date-field slot="field" name="dateOfBirth"></gcl-date-field>
+        </gcl-form-field>
+
+        <gcl-form-field required>
+            <gcl-localized-text slot="label">Avatar</gcl-localized-text>
+            <!-- <span slot="tools">!</span> -->
+            <gcl-file-field slot="field" name="avatar"></gcl-file-field>
+        </gcl-form-field>
+
     </gcl-form>
 
 </body>

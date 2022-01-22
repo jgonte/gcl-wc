@@ -1,6 +1,4 @@
-import css from "../../../custom-element/helpers/css";
-
-const styles = css`
+const styles = `
 
     gcl-slider {
         display: inline-block;

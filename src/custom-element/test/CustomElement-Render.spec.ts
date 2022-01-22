@@ -1,9 +1,9 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
-import css from "../helpers/css";
 import { html } from "../../renderer/html";
 import { CustomElementPropertyMetadata } from "../interfaces";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 beforeEach(() => {
 
@@ -16,7 +16,7 @@ describe("custom element render tests", () => {
 
         class A extends CustomElement {
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>Hello, my name is unknown</span>
@@ -52,7 +52,7 @@ describe("custom element render tests", () => {
                 };
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>Hello, my name is ${this.name}</span>
@@ -88,7 +88,7 @@ describe("custom element render tests", () => {
                 };
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>Hello, my name is ${this.name}</span>
@@ -131,10 +131,10 @@ describe("custom element render tests", () => {
 
             static get styles(): string {
 
-                return css`:host { background-color: yellowgreen; }`;
+                return `:host { background-color: yellowgreen; }`;
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>Hello, my name is ${this.name}</span>
@@ -178,10 +178,10 @@ describe("custom element render tests", () => {
 
             static get styles(): string {
 
-                return css`:host { background-color: yellowgreen; }`;
+                return `:host { background-color: yellowgreen; }`;
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>Hello, my name is ${this.name}</span>

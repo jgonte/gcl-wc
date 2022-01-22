@@ -69,7 +69,7 @@ export default class FormField extends
         return html`<gcl-row id="field-row" justify-content="start">    
             <gcl-form-label>
                 <slot name="label">Label</slot>
-                ${required && html`<span style="color: red;">*</span>`}     
+                ${required === true ? html`<span style="color: red;">*</span>` : null}     
                 <span style="display:inline-block; width: 1rem;">
                     ${modified === true ? html`<span style="color: blue;">M</span>` : null}
                 </span>    

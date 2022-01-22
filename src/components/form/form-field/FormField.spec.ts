@@ -28,19 +28,6 @@ describe("form tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe(
-`<style>[object Object]
-
-[object Object]</style><gcl-row id="field-row" justify-content=\"start\">
-            <gcl-form-label>
-                <slot name="label">Label</slot>
-            </gcl-form-label>
-            <slot name="tools"></slot>
-            :
-            <span style="display:inline-block; padding: 0 1rem 0 0;"></span>
-            <slot name=\"field\"></slot>
-        </gcl-row>
-        <gcl-validation-summary warnings=\"[]\" errors=\"[]\"></gcl-validation-summary>`
-        );
+        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]\n\n[object Object]</style><gcl-row id=\"field-row\" justify-content=\"start\">    \n            <gcl-form-label>\n                <slot name=\"label\">Label</slot><!--_$bm_--><!--_$em_--><span style=\"display:inline-block; width: 1rem;\"><!--_$bm_--><!--_$em_--></span>    \n            </gcl-form-label>\n            <slot name=\"tools\"></slot>\n            :\n            <span style=\"display:inline-block; padding: 0 1rem 0 0;\"></span>\n            <slot name=\"field\"></slot>      \n        </gcl-row>\n        <gcl-validation-summary warnings=\"[]\" errors=\"[]\">\n        </gcl-validation-summary>");
     });
 });

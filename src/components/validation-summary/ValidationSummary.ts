@@ -2,6 +2,7 @@ import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import { html } from "../../renderer/html";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 export default class ValidationSummary extends CustomElement {
 
@@ -13,19 +14,21 @@ export default class ValidationSummary extends CustomElement {
              * The warnings to display
              */
             warnings: {
-                type: Array
+                type: Array,
+                value: []
             },
 
             /**
              * The errors to display
              */
             errors: {
-                type: Array
+                type: Array,
+                value: []
             }
         };
     }
 
-    render() {
+    render(): NodePatchingData {
 
         return html`${this.renderWarnings()}
             ${this.renderErrors()}`;

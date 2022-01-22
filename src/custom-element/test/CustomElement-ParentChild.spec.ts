@@ -1,9 +1,9 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
-import css from "../helpers/css";
 import { html } from "../../renderer/html";
 import { CustomElementPropertyMetadata } from "../interfaces";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 beforeEach(() => {
 
@@ -34,14 +34,14 @@ describe("custom element parent children relationship tests", () => {
 
             static get styles(): string {
 
-                return css`
+                return `
                     :host {
                         background-color: yellowgreen;
                     }
                 `;
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>Hello, my name is ${this.name}</span>
@@ -71,14 +71,14 @@ describe("custom element parent children relationship tests", () => {
 
             static get styles(): string {
 
-                return css`
+                return `
                     :host {
                         background-color: aliceblue
                     }
                 `;
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>My age is ${this.age}</span>
@@ -145,14 +145,14 @@ describe("custom element parent children relationship tests", () => {
 
             static get styles(): string {
 
-                return css`
+                return `
                     :host {
                         background-color: yellowgreen;
                     }
                 `;
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <slot name="content"></slot>
@@ -182,14 +182,14 @@ describe("custom element parent children relationship tests", () => {
 
             static get styles(): string {
 
-                return css`
+                return `
                     :host {
                         background-color: aliceblue
                     }
                 `;
             }
 
-            render() {
+            render(): NodePatchingData {
 
                 return html`
                     <span>My age is ${this.age}</span>

@@ -1,4 +1,5 @@
-import { NodePatchingData, NodePatcherRule, CompiledNodePatcherRule } from "./NodePatcher";
+import { NodePatcherRule } from "./createNodePatcherRules";
+import { NodePatchingData, CompiledNodePatcherRule } from "./NodePatcher";
 
 /**
  * Creates a node according to the patching data of the node
@@ -37,9 +38,9 @@ export function createNode(parentNode: Node, patchingData: NodePatchingData): No
         // Set the node of the patching data
         patchingData.node = parentNode;
 
-        if ((parentNode as any)._$patchingData === undefined &&     
+        if ((parentNode as any)._$patchingData === undefined &&
             (!(parentNode instanceof DocumentFragment) ||
-            parentNode instanceof ShadowRoot)) {
+                parentNode instanceof ShadowRoot)) {
 
             // Attach the patching data to the node if there is none attached
             (parentNode as any)._$patchingData = patchingData;

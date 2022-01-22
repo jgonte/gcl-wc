@@ -3,6 +3,7 @@ import defineCustomElement from "../../custom-element/helpers/defineCustomElemen
 import { CustomElementStateMetadata } from "../../custom-element/interfaces";
 import { errorEvent } from "../../error/ErrorHandler";
 import { html } from "../../renderer/html";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 /**
  * The root class of the SPA
@@ -20,7 +21,7 @@ export default class App extends CustomElement {
         };
     }
 
-    render() {
+    render(): NodePatchingData {
 
         return html`${this.renderErrors()}
             <slot></slot>`;

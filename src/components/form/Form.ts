@@ -34,7 +34,7 @@ export default class Form extends
         this.handleChange = this.handleChange.bind(this);
     }
 
-    render() {
+    render(): NodePatchingData {
 
         return html`<gcl-row justify-content="center">
             ${this.renderSubmitting()}

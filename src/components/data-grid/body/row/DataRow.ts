@@ -2,6 +2,7 @@ import CustomElement from "../../../../custom-element/CustomElement";
 import defineCustomElement from "../../../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../../../custom-element/interfaces";
 import { html } from "../../../../renderer/html";
+import { NodePatchingData } from "../../../../renderer/NodePatcher";
 import styles from "./DataRow.css";
 
 export default class DataRow extends CustomElement {
@@ -33,19 +34,14 @@ export default class DataRow extends CustomElement {
         };
     }
 
-    render() {
+    render(): NodePatchingData[] {
 
         const {
             record,
             fields
         } = this;
 
-        return fields.map(field => {
-
-            return (
-                html`<gcl-data-cell field=${field} record=${record} key=${field}></gcl-data-cell>`
-            );
-        });
+        return fields.map(field => html`<gcl-data-cell field=${field} record=${record} key=${field}></gcl-data-cell>`);
     }
 }
 

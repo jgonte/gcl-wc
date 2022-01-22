@@ -3,6 +3,7 @@ import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import { html } from "../../renderer/html";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 export default abstract class Tool extends
     SizableMixin(
@@ -18,14 +19,14 @@ export default abstract class Tool extends
             /**
              * What action to execute when the tool has been closed
              */
-             iconName: {
+            iconName: {
                 type: String,
                 required: true
             }
         };
     }
 
-    render() {
+    render(): NodePatchingData {
 
         const {
             kind,

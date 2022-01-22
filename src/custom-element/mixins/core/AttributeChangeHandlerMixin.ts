@@ -159,6 +159,11 @@ const AttributeChangeHandlerMixin = Base =>
          */
         attributeChangedCallback(attributeName: string, oldValue: string | null, newValue: string | null) {
 
+            if (oldValue === newValue) {
+
+                return; // Nothing to change
+            }
+            
             super.attributeChangedCallback?.(attributeName, oldValue, newValue);
 
             this._setAttribute(attributeName, newValue);

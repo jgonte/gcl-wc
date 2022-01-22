@@ -13,6 +13,12 @@ export const attributeMarkerPrefix = "_$attr:";
 
 export const eventMarkerPrefix = "_$evt:";
 
+export enum NodePatcherRuleTypes {
+    PATCH_NODE = 1, // Patches either a single node or a collection of nodes
+    PATCH_ATTRIBUTE,
+    PATCH_EVENT
+}
+
 export interface TemplateData {
 
     templateString: string;
@@ -61,6 +67,9 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
     // Flag to indicate state whether we are dealing with a value for an attribute or an event
     let beginAttributeOrEvent: boolean = false;
 
+    // Flag when a begin marker has been emitted but we transitioned to an attribute so we need to emit the end marker as well
+    let beginMarkerSet: boolean = false;
+
     for (let i = 0; i < length; ++i) {
 
         s = strings[i];
@@ -68,6 +77,13 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
         s = trimNode(s);
 
         if (s.endsWith('=')) { // It is an attribute or an event
+
+            if (beginMarkerSet === true) {
+
+                parts.push(`<!--${endMarker}-->`); // End the previous node
+
+                beginMarkerSet = false;
+            }
 
             const name = getAttributeName(s);
 
@@ -99,6 +115,8 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
             }
 
             parts.push(`${s}<!--${beginMarker}-->`);
+
+            beginMarkerSet = true; // Flag that we set the begin marker
         }
     }
 
@@ -120,7 +138,7 @@ function createTemplateString(strings: TemplateStringsArray): { templateString: 
     };
 }
 
-function trimNode(s: string) : string {
+function trimNode(s: string): string {
 
     const trimmedStart = s.trimStart();
 
