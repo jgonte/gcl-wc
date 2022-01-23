@@ -4,64 +4,64 @@ describe("applyStyle tests", () => {
 
     it('should apply a literal style single rule', async () => {
 
-        const component = document.createElement('div');
+        const element = document.createElement('div');
 
         applyStyle`
             color: red;
-        `(component);
+        `(element);
 
-        expect(component.style.color).toEqual('red');
+        expect(element.style.color).toEqual('red');
     });
 
     it('should apply a literal style more than one rule', async () => {
 
-        const component = document.createElement('div');
+        const element = document.createElement('div');
 
         applyStyle`
             color: red;
             background-color: yellow;
-        `(component);
+        `(element);
 
-        expect(component.style.color).toEqual('red');
+        expect(element.style.color).toEqual('red');
 
-        expect(component.style.backgroundColor).toEqual('yellow');
+        expect(element.style.backgroundColor).toEqual('yellow');
     });
 
     it('should apply a style one value rule and one literal', async () => {
 
-        const component = document.createElement('div');
+        const element = document.createElement('div');
 
         const red = 'red';
 
         applyStyle`
             color: ${red};
             background-color: yellow;
-        `(component);
+        `(element);
 
-        expect(component.style.color).toEqual('red');
+        expect(element.style.color).toEqual('red');
 
-        expect(component.style.backgroundColor).toEqual('yellow');
+        expect(element.style.backgroundColor).toEqual('yellow');
     });
 
     it('should apply a style one literal and one value rule ', async () => {
 
-        const component = document.createElement('div');
+        const element = document.createElement('div');
 
         const red = 'red';
 
         applyStyle`   
             background-color: yellow;
             color: ${red};
-        `(component);
+        `(element);
 
-        expect(component.style.color).toEqual('red');
+        expect(element.style.color).toEqual('red');
 
-        expect(component.style.backgroundColor).toEqual('yellow');
+        expect(element.style.backgroundColor).toEqual('yellow');
     });
 
     it('should apply a combination of rules ', async () => {
 
-        const component = document.createElement('div');
+        const element = document.createElement('div');
 
         const fontSize = '12px'
 
@@ -72,15 +72,15 @@ describe("applyStyle tests", () => {
             background-color: yellow;
             color: ${red};
             text-align: center;
-        `(component);
+        `(element);
 
-        expect(component.style.textAlign).toEqual('center');
+        expect(element.style.textAlign).toEqual('center');
 
-        expect(component.style.color).toEqual('red');
+        expect(element.style.color).toEqual('red');
 
-        expect(component.style.backgroundColor).toEqual('yellow');
+        expect(element.style.backgroundColor).toEqual('yellow');
 
-        expect(component.style.fontSize).toEqual('12px');
+        expect(element.style.fontSize).toEqual('12px');
     });
 
 });

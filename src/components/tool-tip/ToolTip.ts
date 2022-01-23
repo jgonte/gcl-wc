@@ -13,11 +13,6 @@ export default class ToolTip extends CustomElement {
 
     render(): NodePatchingData {
 
-        // return html`
-        //     
-        //     <slot name="content"></slot>
-        // `;
-
         return html`<div class="tooltip">
             <slot name="trigger"></slot>
             <span id="content">
