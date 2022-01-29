@@ -1,5 +1,4 @@
 /* FormField.css */
 #field-row {
-    width: 100%;
-    margin: 0.5rem;
+    background-color: darkgoldenrod;
 }

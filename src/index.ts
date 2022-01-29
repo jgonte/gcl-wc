@@ -6,6 +6,7 @@ import Tool from "./components/tools/Tool";
 import CloseTool from "./components/tools/close/CloseTool";
 import Alert from "./components/alert/Alert";
 import Overlay from "./components/overlay/Overlay";
+import Badge from "./components/badge/Badge";
 import Button from "./components/button/Button";
 import Row from "./components/row/Row";
 import DataHeaderCell from "./components/data-grid/header/cell/DataHeaderCell";
@@ -38,6 +39,7 @@ export {
     CloseTool,
     Alert,
     Overlay,
+    Badge,
     Button,
     // Layout
     Row,

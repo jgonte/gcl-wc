@@ -48,7 +48,9 @@ const SubmitableMixin = Base =>
                 return null;
             }
 
-            return html`<span key="submitting-overlay">Submiting ...</span>`;
+            return html`<gcl-overlay>
+                <gcl-alert kind="info" >...Submitting</gcl-alert>
+            </gcl-overlay>`;
         }
 
         connectedCallback() {

@@ -63,7 +63,7 @@ export default class FileField extends Field {
 
         return html`
             <input
-                style="opacity: 0;"
+                style="opacity: 0; position: absolute;"
                 type="file"
                 name=${name}
                 id=${name}

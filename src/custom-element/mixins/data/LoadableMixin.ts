@@ -51,7 +51,9 @@ const LoadableMixin = Base =>
                 return null;
             }
 
-            return html`<span key="loading-overlay">Loading ...</span>`;
+            return html`<gcl-overlay>
+                <gcl-alert kind="info" >...Loading</gcl-alert>
+            </gcl-overlay>`;
         }
 
         connectedCallback() {

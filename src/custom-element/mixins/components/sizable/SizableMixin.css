@@ -1,19 +1,19 @@
 /* SizableMixin */
 /* host applies to the text component */
 :host([size='large']) *{
-    padding: var(--gcl-padding-size-large);
+    /* padding: var(--gcl-padding-size-large); */
     font-size: var(--gcl-font-size-large);
     min-height: var(--gcl-min-height-large);
 }
 
 :host([size='medium']) *{
-    padding: var(--gcl-padding-size-medium);
+    /* padding: var(--gcl-padding-size-medium); */
     font-size: var(--gcl-font-size-medium);
     min-height: var(--gcl-min-height-medium);
 }
 
 :host([size='small']) *{
-    padding: var(--gcl-padding-size-small); 
+    /* padding: var(--gcl-padding-size-small);  */
     font-size: var(--gcl-font-size-small);
     min-height: var(--gcl-min-height-small);
 }

@@ -1,0 +1,25 @@
+:host {
+    box-sizing: border-box;
+    font-size:.7em;
+    width:18px;
+    height:18px;
+    text-align:center;
+    line-height:18px;
+    border-radius: 50%;
+    box-shadow:0 0 1px #333;
+}
+
+:host([kind='primary']) {
+    background-color: var(--gcl-color-primary);
+    color: var(--gcl-color-on-primary);
+}
+
+:host([kind='secondary']) {
+    background-color: var(--gcl-color-secondary);
+    color: var(--gcl-color-on-secondary);
+}
+
+:host([kind='tertiary']) {
+    background-color: var(--gcl-color-tertiary);
+    color: var(--gcl-color-on-tertiary);
+}

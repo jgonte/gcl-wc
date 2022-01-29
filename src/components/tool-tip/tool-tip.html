@@ -12,11 +12,49 @@
 
 <body>
 
-    <gcl-tool-tip>
-        <div slot="trigger">Hover me now</div>
-        <div slot="content">Look it works!</div>
+    <gcl-tool-tip position="top">
+        <div slot="trigger">Top not really - Hover me now</div>
+        <div slot="content">Top works!</div>
     </gcl-tool-tip>
-    
+
+    <br/>
+
+    <gcl-tool-tip position="left">
+        <span slot="trigger">Left not really - Hover me now</span>
+        <div slot="content">Left works!</div>
+    </gcl-tool-tip>
+
+    <gcl-row style="height: 100px;">
+
+        <gcl-tool-tip position="top">
+            <div slot="trigger">Top - Hover me now</div>
+            <div slot="content">Top works!</div>
+        </gcl-tool-tip>
+
+        <gcl-tool-tip position="bottom">
+            <div slot="trigger">Bottom - Hover me now</div>
+            <div slot="content" style="padding: 5px;">
+                Some quite large content
+                Bottom works!</div>
+        </gcl-tool-tip>
+
+        <gcl-tool-tip position="right">
+            <div slot="trigger">Right - Hover me now</div>
+            <div slot="content">Right works!</div>
+        </gcl-tool-tip>
+
+        <gcl-tool-tip position="left">
+            <div slot="trigger">Left - Hover me now</div>
+            <div slot="content">Left works!</div>
+        </gcl-tool-tip>
+
+        <gcl-tool-tip position="right">
+            <div slot="trigger">Right not really - Hover me now</div>
+            <div slot="content">Right works!</div>
+        </gcl-tool-tip>
+
+    </gcl-row>
+
 </body>
 
 </html>

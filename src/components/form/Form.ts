@@ -9,6 +9,7 @@ import { changeEvent, Field, fieldAddedEvent } from "../fields/Field";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 import ValidatableMixin from "../../custom-element/mixins/components/validatable/ValidatableMixin";
 import { ValidationContext } from "../../utils/validation/Interfaces";
+import styles from "./Form.css";
 
 export default class Form extends
     SubmitableMixin(
@@ -34,16 +35,20 @@ export default class Form extends
         this.handleChange = this.handleChange.bind(this);
     }
 
+    static get styles(): string {
+
+        return styles as any;
+    }
+
     render(): NodePatchingData {
 
-        return html`<gcl-row justify-content="center">
+        return html`<form>
+            ${this.renderLoading()}
             ${this.renderSubmitting()}
             ${this.renderError()}
-            <form key="form">
-                <slot key="form-fields-slot"></slot>
-                ${this._renderButton()}
-            </form>
-        </gcl-row>`;
+            <slot key="form-fields"></slot>
+            ${this._renderButton()}
+        </form>`;
     }
 
     private _renderButton(): NodePatchingData {

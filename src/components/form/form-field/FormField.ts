@@ -69,9 +69,23 @@ export default class FormField extends
         return html`<gcl-row id="field-row" justify-content="start">    
             <gcl-form-label>
                 <slot name="label">Label</slot>
-                ${required === true ? html`<span style="color: red;">*</span>` : null}     
-                <span style="display:inline-block; width: 1rem;">
-                    ${modified === true ? html`<span style="color: blue;">M</span>` : null}
+                ${required === true ?
+                html`<gcl-tool-tip>
+                        <gcl-badge kind="danger" slot="trigger">
+                            <span>*</span>
+                        </gcl-badge>
+                        <gcl-localized-text resource-key="thisFieldIsRequired" slot="content">This field is required</gcl-localized-text>
+                    </gcl-tool-tip>`
+                : null}     
+                <span>
+                    ${modified === true ?
+                html`<gcl-tool-tip>
+                        <gcl-badge kind="primary" slot="trigger">
+                            <span>M</span>
+                        </gcl-badge>
+                        <gcl-localized-text resource-key="thisFieldHasBeenModified" slot="content">This field has been modified</gcl-localized-text>
+                    </gcl-tool-tip>`
+                : null}
                 </span>    
             </gcl-form-label>
             <slot name="tools"></slot>
@@ -106,7 +120,7 @@ export default class FormField extends
     handleInput(event: CustomEvent): void {
 
         const {
-           modified
+            modified
         } = event.detail;
 
         this.modified = modified;
