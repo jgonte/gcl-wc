@@ -1,3 +1,7 @@
+:host {
+    margin-left: 1rem;
+}
+
 input, 
 select,
 textarea {

@@ -87,10 +87,9 @@ export default class FormField extends
                     </gcl-tool-tip>`
                 : null}
                 </span>    
-            </gcl-form-label>
-            <slot name="tools"></slot>
-            :
-            <span style="display:inline-block; padding: 0 1rem 0 0;"></span>
+                <slot name="tools"></slot>
+            </gcl-form-label>           
+            <span>:</span>
             <slot name="field"></slot>      
         </gcl-row>
         <gcl-validation-summary
