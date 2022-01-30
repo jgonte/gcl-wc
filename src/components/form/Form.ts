@@ -10,6 +10,7 @@ import { NodePatchingData } from "../../renderer/NodePatcher";
 import ValidatableMixin from "../../custom-element/mixins/components/validatable/ValidatableMixin";
 import { ValidationContext } from "../../utils/validation/Interfaces";
 import styles from "./Form.css";
+import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 
 export default class Form extends
     SubmitableMixin(
@@ -40,13 +41,44 @@ export default class Form extends
         return styles as any;
     }
 
+    static get properties(): Record<string, CustomElementPropertyMetadata> {
+
+        return {
+
+            /**
+             * The width of the labels of the form
+             */
+            labelWidth: {
+                attribute: 'label-width',
+                type: String,
+                value: '50%',
+            },
+
+            /**
+             * Content justification
+             */
+             justifyLabelContent: {
+                attribute: 'justify-label-content',
+                type: String,
+                value: 'space-evenly',
+                options: ['start', 'center', 'space-around', 'space-between', 'space-evenly'],
+                reflect: true
+            }
+        };
+    }
+
     render(): NodePatchingData {
+
+        const {
+            labelWidth,
+            justifyLabelContent
+        } = this;
 
         return html`<form>
             ${this.renderLoading()}
             ${this.renderSubmitting()}
             ${this.renderError()}
-            <slot key="form-fields"></slot>
+            <slot label-width=${labelWidth} justify-label-content=${justifyLabelContent}key="form-fields"></slot>
             ${this._renderButton()}
         </form>`;
     }

@@ -68,12 +68,13 @@
     <br /> -->
 
     <h4>Submit only</h4>
-    <gcl-form id="submitOnly" submit-url="http://localhost:60314/api/contacts/">
+    <gcl-form id="submitOnly" submit-url="http://localhost:60314/api/contacts/" justify-label-content="end">
 
         <gcl-hidden-field name="id" is-id="true"></gcl-hidden-field>
 
         <gcl-form-field>
             <gcl-localized-text slot="label">First (SurName) Name</gcl-localized-text>
+            <span slot="tools">!</span>
             <gcl-text-field slot="field" name="name" value="Sarah"></gcl-text-field>
         </gcl-form-field>
 
@@ -87,7 +88,7 @@
     <gcl-row justify-content="center">
 
         <gcl-form id="loadAndSubmit" load-url="http://localhost:60314/api/contacts/1"
-            submit-url="http://localhost:60314/api/contacts/" style="width: 700px;">
+            submit-url="http://localhost:60314/api/contacts/" label-width="35%" style="width: 700px;">
 
             <gcl-hidden-field name="id" is-id="true"></gcl-hidden-field>
 

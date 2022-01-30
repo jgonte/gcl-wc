@@ -32,6 +32,28 @@ export default class FormField extends
                 mutable: true,
                 reflect: true,
                 value: false
+            },
+
+            /**
+             * The width of the labels of the form
+             */
+            labelWidth: {
+                attribute: 'label-width',
+                type: String,
+                reflect: true,
+                inherit: true
+            },
+
+            /**
+             * Content justification
+             */
+            justifyLabelContent: {
+                attribute: 'justify-label-content',
+                type: String,
+                value: 'space-evenly',
+                options: ['start', 'center', 'space-around', 'space-between', 'space-evenly'],
+                reflect: true,
+                inherit: true
             }
         };
     }
@@ -60,14 +82,18 @@ export default class FormField extends
     render(): NodePatchingData {
 
         const {
+            labelWidth,
+            justifyLabelContent,
             required,
             modified,
             warnings,
             errors
         } = this;
 
+        const formLabelWidth = `width: ${labelWidth};`;
+
         return html`<gcl-row id="field-row" justify-content="start">    
-            <gcl-form-label>
+            <gcl-form-label justify-content=${justifyLabelContent} style=${formLabelWidth}>
                 <slot name="label">Label</slot>
                 ${required === true ?
                 html`<gcl-tool-tip>
