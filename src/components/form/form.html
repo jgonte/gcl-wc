@@ -92,13 +92,13 @@
 
             <gcl-hidden-field name="id" is-id="true"></gcl-hidden-field>
 
-            <gcl-form-field required>
+            <gcl-form-field required help="This is the name of the person">
                 <gcl-localized-text slot="label">First Name</gcl-localized-text>
                 <!-- <span slot="tools">!</span> -->
                 <gcl-text-field slot="field" name="name"></gcl-text-field>
             </gcl-form-field>
 
-            <gcl-form-field required>
+            <gcl-form-field required help-resource-key="dateOfBirth" >
                 <gcl-localized-text slot="label">Date of Birth</gcl-localized-text>
                 <!-- <span slot="tools">!</span> -->
                 <gcl-date-field slot="field" name="dateOfBirth"></gcl-date-field>

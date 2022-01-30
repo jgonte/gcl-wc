@@ -54,6 +54,21 @@ export default class FormField extends
                 options: ['start', 'center', 'space-around', 'space-between', 'space-evenly'],
                 reflect: true,
                 inherit: true
+            },
+
+            /**
+             * The key to retrieve a localized help value from an i18n provider
+             */
+             helpResourceKey: {
+                attribute: 'help-resource-key',
+                type: String
+            },
+
+            /**
+             * The help content
+             */
+            help: {
+                type: String
             }
         };
     }
@@ -85,6 +100,8 @@ export default class FormField extends
             labelWidth,
             justifyLabelContent,
             required,
+            helpResourceKey,
+            help,
             modified,
             warnings,
             errors
@@ -93,27 +110,19 @@ export default class FormField extends
         const formLabelWidth = `width: ${labelWidth};`;
 
         return html`<gcl-row id="field-row" justify-content="start">    
-            <gcl-form-label justify-content=${justifyLabelContent} style=${formLabelWidth}>
-                <slot name="label">Label</slot>
-                ${required === true ?
-                html`<gcl-tool-tip>
-                        <gcl-badge kind="danger" slot="trigger">
-                            <span>*</span>
-                        </gcl-badge>
-                        <gcl-localized-text resource-key="thisFieldIsRequired" slot="content">This field is required</gcl-localized-text>
-                    </gcl-tool-tip>`
-                : null}     
-                <span>
-                    ${modified === true ?
-                html`<gcl-tool-tip>
-                        <gcl-badge kind="primary" slot="trigger">
-                            <span>M</span>
-                        </gcl-badge>
-                        <gcl-localized-text resource-key="thisFieldHasBeenModified" slot="content">This field has been modified</gcl-localized-text>
-                    </gcl-tool-tip>`
-                : null}
-                </span>    
-                <slot name="tools"></slot>
+            <gcl-form-label 
+                required=${required}
+                help-resource-key=${helpResourceKey}
+                help=${help}
+                modified=${modified}
+                justify-content=${justifyLabelContent} 
+                style=${formLabelWidth}>
+                    <span slot="label">
+                        <slot name="label"></slot>
+                    </span>
+                    <gcl-row slot="tools" justify-content="space-evenly">
+                        <slot name="tools"></slot>
+                    </gcl-row>
             </gcl-form-label>           
             <span>:</span>
             <slot name="field"></slot>      
