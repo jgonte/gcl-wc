@@ -25,7 +25,7 @@ describe("Data grid tests", () => {
             // Attach it to the DOM
             document.body.innerHTML = `<gcl-data-grid></gcl-data-grid>`;
 
-        }).toThrow(new Error("The attributes: [data, fields] must have a value"));
+        }).toThrow(new Error("The attributes: [fields, data, id-field] must have a value"));
     });
 
     it('should render when the data of the attributes is provided', async () => {
@@ -39,7 +39,7 @@ describe("Data grid tests", () => {
 
         // Attach it to the DOM
         document.body.innerHTML = `
-        <gcl-data-grid id="dg1" 
+        <gcl-data-grid id="dg1" id-field="name" 
             data='[{ "name": "Sarah", "age": "19", "description": "Beautiful and smart" }, { "name": "Mark", "age": "31", "description": "Hard worker" }]'
             fields='[ "name", "age", "description" ]'
         >
@@ -50,7 +50,7 @@ describe("Data grid tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:&#x22;19&#x22;,&#x22;description&#x22;:&#x22;Beautiful and smart&#x22;}\" key=\"tbd\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:&#x22;31&#x22;,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!--_$em_-->");
+        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:&#x22;19&#x22;,&#x22;description&#x22;:&#x22;Beautiful and smart&#x22;}\" key=\"Sarah\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:&#x22;31&#x22;,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"Mark\"></gcl-data-row><!--_$em_-->");
     });
 
     it('should render when the data of the attributes is provided via functions', async () => {
@@ -85,14 +85,14 @@ describe("Data grid tests", () => {
         defineCustomElement('gcl-data-grid', DataGrid);
 
         // Attach it to the DOM
-        document.body.innerHTML = '<gcl-data-grid id="dg2" data="getData()" fields="getFields()"></gcl-data-grid>';
+        document.body.innerHTML = '<gcl-data-grid id="dg2" id-field="name" data="getData()" fields="getFields()"></gcl-data-grid>';
 
         // Test the element
         const component: any = document.querySelector('gcl-data-grid');
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!--_$em_-->");
+        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"Sarah\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"Mark\"></gcl-data-row><!--_$em_-->");
     });
 
     it('should swap the records', async () => {
@@ -127,14 +127,14 @@ describe("Data grid tests", () => {
         defineCustomElement('gcl-data-grid', DataGrid);
 
         // Attach it to the DOM
-        document.body.innerHTML = '<gcl-data-grid id="dg2" data="getData()" fields="getFields()"></gcl-data-grid>';
+        document.body.innerHTML = '<gcl-data-grid id="dg2"  id-field="name" data="getData()" fields="getFields()"></gcl-data-grid>';
 
         // Test the element
         const component: any = document.querySelector('gcl-data-grid');
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><!--_$em_-->");
+        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"Sarah\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"Mark\"></gcl-data-row><!--_$em_-->");
 
         component.data = [
             {
@@ -151,6 +151,6 @@ describe("Data grid tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"tbd\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"tbd\"></gcl-data-row><!--_$em_-->");
+        expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"Mark\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"Sarah\"></gcl-data-row><!--_$em_-->");
     });
 });

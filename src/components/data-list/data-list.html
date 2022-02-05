@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../../../dist/bundle.js"></script>
+
+    <script>
+
+        function getData() {
+
+            return [
+                {
+                    name: "Sarah",
+                    age: 19,
+                    description: 'Smart and beautiful'
+                },
+                {
+                    name: "Mark",
+                    age: 31,
+                    description: 'Dedicated and perseverant'
+                }
+            ];
+        }
+
+    </script>
+
+    <title>Data list demo</title>
+</head>
+
+<body>
+    <gcl-data-list id="dr1" data='[
+            {
+                "name": "Sarah",
+                "age": 19,
+                "description": "Smart and beautiful"
+            },
+            {
+                "name": "Mark",
+                "age": 31,
+                "description": "Dedicated and perseverant"
+            }
+        ]' 
+        id-field="name"
+        display-field="name">
+    </gcl-data-list>
+
+    <gcl-data-list id="dr2" data='getData()' id-field="name" display-field="name"></gcl-data-list>
+</body>
+
+</html>

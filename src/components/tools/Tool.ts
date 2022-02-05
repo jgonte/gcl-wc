@@ -20,7 +20,7 @@ export default abstract class Tool extends
              * What action to execute when the tool has been closed
              */
             iconName: {
-                type: String,
+                type: [String, Function],
                 required: true
             }
         };

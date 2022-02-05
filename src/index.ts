@@ -4,6 +4,7 @@ import Icon from "./components/icon/Icon";
 import Text from "./components/localized-text/LocalizedText";
 import Tool from "./components/tools/Tool";
 import CloseTool from "./components/tools/close/CloseTool";
+import DropTool from "./components/tools/drop/DropTool";
 import Alert from "./components/alert/Alert";
 import Overlay from "./components/overlay/Overlay";
 import Badge from "./components/badge/Badge";
@@ -37,6 +38,7 @@ export {
     Text,
     Tool,
     CloseTool,
+    DropTool,
     Alert,
     Overlay,
     Badge,

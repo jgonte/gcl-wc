@@ -1,11 +1,15 @@
 import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
+import DataHolderMixin from "../../custom-element/mixins/data/DataHolderMixin";
 import { html } from "../../renderer/html";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 import styles from "./DataGrid.css";
 
-export default class DataGrid extends CustomElement {
+export default class DataGrid extends
+    DataHolderMixin(
+        CustomElement
+    ) {
 
     static get styles(): string {
 
@@ -15,14 +19,6 @@ export default class DataGrid extends CustomElement {
     static get properties(): Record<string, CustomElementPropertyMetadata> {
 
         return {
-
-            /**
-             * The collection of records to render the data from
-             */
-            data: {
-                type: [Array, Function],
-                required: true
-            },
 
             /**
              * The descriptor of the fields to render each row
@@ -55,10 +51,11 @@ export default class DataGrid extends CustomElement {
 
         const {
             fields,
-            data
+            data,
+            idField
         } = this;
 
-        return data.map(record => html`<gcl-data-row fields=${fields} record=${record} key="tbd"></gcl-data-row>`);
+        return data.map(record => html`<gcl-data-row fields=${fields} record=${record} key=${record[idField]}></gcl-data-row>`);
     }
 }
 

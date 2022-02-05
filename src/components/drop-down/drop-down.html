@@ -7,51 +7,16 @@
 
     <script type="module" src="../../../dist/bundle.js"></script>
 
-    <script>
-
-        function getData() {
-
-            return [
-                {
-                    name: "Sarah",
-                    age: 19,
-                    description: 'Smart and beautiful'
-                },
-                {
-                    name: "Mark",
-                    age: 31,
-                    description: 'Dedicated and perseverant'
-                }
-            ];
-        }
-
-        function getFields() {
-
-            return ["name", "age", "description"];
-        }
-
-    </script>
-
     <title>Drop down demo</title>
 </head>
 
 <body>
 
-    <gcl-drop-down id="dg1" fields='["name", "age", "description"]' data='[
-        {
-            "name": "Sarah",
-            "age": 19,
-            "description": "Smart and beautiful"
-        },
-        {
-            "name": "Mark",
-            "age": 31,
-            "description": "Dedicated and perseverant"
-        }
-    ]'></gcl-drop-down>
-    
-    <br />
-    <gcl-drop-down id="dg2" fields="getFields()" data="getData()"></gcl-drop-down>
+    <gcl-drop-down>
+        <span slot="header">Click me</span>
+        <div slot="content">This is the content</div>
+    </gcl-drop-down>
+
 </body>
 
 </html>

@@ -32,12 +32,12 @@
 
     </script>
 
-    <title>Datagrid demo</title>
+    <title>Datag rid demo</title>
 </head>
 
 <body>
 
-    <gcl-data-grid id="dg1" fields='["name", "age", "description"]' data='[
+    <gcl-data-grid id="dg1" id-field="name" fields='["name", "age", "description"]' data='[
         {
             "name": "Sarah",
             "age": 19,
@@ -51,7 +51,7 @@
     ]'></gcl-data-grid>
     
     <br />
-    <gcl-data-grid id="dg2" fields="getFields()" data="getData()"></gcl-data-grid>
+    <gcl-data-grid id="dg2" id-field="name" fields="getFields()" data="getData()"></gcl-data-grid>
 </body>
 
 </html>
