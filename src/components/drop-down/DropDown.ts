@@ -1,9 +1,9 @@
 import CustomElement from "../../custom-element/CustomElement";
-import getClasses from "../../custom-element/helpers/css/style/class/getClasses";
+import getClasses from "../../custom-element/helpers/css/class/getClasses";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import popupManager from "../../custom-element/helpers/managers/popupManager";
 import { CustomElementStateMetadata } from "../../custom-element/interfaces";
-import { html } from "../../renderer/html";
+import html  from "../../renderer/html";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 import { dropChanged } from "../tools/drop/DropTool";
 import styles from "./DropDown.css";

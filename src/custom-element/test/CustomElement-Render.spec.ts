@@ -1,7 +1,7 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
-import { html } from "../../renderer/html";
+import html  from "../../renderer/html";
 import { CustomElementPropertyMetadata } from "../interfaces";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 

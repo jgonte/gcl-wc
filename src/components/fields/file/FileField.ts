@@ -2,7 +2,7 @@ import { Field } from "../Field";
 import { CustomElementPropertyMetadata } from "../../../custom-element/interfaces";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import { NodePatchingData } from "../../../renderer/NodePatcher";
-import { html } from "../../../renderer/html";
+import html  from "../../../renderer/html";
 
 function formatSize(fileSize) {
 

@@ -31,6 +31,12 @@ export interface CustomElementPropertyMetadata {
     type?: Function | Function[];
 
     /**
+     * When the type of the property is a function and we don't want to evaluate the function when initializing it value
+     * but we want to call that function at a later time
+     */
+    defer?: boolean;
+
+    /**
      * The default value of the property if no attribute is set in HTML
      */
     value?: any;

@@ -1,4 +1,4 @@
-import { html } from "../html";
+import html  from "../html";
 import { mountChildren, mountNode } from "../mount";
 import { updateChildren, updateNode } from "../update";
 

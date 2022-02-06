@@ -5,7 +5,7 @@ import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import KindMixin from "../../custom-element/mixins/components/kind/KindMixin";
 import SizableMixin from "../../custom-element/mixins/components/sizable/SizableMixin";
 import { NodePatchingData } from "../../renderer/NodePatcher";
-import { html } from "../../renderer/html";
+import html from "../../renderer/html";
 import styles from "./Alert.css";
 
 //@ts-ignore

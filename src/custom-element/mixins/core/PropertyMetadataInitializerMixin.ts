@@ -62,7 +62,8 @@ const PropertyMetadataInitializerMixin = Base =>
                     get(): any {
 
                         let {
-                            type
+                            type,
+                            defer
                         } = propertyMetadata;
 
                         const value = this._properties[name];
@@ -72,7 +73,9 @@ const PropertyMetadataInitializerMixin = Base =>
                             type = [type];
                         }
 
-                        if (type.includes(Function) && typeof value === 'function') { // Only call the function if the type is a Function
+                        if (type.includes(Function) &&
+                            typeof value === 'function' &&
+                            defer !== true) { // Only call the function if the type is a Function and it is not deferred
 
                             return value();
                         }
@@ -106,7 +109,7 @@ const PropertyMetadataInitializerMixin = Base =>
          * Retrieve the state of this and the base mixins
          * @returns The merged state
          */
-         static getAllProperties(): Record<string, CustomElementPropertyMetadata> {
+        static getAllProperties(): Record<string, CustomElementPropertyMetadata> {
 
             let properties = this.properties || {};
 

@@ -2,7 +2,7 @@ import CustomElement from "../../custom-element/CustomElement";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
 import DataHolderMixin from "../../custom-element/mixins/data/DataHolderMixin";
-import { html } from "../../renderer/html";
+import html  from "../../renderer/html";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 import styles from "./DataGrid.css";
 

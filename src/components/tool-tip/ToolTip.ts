@@ -1,8 +1,8 @@
 import CustomElement from "../../custom-element/CustomElement";
-import applyClasses from "../../custom-element/helpers/css/style/class/applyClasses";
+import applyClasses from "../../custom-element/helpers/css/class/applyClasses";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
-import { html } from "../../renderer/html";
+import html  from "../../renderer/html";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 import styles from "./ToolTip.css";
 

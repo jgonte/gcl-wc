@@ -5,7 +5,7 @@ import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../..
 import SizableMixin from "../../../custom-element/mixins/components/sizable/SizableMixin";
 import { validationEvent } from "../../../custom-element/mixins/components/validatable/ValidatableMixin";
 import { NodePatchingData } from "../../../renderer/NodePatcher";
-import { html } from "../../../renderer/html";
+import html  from "../../../renderer/html";
 import { inputEvent } from "../../fields/Field";
 import styles from "./FormField.css";
 

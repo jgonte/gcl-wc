@@ -1,3 +1,4 @@
+import html from "./renderer/html";
 import defineCustomElement from "./custom-element/helpers/defineCustomElement";
 import CustomElement from "./custom-element/CustomElement";
 import Icon from "./components/icon/Icon";
@@ -31,7 +32,11 @@ import ValidationSummary from "./components/validation-summary/ValidationSummary
 import appCtrl from "./components/app/appCtrl";
 import App from "./components/app/App";
 
+// Make it available in the global object of the browser
+(window as any).html = html;
+
 export {
+    html,
     defineCustomElement,
     CustomElement,
     Icon,

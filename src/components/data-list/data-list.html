@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <script type="module" src="../../../../../dist/bundle.js"></script>
+    <script type="module" src="../../../dist/bundle.js"></script>
 
     <script>
 
@@ -25,12 +25,35 @@
             ];
         }
 
+        function getItemStyle() {
+
+            return {
+                listStyleType: 'circle'
+            };
+        }
+
+        function getTemplate(record) {
+
+            const {
+                name,
+                age,
+                description
+            } = record;
+
+            return html`<div>
+                <span style="background-color: lightgreen;">${name}</span>
+                <span style="background-color: yellow;">${age}</span>
+                <span style="background-color: darkred; color: white; font-weight: bold;">${description}</span>
+            </div>`;
+        }
+
     </script>
 
     <title>Data list demo</title>
 </head>
 
 <body>
+
     <gcl-data-list id="dr1" data='[
             {
                 "name": "Sarah",
@@ -42,12 +65,17 @@
                 "age": 31,
                 "description": "Dedicated and perseverant"
             }
-        ]' 
-        id-field="name"
-        display-field="name">
+        ]' id-field="name" display-field="name">
     </gcl-data-list>
 
-    <gcl-data-list id="dr2" data='getData()' id-field="name" display-field="name"></gcl-data-list>
+    <gcl-data-list id="dr2" item-style="getItemStyle()" data='getData()' id-field="name" display-field="name">
+    </gcl-data-list>
+
+    <gcl-data-list id="dr3" item-style="list-style-type: upper-roman;" data='getData()' id-field="name"
+        display-field="name"></gcl-data-list>
+
+    <gcl-data-list id="dr4" item-style="list-style-type: lower-alpha;" data='getData()' id-field="name"
+        template="getTemplate()"></gcl-data-list>
 </body>
 
 </html>

@@ -2,7 +2,7 @@ import { NodePatcher, NodePatchingData } from "./NodePatcher";
 
 const cache = new Map<string, NodePatcher>();
 
-export function html(strings: TemplateStringsArray, ...values: any): NodePatchingData {
+export default function html(strings: TemplateStringsArray, ...values: any): NodePatchingData {
 
     const key = strings.toString();
 
