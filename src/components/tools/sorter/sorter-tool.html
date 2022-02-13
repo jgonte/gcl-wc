@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../../../../dist/bundle.js"></script>
+
+    <title>Sorter tool demo</title>
+
+    <script>
+
+        window.addEventListener('sorterChanged', event => alert(`
+            Event type: 'sorterChanged'
+            Field name: '${event.detail.field}'
+            Ascending: '${event.detail.ascending}'
+            Sorter element id: '${event.detail.sorterElement.id}'
+        `));
+
+    </script>
+
+</head>
+
+<body>
+
+    <gcl-sorter-tool id="st1" field="amount"></gcl-sorter-tool>
+
+</body>
+
+</html>

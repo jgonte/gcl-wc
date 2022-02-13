@@ -1,7 +1,7 @@
 import CustomElement from "../../../../../custom-element/CustomElement";
 import defineCustomElement from "../../../../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../../../../custom-element/interfaces";
-import html  from "../../../../../renderer/html";
+import html from "../../../../../renderer/html";
 import { NodePatchingData } from "../../../../../renderer/NodePatcher";
 import styles from "./DataCell.css";
 
@@ -45,9 +45,14 @@ export default class DataCell extends CustomElement {
             field :
             field.name;
 
-        const value = record[name];
+        if (field.render !== undefined) {
 
-        return html`${value}`;
+            return field.render(record, field);
+        }
+        else {
+
+            return html`${record[name]}`;
+        }   
     }
 }
 

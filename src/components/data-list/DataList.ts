@@ -2,6 +2,7 @@ import CustomElement from "../../custom-element/CustomElement";
 import getStyle from "../../custom-element/helpers/css/style/getStyle";
 import defineCustomElement from "../../custom-element/helpers/defineCustomElement";
 import { CustomElementPropertyMetadata } from "../../custom-element/interfaces";
+import SelectionContainerMixin from "../../custom-element/mixins/components/selection-container/SelectionContainerMixin";
 import DataHolderMixin from "../../custom-element/mixins/data/DataHolderMixin";
 import html from "../../renderer/html";
 import { NodePatchingData } from "../../renderer/NodePatcher";
@@ -11,8 +12,10 @@ const defaultItemStyle = `
 `;
 
 export default class DataList extends
-    DataHolderMixin(
-        CustomElement
+    SelectionContainerMixin(
+        DataHolderMixin(
+            CustomElement
+        )
     ) {
 
     static get properties(): Record<string, CustomElementPropertyMetadata> {
@@ -40,7 +43,7 @@ export default class DataList extends
              */
             template: {
                 type: Function,
-                defer: true
+                defer: true // Store the function itself instead of executing it to get its return value when initializing the property
             }
         };
     }
@@ -59,9 +62,14 @@ export default class DataList extends
             idField
         } = this;
 
-        return data.map(record => html`<li key=${record[idField]} style=${this.getItemStyle()}>
-            ${this.renderItem(record)}
-        </li>`);
+        return data.map(record => {
+
+            const id = record[idField];
+
+            return html`<li key=${id} style=${this.getItemStyle()}>
+                <gcl-selectable select-value=${id}>${this.renderItem(record)}</gcl-selectable>
+            </li>`;
+        });
     }
 
     getItemStyle(): string {

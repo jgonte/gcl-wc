@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="../../../../../../variables.css">
+
     <script type="module" src="../../../../../../dist/bundle.js"></script>
 
     <script>
@@ -18,24 +20,32 @@
             };
         }
 
-        function getField() {
+        function getFieldName() {
 
             return "name";
+        }
 
-        //     return {
-        //         name: "name",
-        //         display: "Name",
-        //         width: '200px',
-        //         render: (record, field) => {
-        //             return `
-        // <gcl-row justify-content="center" style="width:${field.width};">
-        //     <gcl-icon name="person" variant="warning" size="large"></gcl-icon>
-        //     <span style="background-color: red;">
-        //         ${record[field.name]}
-        //     </span>
-        // </gcl-row>`;
-        //         }
-        //     };
+        function getField() {
+
+            return {
+                name: "name",
+                display: "Name",
+                width: '200px',
+                render: (record, field) => {
+
+                    const fieldStyle = getStyle({
+                        width: field.width
+                    });
+
+                    return html`<gcl-row justify-content="center" style=${fieldStyle}>
+                        <gcl-icon name="person" kind="warning" size="large"></gcl-icon>
+                        <gcl-badge kind="warning" size="large">${record.reputation}</gcl-badge>
+                        <span style="background-color: red;">
+                            ${record[field.name]}
+                        </span>
+                    </gcl-row>`;
+                }
+            };
         }
 
     </script>
@@ -45,8 +55,12 @@
 </head>
 
 <body>
+
     <gcl-data-cell id="dc1" record='{ "name": "Sarah" }' field="name"></gcl-data-cell>
-    <gcl-data-cell id="dc2" record="getRecord()" field="getField()"></gcl-data-cell>
+
+    <gcl-data-cell id="dc2" record="getRecord()" field="getFieldName()"></gcl-data-cell>
+
+    <gcl-data-cell id="dc3" record="getRecord()" field="getField()"></gcl-data-cell>
 </body>
 
 </html>

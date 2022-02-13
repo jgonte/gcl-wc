@@ -40,11 +40,16 @@
                 description
             } = record;
 
-            return html`<div>
-                <span style="background-color: lightgreen;">${name}</span>
-                <span style="background-color: yellow;">${age}</span>
-                <span style="background-color: darkred; color: white; font-weight: bold;">${description}</span>
+            return html`<div style="width: 200px;">
+                <div style="background-color: lightgreen;">${name}</div>
+                <div style="background-color: yellow;">${age}</div>
+                <div style="background-color: darkred; color: white; font-weight: bold;">${description}</div>
             </div>`;
+        }
+
+        function selectValue(element) {
+
+            return element.data[element.idField];
         }
 
     </script>
@@ -65,17 +70,19 @@
                 "age": 31,
                 "description": "Dedicated and perseverant"
             }
-        ]' id-field="name" display-field="name">
+        ]' id-field="name" display-field="name" select-value="selectValue()">
     </gcl-data-list>
 
     <gcl-data-list id="dr2" item-style="getItemStyle()" data='getData()' id-field="name" display-field="name">
     </gcl-data-list>
 
     <gcl-data-list id="dr3" item-style="list-style-type: upper-roman;" data='getData()' id-field="name"
-        display-field="name"></gcl-data-list>
+        display-field="name" select-value="selectValue()">
+    </gcl-data-list>
 
     <gcl-data-list id="dr4" item-style="list-style-type: lower-alpha;" data='getData()' id-field="name"
-        template="getTemplate()"></gcl-data-list>
+        template="getTemplate()" select-value="selectValue()">
+    </gcl-data-list>
 </body>
 
 </html>

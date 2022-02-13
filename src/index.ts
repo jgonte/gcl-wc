@@ -1,4 +1,5 @@
 import html from "./renderer/html";
+import getStyle from "./custom-element/helpers/css/style/getStyle";
 import defineCustomElement from "./custom-element/helpers/defineCustomElement";
 import CustomElement from "./custom-element/CustomElement";
 import Icon from "./components/icon/Icon";
@@ -6,11 +7,13 @@ import Text from "./components/localized-text/LocalizedText";
 import Tool from "./components/tools/Tool";
 import CloseTool from "./components/tools/close/CloseTool";
 import DropTool from "./components/tools/drop/DropTool";
+import SorterTool from "./components/tools/sorter/SorterTool";
 import Alert from "./components/alert/Alert";
 import Overlay from "./components/overlay/Overlay";
 import Badge from "./components/badge/Badge";
 import Button from "./components/button/Button";
 import Row from "./components/row/Row";
+import Selectable from "./components/selectable/Selectable";
 import DataHeaderCell from "./components/data-grid/header/cell/DataHeaderCell";
 import DataHeader from "./components/data-grid/header/DataHeader";
 import DataCell from "./components/data-grid/body/row/cell/DataCell";
@@ -34,22 +37,26 @@ import App from "./components/app/App";
 
 // Make it available in the global object of the browser
 (window as any).html = html;
+(window as any).getStyle = getStyle;
 
 export {
-    html,
     defineCustomElement,
     CustomElement,
     Icon,
     Text,
+    // Tools
     Tool,
     CloseTool,
     DropTool,
+    SorterTool,
     Alert,
     Overlay,
     Badge,
     Button,
     // Layout
     Row,
+    // Wrappers
+    Selectable,
     // Data grid components
     DataHeaderCell,
     DataHeader,
