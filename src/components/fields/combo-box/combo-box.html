@@ -8,13 +8,38 @@
     <script type="module" src="../../../../dist/bundle.js"></script>
 
     <title>Combo box demo</title>
+
+
+    <script>
+        
+        function showSelection(selection) {
+
+            alert('Selection: ' + JSON.stringify(selection));
+        }
+
+    </script>
+
 </head>
 
 <body>
 
-    <gcl-combo-box>
+    <gcl-combo-box name="person">
         <span slot="header">Please click me</span>
-        <div slot="content">This is my beautiful content</div>
+        <div slot="content">
+            <gcl-data-list id="dr1" data='[
+            {
+                "name": "Sarah",
+                "age": 19,
+                "description": "Smart and beautiful"
+            },
+            {
+                "name": "Mark",
+                "age": 31,
+                "description": "Dedicated and perseverant"
+            }
+        ]' id-field="name" display-field="name" selection-changed="showSelection()">
+            </gcl-data-list>
+        </div>
     </gcl-combo-box>
 
 </body>

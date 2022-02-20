@@ -3,9 +3,9 @@ import defineCustomElement from "../../custom-element/helpers/defineCustomElemen
 import SubmitableMixin from "../../custom-element/mixins/data/SubmitableMixin";
 import ErrorableMixin from "../../custom-element/mixins/components/errorable/ErrorableMixin";
 import LoadableMixin from "../../custom-element/mixins/data/LoadableMixin";
-import html  from "../../renderer/html";
+import html from "../../renderer/html";
 import DataRecord from "../../utils/data/record/DataRecord";
-import { changeEvent, Field, fieldAddedEvent } from "../fields/Field";
+import Field, { changeEvent, fieldAddedEvent } from "../fields/Field";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 import ValidatableMixin from "../../custom-element/mixins/components/validatable/ValidatableMixin";
 import { ValidationContext } from "../../utils/validation/Interfaces";
@@ -57,7 +57,7 @@ export default class Form extends
             /**
              * Content justification
              */
-             justifyLabelContent: {
+            justifyLabelContent: {
                 attribute: 'justify-label-content',
                 type: String,
                 value: 'space-evenly',

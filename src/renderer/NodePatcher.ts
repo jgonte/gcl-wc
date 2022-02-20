@@ -135,7 +135,8 @@ export class NodePatcher {
 
                             node.parentNode.insertBefore(df, node);
                         }
-                        else if (value !== null) {
+                        else if (value !== undefined && 
+                            value !== null) {
 
                             const { parentNode } = node;
 

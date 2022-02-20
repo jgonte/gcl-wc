@@ -1,6 +1,6 @@
 import { createNode } from "../createNode";
 import { beginMarker, endMarker } from "../createTemplate";
-import html  from "../html";
+import html from "../html";
 
 describe("create node tests", () => {
 
@@ -20,7 +20,7 @@ describe("create node tests", () => {
 
         // TODO: Verify the assumption below if not, the do not allow document fragments as a parent node
         // The parent node is a fragment. Shadow DOMs are document fragments
-        expect(patchingData.node).toEqual(fragment); 
+        expect(patchingData.node).toEqual(fragment);
 
         const {
             childNodes
@@ -219,6 +219,92 @@ describe("create node tests", () => {
         expect((node as any)._$patchingData).toEqual(patchingData);
 
         expect(node.outerHTML).toEqual("<svg role=\"img\">\n                <use href=\"/dist/assets/icons#alarm\"/>\n            </svg>");
+    });
+
+    it('should create an element with nested children', () => {
+
+        const data = {
+            name: "Sarah",
+            age: 19,
+            description: "Beautiful and smart",
+            skills: [
+                {
+                    id: 1,
+                    description: "Artist"
+                },
+                {
+                    id: 2,
+                    description: "Medicine"
+                }
+            ]
+        };
+
+        const {
+            name,
+            age,
+            description,
+            skills
+        } = data;
+
+        const patchingData = html`<div style="width: 200px; margin: 10px;">
+        <div style="background-color: lightgreen; padding: 5px;">${name}</div>
+        <div style="background-color: yellow;">${age}</div>
+        <div style="background-color: darkred; color: white; font-weight: bold;">${description}</div>
+        <gcl-data-list id-field="id" data=${skills}></gcl-data-list>
+    </div>`;
+
+        const node = createNode(undefined, patchingData) as HTMLElement;
+
+        // Verify the patching data
+        const {
+            node: newNode,
+            patcher,
+            rules,
+            values
+        } = patchingData;
+
+        expect(node).toBe(newNode);
+
+        expect(rules.length).toEqual(4);
+
+        expect(values).toEqual([
+            "Sarah",
+            19,
+            "Beautiful and smart",
+            [
+                {
+                    id: 1,
+                    description: "Artist"
+                },
+                {
+                    id: 2,
+                    description: "Medicine"
+                }
+            ]
+        ]);
+
+        const {
+            templateString,
+            template,
+            keyIndex,
+        } = patcher;
+
+        expect(templateString).toEqual("<div style=\"width: 200px; margin: 10px;\">\n        <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_--><!--_$em_--></div>\n        <div style=\"background-color: yellow;\"><!--_$bm_--><!--_$em_--></div>\n        <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_--><!--_$em_--></div>\n        <gcl-data-list id-field=\"id\" data=\"_$attr:data\"></gcl-data-list>\n    </div>");
+
+        const {
+            childNodes: templateChildren
+        } = template.content;
+
+        expect(templateChildren.length).toEqual(1);
+
+        expect(keyIndex).toEqual(undefined);
+
+        // Verify the nodes
+        expect(node.nodeType).toEqual(Node.ELEMENT_NODE);
+
+        expect((node as any)._$patchingData).toEqual(patchingData);
+
+        expect(node.outerHTML).toEqual("<div style=\"width: 200px; margin: 10px;\">\n        <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Sarah<!--_$em_--></div>\n        <div style=\"background-color: yellow;\"><!--_$bm_-->19<!--_$em_--></div>\n        <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Beautiful and smart<!--_$em_--></div>\n        <gcl-data-list id-field=\"id\" data=\"[{&#x22;id&#x22;:1,&#x22;description&#x22;:&#x22;Artist&#x22;},{&#x22;id&#x22;:2,&#x22;description&#x22;:&#x22;Medicine&#x22;}]\"></gcl-data-list>\n    </div>");
     });
 
 });

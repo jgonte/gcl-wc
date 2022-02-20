@@ -1,4 +1,4 @@
-import html  from "../html";
+import html from "../html";
 import { mountChildren, mountNode } from "../mount";
 import { updateChildren, updateNode } from "../update";
 
@@ -1370,5 +1370,67 @@ describe("renderer tests", () => {
 
     //     expect(rule.node).toEqual(node.childNodes[0]);
     // });
+
+    it('should render a complex object with children', () => {
+
+        let data = {
+            name: "Sarah",
+            age: 19,
+            description: "Smart and beautiful",
+            skills: [
+                {
+                    id: 1,
+                    description: 'Artist'
+                },
+                {
+                    id: 2,
+                    description: 'Medicine'
+                }
+            ]
+        }
+
+        let patchingData = html`<div style="width: 200px; margin: 10px;">
+            <div style="background-color: lightgreen; padding: 5px;">${data.name}</div>
+            <div style="background-color: yellow;">${data.age}</div>
+            <div style="background-color: darkred; color: white; font-weight: bold;">${data.description}</div>
+            <gcl-data-list id-field="id" data=${data.skills}></gcl-data-list>
+        </div>`;
+
+        const container = document.createElement('div');
+
+        mountNode(container, patchingData);
+
+        expect(container.outerHTML).toEqual("<div><div style=\"width: 200px; margin: 10px;\">\n            <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Sarah<!--_$em_--></div>\n            <div style=\"background-color: yellow;\"><!--_$bm_-->19<!--_$em_--></div>\n            <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Smart and beautiful<!--_$em_--></div>\n            <gcl-data-list id-field=\"id\" data=\"[{&#x22;id&#x22;:1,&#x22;description&#x22;:&#x22;Artist&#x22;},{&#x22;id&#x22;:2,&#x22;description&#x22;:&#x22;Medicine&#x22;}]\"></gcl-data-list>\n        </div></div>");
+
+        data = {
+            name: "Mark",
+            age: 31,
+            description: "Hard worker",
+            skills: [
+                {
+                    id: 1,
+                    description: 'Marketing'
+                },
+                {
+                    id: 2,
+                    description: 'Finance'
+                }
+            ]
+        }
+
+        let newPatchingData = html`<div style="width: 200px; margin: 10px;">
+            <div style="background-color: lightgreen; padding: 5px;">${data.name}</div>
+            <div style="background-color: yellow;">${data.age}</div>
+            <div style="background-color: darkred; color: white; font-weight: bold;">${data.description}</div>
+            <gcl-data-list id-field="id" data=${data.skills}></gcl-data-list>
+        </div>`;
+
+        updateNode(container, patchingData, newPatchingData);
+
+        expect(container.outerHTML).toEqual("<div><div style=\"width: 200px; margin: 10px;\">\n            <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Mark<!--_$em_--></div>\n            <div style=\"background-color: yellow;\"><!--_$bm_-->31<!--_$em_--></div>\n            <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Hard worker<!--_$em_--></div>\n            <gcl-data-list id-field=\"id\" data=\"[{&#x22;id&#x22;:1,&#x22;description&#x22;:&#x22;Marketing&#x22;},{&#x22;id&#x22;:2,&#x22;description&#x22;:&#x22;Finance&#x22;}]\"></gcl-data-list>\n        </div></div>");
+
+        patchingData = newPatchingData;
+
+    });
 
 });

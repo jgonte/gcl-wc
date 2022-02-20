@@ -1,4 +1,4 @@
-import { Field } from "../Field";
+import Field from "../Field";
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
 import html  from "../../../renderer/html";
 import { NodePatchingData } from "../../../renderer/NodePatcher";

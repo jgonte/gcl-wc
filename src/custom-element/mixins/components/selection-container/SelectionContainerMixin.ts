@@ -38,6 +38,15 @@ const SelectionContainerMixin = Base =>
                     value: [],
                     mutable: true,
                     reflect: true
+                },
+
+                /**
+                 * The handler to call when the selection has changed
+                 */
+                selectionChanged: {
+                    attribute: 'selection-changed',
+                    type: Function,
+                    defer: true
                 }
             };
         }
@@ -86,6 +95,7 @@ const SelectionContainerMixin = Base =>
             const {
                 multiple,
                 selection,
+                selectionChanged
             } = this;
 
             const {
@@ -94,7 +104,7 @@ const SelectionContainerMixin = Base =>
                 value
             } = event.detail;
 
-            if (multiple !== undefined) {         
+            if (multiple !== undefined) {
 
                 if (selected === true) { // Add the value to the selection
 
@@ -127,10 +137,15 @@ const SelectionContainerMixin = Base =>
 
                     this.selectedChild = element;
                 }
-                else { 
+                else {
 
                     this.selectedChild = undefined;
                 }
+            }
+
+            if (selectionChanged !== undefined) {
+
+                selectionChanged(this.selection);
             }
         }
     };

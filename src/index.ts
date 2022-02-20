@@ -5,6 +5,7 @@ import CustomElement from "./custom-element/CustomElement";
 import Icon from "./components/icon/Icon";
 import Text from "./components/localized-text/LocalizedText";
 import Tool from "./components/tools/Tool";
+import TemplatedItem from "./components/templated-item/TemplatedItem";
 import CloseTool from "./components/tools/close/CloseTool";
 import DropTool from "./components/tools/drop/DropTool";
 import SorterTool from "./components/tools/sorter/SorterTool";
@@ -44,6 +45,7 @@ export {
     CustomElement,
     Icon,
     Text,
+    TemplatedItem,
     // Tools
     Tool,
     CloseTool,

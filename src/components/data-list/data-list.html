@@ -47,9 +47,9 @@
             </div>`;
         }
 
-        function selectValue(element) {
+        function showSelection(selection) {
 
-            return element.data[element.idField];
+            alert('Selection: ' + JSON.stringify(selection));
         }
 
     </script>
@@ -70,18 +70,20 @@
                 "age": 31,
                 "description": "Dedicated and perseverant"
             }
-        ]' id-field="name" display-field="name" select-value="selectValue()">
+        ]' id-field="name" display-field="name" selection-changed="showSelection()">
     </gcl-data-list>
 
-    <gcl-data-list id="dr2" item-style="getItemStyle()" data='getData()' id-field="name" display-field="name">
+    <gcl-data-list id="dr2" item-style="getItemStyle()" data='getData()' id-field="name" display-field="name"
+        selection-changed="showSelection()">
     </gcl-data-list>
 
     <gcl-data-list id="dr3" item-style="list-style-type: upper-roman;" data='getData()' id-field="name"
-        display-field="name" select-value="selectValue()">
+        display-field="name" selection-changed="showSelection()">
     </gcl-data-list>
 
     <gcl-data-list id="dr4" item-style="list-style-type: lower-alpha;" data='getData()' id-field="name"
-        template="getTemplate()" select-value="selectValue()">
+        multiple
+        template="getTemplate()" selection-changed="showSelection()">
     </gcl-data-list>
 </body>
 

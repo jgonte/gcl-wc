@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script type="module" src="../../../dist/bundle.js"></script>
+
+    <script>
+
+        function getData() {
+
+            return {
+                name: "Sarah",
+                age: 19,
+                description: 'Smart and beautiful',
+                skills: [
+                    {
+                        id: 1,
+                        description: 'Artist'
+                    },
+                    {
+                        id: 2,
+                        description: 'Medicine'
+                    }
+                ]
+            };
+        }
+
+        function getTemplate(data) {
+
+            const {
+                name,
+                age,
+                description,
+                skills
+            } = data;
+
+            return html`<div style="width: 200px; margin: 10px;">
+                <div style="background-color: lightgreen; padding: 5px;">${name}</div>
+                <div style="background-color: yellow;">${age}</div>
+                <div style="background-color: darkred; color: white; font-weight: bold;">${description}</div>
+                <gcl-data-list id-field="id" display-field="description" data=${skills}></gcl-data-list>
+            </div>`;
+        }
+
+        function getSimpleTemplate(data) {
+
+            return html`Simple template`;
+        }
+
+    </script>
+
+    <title>Templated item demo</title>
+</head>
+
+<body>
+
+    <gcl-templated-item id="ti1" data='{
+            "name": "Sarah",
+            "age": 19,
+            "description": "Smart and beautiful",
+            "skills": [
+                {
+                    "id": 1,
+                    "description": "Artist"
+                },
+                {
+                    "id": 2,
+                    "description": "Medicine"
+                }
+            ]
+        }' template="getTemplate()">
+    </gcl-templated-item>
+
+    <gcl-templated-item id="ti2" data='getData()' template="getTemplate()">
+    </gcl-templated-item>
+
+    <gcl-templated-item id="ti3" data='getData()' template="getSimpleTemplate()">
+    </gcl-templated-item>
+
+</body>
+
+</html>

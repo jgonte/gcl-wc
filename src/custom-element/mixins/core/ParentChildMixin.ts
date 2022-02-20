@@ -76,7 +76,7 @@ const ParentChildMixin = Base =>
                 return; // Nothing to do with the slot
             }
 
-            const children = slot.assignedElements();
+            const children = slot.assignedNodes();
 
             if (children.length > 0) { // The children have been already loaded
 

@@ -13,7 +13,7 @@ export const changeEvent = "changeEvent";
 
 export const fieldAddedEvent = "fieldAddedEvent";
 
-export abstract class Field extends
+export default abstract class Field extends
     SizableMixin(
         ValidatableMixin(
             CustomElement
