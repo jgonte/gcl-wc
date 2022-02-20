@@ -21,7 +21,8 @@ const DataHolderMixin = Base =>
                  */
                 data: {
                     type: [Array, Function],
-                    required: true
+                    value: []
+                    //required: true - We might need to load it after connecting the component
                 },
 
                 /**

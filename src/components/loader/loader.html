@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../../variables.css">
+    <script type="module" src="../../../dist/bundle.js"></script>
+
+    <title>Loader demo</title>
+
+    <script>
+
+        function getItemStyle() {
+
+            return {
+                listStyleType: 'circle'
+            };
+        }
+
+        function getTemplate(record) {
+
+            const {
+                name,
+                reputation,
+                description
+            } = record;
+
+            return html`<div style="width: 200px;">
+                <div style="background-color: lightgreen;">${name}</div>
+                <div style="background-color: yellow;">${reputation}</div>
+                <div style="background-color: darkred; color: white; font-weight: bold;">${description}</div>
+            </div>`;
+        }
+
+        function showSelection(selection) {
+
+            alert('Selection: ' + JSON.stringify(selection));
+        }
+
+    </script>
+</head>
+
+<body>
+
+    <gcl-loader load-url="http://localhost:60314/api/contacts/">
+        <gcl-data-list id-field="name" display-field="name" template="getTemplate()"
+            selection-changed="showSelection()">
+        </gcl-data-list>
+    </gcl-loader>
+
+    <!-- <br/>
+    <gcl-loader kind="success">
+        <span>5</span>
+    </gcl-loader>
+
+    <br/>
+    <gcl-loader kind="danger">
+        <span>15</span>
+    </gcl-loader>
+
+    <br/>
+    <gcl-loader kind="warning">
+        <span>8</span>
+    </gcl-loader> -->
+
+</body>
+
+</html>
