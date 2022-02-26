@@ -58,7 +58,6 @@ const MetadataInitializerMixin = Base =>
 
             return classMetadataRegistry.get(this);
         }
-
     }
 
 export default MetadataInitializerMixin;

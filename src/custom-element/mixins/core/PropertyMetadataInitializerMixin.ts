@@ -127,7 +127,6 @@ const PropertyMetadataInitializerMixin = Base =>
 
             return properties;
         }
-
     }
 
 export default PropertyMetadataInitializerMixin;

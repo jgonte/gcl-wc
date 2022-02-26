@@ -72,7 +72,7 @@ const LoadableMixin = Base =>
 
             if (this.autoLoad === true) { // Wait until all the fields were added
 
-                this.load();
+                setTimeout(() => this.load(), 0); // Wait for the next refresh to load
             }
         }
 

@@ -8,6 +8,8 @@ const SelectionContainerMixin = Base =>
 
     class SelectionContainer extends Base {
 
+        isSelectionContainer = true; // Mark the instance as a selection 
+
         static get properties(): Record<string, CustomElementPropertyMetadata> {
 
             return {

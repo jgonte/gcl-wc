@@ -17,7 +17,8 @@ export default class TemplatedItem extends CustomElement {
              */
             data: {
                 type: [Object, Function],
-                required: true
+                value: {}
+                //required: true - We might need to load it after connecting the component
             },
 
             /**

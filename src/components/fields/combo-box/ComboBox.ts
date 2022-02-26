@@ -1,10 +1,15 @@
 import defineCustomElement from "../../../custom-element/helpers/defineCustomElement";
+import findChild from "../../../custom-element/helpers/findChild";
 import { CustomElementPropertyMetadata } from "../../../custom-element/interfaces";
+import SelectionContainerMixin from "../../../custom-element/mixins/components/selection-container/SelectionContainerMixin";
 import html from "../../../renderer/html";
 import { NodePatchingData } from "../../../renderer/NodePatcher";
 import Field from "../Field";
 
-export default class ComboBox extends Field {
+export default class ComboBox extends
+    SelectionContainerMixin(
+        Field
+    ) {
 
     static get properties(): Record<string, CustomElementPropertyMetadata> {
 
@@ -16,10 +21,37 @@ export default class ComboBox extends Field {
                 attribute: 'header-template',
                 type: Function,
                 defer: true // Store the function itself instead of executing it to get its return value when initializing the property
+            },
+
+            /**
+             * The template to render the select text
+             */
+            selectTemplate: {
+                attribute: 'select-template',
+                type: Function,
+                defer: true // Store the function itself instead of executing it to get its return value when initializing the property
+            },
+
+            /**
+             * The template to render the select text
+             */
+            singleSelectionTemplate: {
+                attribute: 'single-selection-template',
+                type: Function,
+                defer: true // Store the function itself instead of executing it to get its return value when initializing the property
+            },
+
+            /**
+             * The template to render the select text
+             */
+            multipleSelectionTemplate: {
+                attribute: 'multiple-selection-template',
+                type: Function,
+                defer: true // Store the function itself instead of executing it to get its return value when initializing the property
             }
         };
     }
-    
+
     render(): NodePatchingData {
 
         return html`<gcl-drop-down>
@@ -30,9 +62,17 @@ export default class ComboBox extends Field {
         </gcl-drop-down>`;
     }
 
-    updateHeader(selection: any[]): void {
+    renderHeader(): NodePatchingData {
 
-        alert('Update header: ' + JSON.stringify(selection));
+        const {
+            selection
+        } = this;
+
+        switch (selection.length) {
+            case 0: return this.selectTemplate();
+            case 1: return this.singleSelectionTemplate(selection);
+            default: return this.multipleSelectionTemplate(selection);
+        }
     }
 
     didMountCallback() {
@@ -40,23 +80,26 @@ export default class ComboBox extends Field {
         super.didMountCallback?.();
 
         // If the slotted content is a selection container, then attach the update header to the selectionChanged property
-        const content = this.document.getElementById('content'); 
+        const content = this.document.getElementById('content');
 
-        const container = content.assignedNodes({ flatten: false })[0].children[0];
+        const container = findChild(
+            content.assignedElements({ flatten: false }),
+            child => child.isSelectionContainer === true
+        ) as any;
 
         const selectionChangedHandler = container.selectionChanged;
 
         if (selectionChangedHandler === undefined) {
 
-            container.selectionChanged = this.updateHeader;
+            container.selectionChanged = selection => this.selection = selection;
         }
         else {
 
             container.selectionChanged = selection => {
 
-                selectionChangedHandler(selection); // Include the original handler
+                this.selection = selection;
 
-                this.updateHeader(selection);
+                selectionChangedHandler(selection); // Include the original handler
             }
         }
     }

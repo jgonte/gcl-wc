@@ -1,4 +1,6 @@
 import { isPrimitive } from "../../utils/shared";
+import areEquivalentValues from "../areEquivalentValues";
+import { createNode } from "../createNode";
 import { endMarker } from "../createTemplate";
 
 export function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
@@ -46,7 +48,7 @@ export function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
                 } = oldChild as any;
 
                 const r = patcher === otherPatcher &&
-                    values === otherValues;
+                    areEquivalentValues(values, otherValues);
 
                 if (r === true) {
 
@@ -78,9 +80,15 @@ export function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
 
             (oldChildNode as any)._$patchingData.values = values; // Update the latest values 
         }
-        else {
+        else { // Different patchers (type of nodes)
 
-            throw new Error('Not implemented');
+            const {
+                parentNode
+            } = oldChildNode;
+
+            const newChildNode = createNode(parentNode, newChild as any);
+
+            parentNode.replaceChild(newChildNode, oldChildNode);
         }
     }
     else {

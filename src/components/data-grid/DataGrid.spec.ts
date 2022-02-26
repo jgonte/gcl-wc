@@ -25,7 +25,7 @@ describe("Data grid tests", () => {
             // Attach it to the DOM
             document.body.innerHTML = `<gcl-data-grid></gcl-data-grid>`;
 
-        }).toThrow(new Error("The attributes: [fields, data, id-field] must have a value"));
+        }).toThrow(new Error("The attributes: [fields, id-field] must have a value"));
     });
 
     it('should render when the data of the attributes is provided', async () => {

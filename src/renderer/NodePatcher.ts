@@ -127,18 +127,29 @@ export class NodePatcher {
 
                 case NodePatcherRuleTypes.PATCH_NODE:
                     {
+                        const { parentNode } = node;
+
                         if (Array.isArray(value)) {
 
                             const df = document.createDocumentFragment();
 
-                            value.forEach(v => mountNode(df, v));
+                            value.forEach(v => {
 
-                            node.parentNode.insertBefore(df, node);
+                                if (isPrimitive(v)) {
+
+                                    const n = document.createTextNode(value.toString());
+
+                                    parentNode.insertBefore(n, node);
+                                }
+                                else {
+
+                                    mountNode(df, v);
+                                }
+                            });
+
+                            parentNode.insertBefore(df, node);
                         }
-                        else if (value !== undefined && 
-                            value !== null) {
-
-                            const { parentNode } = node;
+                        else if (value !== null) {
 
                             let n = value;
 
@@ -314,7 +325,7 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
 
         const oldChild = oldChildren[i] as HTMLElement;
 
-        let key = oldChild.getAttribute?.('key') || null;
+        let key = getKey(oldChild);
 
         if (key !== null) {
 
@@ -336,13 +347,20 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
         }
         else { // oldChild !== undefined
 
-            const oldChildKey = oldChild.getAttribute?.('key') || null;
+            const oldChildKey = getKey(oldChild);
 
-            const newChildKey = newChild.getAttribute?.('key') || null;
+            const newChildKey = getKey(newChild);
 
             if (newChildKey === oldChildKey) {
 
-                updateNode((oldChild as any).node, oldChild as any, newChild as any);
+                if (isPrimitive(oldChild)) {
+
+                    replaceChild(markerNode, newChild, oldChild)
+                }
+                else {
+
+                    updateNode((oldChild as any).node, oldChild as any, newChild as any);
+                }
             }
             else { // newChildKey !== oldChildKey
 
@@ -377,6 +395,29 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
     for (let i = oldChildrenCount - 1; i >= newChildrenCount; --i) {
 
         removeLeftSibling(markerNode);
+    }
+}
+
+function getKey(node: Node | NodePatchingData) {
+
+    const {
+        patcher,
+        values
+    } = node as NodePatchingData;
+
+    if (patcher !== undefined) {
+
+        const {
+            keyIndex
+        } = patcher;
+
+        return keyIndex !== undefined ?
+            values[keyIndex] :
+            null;
+    }
+    else {
+
+        return (node as HTMLElement).getAttribute?.('key') || null;
     }
 }
 

@@ -41,7 +41,8 @@ export default class DataList extends
             /**
              * The template to render the item
              */
-            template: {
+            itemTemplate: {
+                attribute: 'item-template',
                 type: Function,
                 defer: true // Store the function itself instead of executing it to get its return value when initializing the property
             }
@@ -67,7 +68,7 @@ export default class DataList extends
             const id = record[idField];
 
             return html`<li key=${id} style=${this.getItemStyle()}>
-                <gcl-selectable select-value=${id}>${this.renderItem(record)}</gcl-selectable>
+                <gcl-selectable selectable=${this.selectable} select-value=${id}>${this.renderItem(record)}</gcl-selectable>
             </li>`;
         });
     }
@@ -97,16 +98,16 @@ export default class DataList extends
 
         const {
             displayField,
-            template
+            itemTemplate
         } = this;
 
-        if (template === undefined) {
+        if (itemTemplate === undefined) {
 
             return html`${record[displayField]}`;
         }
         else {
 
-            return template(record);
+            return itemTemplate(record);
         }
     }
 }

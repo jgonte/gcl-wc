@@ -33,6 +33,11 @@
             </div>`;
         }
 
+        function getFields() {
+
+            return ["name", "reputation", "description"];
+        }
+
         function showSelection(selection) {
 
             alert('Selection: ' + JSON.stringify(selection));
@@ -43,26 +48,23 @@
 
 <body>
 
+    <h4>Data list</h4>
     <gcl-loader load-url="http://localhost:60314/api/contacts/">
-        <gcl-data-list id-field="name" display-field="name" template="getTemplate()"
+        <gcl-data-list id-field="name" display-field="name" item-template="getTemplate()"
             selection-changed="showSelection()">
         </gcl-data-list>
     </gcl-loader>
 
-    <!-- <br/>
-    <gcl-loader kind="success">
-        <span>5</span>
+    <h4>Data grid</h4>
+    <gcl-loader load-url="http://localhost:60314/api/contacts/">
+        <gcl-data-grid id-field="name" fields="getFields()"></gcl-data-grid>
     </gcl-loader>
 
-    <br/>
-    <gcl-loader kind="danger">
-        <span>15</span>
+    <h4>Templated item</h4>
+    <gcl-loader load-url="http://localhost:60314/api/contacts/1">
+        <gcl-templated-item template="getTemplate()">
+        </gcl-templated-item>
     </gcl-loader>
-
-    <br/>
-    <gcl-loader kind="warning">
-        <span>8</span>
-    </gcl-loader> -->
 
 </body>
 

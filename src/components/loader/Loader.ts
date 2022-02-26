@@ -14,13 +14,17 @@ export default class Loader extends
 
     render(): NodePatchingData {
 
-        return html`<slot></slot>`;
+        return html`<div style="position: relative;">
+            ${this.renderLoading()}
+            <slot id="data-holder"></slot>
+        </div>`;
     }
  
     didMountCallback() {
 
         // Bind to the data property of the child (assuming a single child)
-        this.dataHolder = this.document.childNodes[0].assignedElements({ flatten: false })[0]; // Do not include nodes
+        this.dataHolder = this.document.getElementById('data-holder')
+            .assignedElements({ flatten: false })[0]; // Only include elements
 
         super.didMountCallback?.();
     }

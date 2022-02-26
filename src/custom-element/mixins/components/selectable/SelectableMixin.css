@@ -2,6 +2,7 @@
     cursor: pointer;
     box-sizing: border-box;
     display: inline-block;
+    width: 100%; /* Take all the width of its parent */
 }
 
 :host([selected='true']) {

@@ -1,0 +1,9 @@
+:host([hoverable="true"]:hover) {
+    background-color: var(--gcl-hoverable-background-color);
+    color: var(--gcl-hoverable-color);
+}
+
+*[hoverable="true"]:hover {
+    background-color: var(--gcl-hoverable-background-color);
+    color: var(--gcl-hoverable-color);
+}

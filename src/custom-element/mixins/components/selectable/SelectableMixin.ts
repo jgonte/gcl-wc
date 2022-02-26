@@ -1,4 +1,6 @@
+import mergeStyles from "../../../helpers/mergeStyles";
 import { CustomElementPropertyMetadata } from "../../../interfaces";
+import HoverableMixin from "../hoverable/HoverableMixin";
 import styles from "./SelectableMixin.css";
 
 export const selectionChanged = 'selectionChanged';
@@ -8,11 +10,14 @@ export const selectionChanged = 'selectionChanged';
  */
 const SelectableMixin = Base =>
 
-    class Selectable extends Base {
+    class Selectable extends
+        HoverableMixin( // Selectable items are also hoverable by default
+            Base
+        ) {
 
         static get styles(): string {
 
-            return styles as any;
+            return mergeStyles(super.styles, styles);
         }
 
         static get properties(): Record<string, CustomElementPropertyMetadata> {
