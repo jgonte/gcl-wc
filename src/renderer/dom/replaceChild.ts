@@ -78,6 +78,8 @@ export function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
 
             oldPatcher.patchNode(oldChildNode, rules, oldValues, values);
 
+            (newChild as any).node = (oldChild as any).node;
+
             (oldChildNode as any)._$patchingData.values = values; // Update the latest values 
         }
         else { // Different patchers (type of nodes)
@@ -91,12 +93,11 @@ export function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
             parentNode.replaceChild(newChildNode, oldChildNode);
         }
     }
-    else {
+    else { // They are nodes
 
         parentNode.replaceChild(newChild, oldChild);
     }
 }
-
 
 function findPreviousSibling(markerNode: Node, predicate: (node: any) => boolean): Node {
 
