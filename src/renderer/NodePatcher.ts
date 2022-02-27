@@ -370,9 +370,7 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
 
                     if (oldChildrenCount >= newChildrenCount) {
 
-                        insertBefore(markerNode, keyedOldNode, null);
-
-                        --oldChildrenCount; // The oldNode is removed from the container
+                        replaceChild(markerNode, newChild, oldChild);
                     }
                     else {
 
