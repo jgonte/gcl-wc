@@ -304,7 +304,7 @@ describe("create node tests", () => {
 
         expect((node as any)._$patchingData).toEqual(patchingData);
 
-        expect(node.outerHTML).toEqual("<div style=\"width: 200px; margin: 10px;\">\n        <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Sarah<!--_$em_--></div>\n        <div style=\"background-color: yellow;\"><!--_$bm_-->19<!--_$em_--></div>\n        <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Beautiful and smart<!--_$em_--></div>\n        <gcl-data-list id-field=\"id\" data=\"[{&#x22;id&#x22;:1,&#x22;description&#x22;:&#x22;Artist&#x22;},{&#x22;id&#x22;:2,&#x22;description&#x22;:&#x22;Medicine&#x22;}]\"></gcl-data-list>\n    </div>");
+        expect(node.outerHTML).toEqual("<div style=\"width: 200px; margin: 10px;\">\n        <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Sarah<!--_$em_--></div>\n        <div style=\"background-color: yellow;\"><!--_$bm_-->19<!--_$em_--></div>\n        <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Beautiful and smart<!--_$em_--></div>\n        <gcl-data-list id-field=\"id\" data=\"[{&quot;id&quot;:1,&quot;description&quot;:&quot;Artist&quot;},{&quot;id&quot;:2,&quot;description&quot;:&quot;Medicine&quot;}]\"></gcl-data-list>\n    </div>");
     });
 
 });

@@ -761,7 +761,7 @@ describe("renderer tests", () => {
 
         mountNode(container, patchingData);
 
-        expect(container.outerHTML).toEqual('<div><x-container class=\"container\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\"></x-container></div>');
+        expect(container.outerHTML).toEqual('<div><x-container class=\"container\" record=\"{&quot;name&quot;:&quot;Sarah&quot;,&quot;age&quot;:19,&quot;description&quot;:&quot;Smart and beautiful&quot;}\"></x-container></div>');
 
         expect(container.children[0].attributes[1].value).toEqual("{\"name\":\"Sarah\",\"age\":19,\"description\":\"Smart and beautiful\"}");
 
@@ -1066,7 +1066,7 @@ describe("renderer tests", () => {
 
     //     const node = html`<span data=${data}></span>`;
 
-    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span data=\"[{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19},{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31}]\"></span>');
+    //     expect((node.childNodes[0] as HTMLElement).outerHTML).toEqual('<span data=\"[{&quot;name&quot;:&quot;Sarah&quot;,&quot;age&quot;:19},{&quot;name&quot;:&quot;Mark&quot;,&quot;age&quot;:31}]\"></span>');
 
     //     const {
     //         patcher,
@@ -1400,7 +1400,7 @@ describe("renderer tests", () => {
 
         mountNode(container, patchingData);
 
-        expect(container.outerHTML).toEqual("<div><div style=\"width: 200px; margin: 10px;\">\n            <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Sarah<!--_$em_--></div>\n            <div style=\"background-color: yellow;\"><!--_$bm_-->19<!--_$em_--></div>\n            <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Smart and beautiful<!--_$em_--></div>\n            <gcl-data-list id-field=\"id\" data=\"[{&#x22;id&#x22;:1,&#x22;description&#x22;:&#x22;Artist&#x22;},{&#x22;id&#x22;:2,&#x22;description&#x22;:&#x22;Medicine&#x22;}]\"></gcl-data-list>\n        </div></div>");
+        expect(container.outerHTML).toEqual("<div><div style=\"width: 200px; margin: 10px;\">\n            <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Sarah<!--_$em_--></div>\n            <div style=\"background-color: yellow;\"><!--_$bm_-->19<!--_$em_--></div>\n            <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Smart and beautiful<!--_$em_--></div>\n            <gcl-data-list id-field=\"id\" data=\"[{&quot;id&quot;:1,&quot;description&quot;:&quot;Artist&quot;},{&quot;id&quot;:2,&quot;description&quot;:&quot;Medicine&quot;}]\"></gcl-data-list>\n        </div></div>");
 
         data = {
             name: "Mark",
@@ -1427,7 +1427,7 @@ describe("renderer tests", () => {
 
         updateNode(container, patchingData, newPatchingData);
 
-        expect(container.outerHTML).toEqual("<div><div style=\"width: 200px; margin: 10px;\">\n            <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Mark<!--_$em_--></div>\n            <div style=\"background-color: yellow;\"><!--_$bm_-->31<!--_$em_--></div>\n            <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Hard worker<!--_$em_--></div>\n            <gcl-data-list id-field=\"id\" data=\"[{&#x22;id&#x22;:1,&#x22;description&#x22;:&#x22;Marketing&#x22;},{&#x22;id&#x22;:2,&#x22;description&#x22;:&#x22;Finance&#x22;}]\"></gcl-data-list>\n        </div></div>");
+        expect(container.outerHTML).toEqual("<div><div style=\"width: 200px; margin: 10px;\">\n            <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Mark<!--_$em_--></div>\n            <div style=\"background-color: yellow;\"><!--_$bm_-->31<!--_$em_--></div>\n            <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Hard worker<!--_$em_--></div>\n            <gcl-data-list id-field=\"id\" data=\"[{&quot;id&quot;:1,&quot;description&quot;:&quot;Marketing&quot;},{&quot;id&quot;:2,&quot;description&quot;:&quot;Finance&quot;}]\"></gcl-data-list>\n        </div></div>");
 
         patchingData = newPatchingData;
     });

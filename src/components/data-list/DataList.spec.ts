@@ -50,7 +50,7 @@ describe("Data list tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<ul><!--_$bm_--><li key=\"1\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&#x22;code&#x22;:1,&#x22;description&#x22;:&#x22;Item 1&#x22;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><!--_$em_--></ul>");
+        expect(component.shadowRoot.innerHTML).toBe("<ul><!--_$bm_--><li key=\"1\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&quot;code&quot;:1,&quot;description&quot;:&quot;Item 1&quot;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><!--_$em_--></ul>");
 
         // Add another item
         component.data = [
@@ -66,7 +66,7 @@ describe("Data list tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<ul><!--_$bm_--><li key=\"1\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&#x22;code&#x22;:1,&#x22;description&#x22;:&#x22;Item 1&#x22;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><li key=\"2\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&#x22;code&#x22;:2,&#x22;description&#x22;:&#x22;Item 2&#x22;}\"><!--_$bm_--><!--_$bm_-->Item 2<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><!--_$em_--></ul>");
+        expect(component.shadowRoot.innerHTML).toBe("<ul><!--_$bm_--><li key=\"1\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&quot;code&quot;:1,&quot;description&quot;:&quot;Item 1&quot;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><li key=\"2\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&quot;code&quot;:2,&quot;description&quot;:&quot;Item 2&quot;}\"><!--_$bm_--><!--_$bm_-->Item 2<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><!--_$em_--></ul>");
 
         // Remove the first item
         component.data = [
@@ -78,7 +78,7 @@ describe("Data list tests", () => {
 
         await component.updateComplete; // Wait for the component to render
 
-        expect(component.shadowRoot.innerHTML).toBe("<ul><!--_$bm_--><li key=\"1\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&#x22;code&#x22;:1,&#x22;description&#x22;:&#x22;Item 1&#x22;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><li key=\"2\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&#x22;code&#x22;:2,&#x22;description&#x22;:&#x22;Item 2&#x22;}\"><!--_$bm_--><!--_$bm_-->Item 2<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><!--_$em_--></ul>");
+        expect(component.shadowRoot.innerHTML).toBe("<ul><!--_$bm_--><li key=\"1\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&quot;code&quot;:1,&quot;description&quot;:&quot;Item 1&quot;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><li key=\"2\" style=\"\n    list-style-type: none;\n\">\n                <gcl-selectable selectable=\"false\" select-value=\"{&quot;code&quot;:2,&quot;description&quot;:&quot;Item 2&quot;}\"><!--_$bm_--><!--_$bm_-->Item 2<!--_$em_--><!--_$em_--></gcl-selectable>\n            </li><!--_$em_--></ul>");
     });
 
     // it('should render when the data of the attributes is provided via functions', async () => {
@@ -116,7 +116,7 @@ describe("Data list tests", () => {
 
     //     await component.updateComplete; // Wait for the component to render
 
-    //     expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"Sarah\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"Mark\"></gcl-data-row><!--_$em_-->");
+    //     expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\" record=\"{&quot;name&quot;:&quot;Sarah&quot;,&quot;age&quot;:19,&quot;description&quot;:&quot;Smart and beautiful&quot;}\" key=\"Sarah\"></gcl-data-row><gcl-data-row fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\" record=\"{&quot;name&quot;:&quot;Mark&quot;,&quot;age&quot;:31,&quot;description&quot;:&quot;Hard worker&quot;}\" key=\"Mark\"></gcl-data-row><!--_$em_-->");
     // });
 
     // it('should swap the records', async () => {
@@ -154,7 +154,7 @@ describe("Data list tests", () => {
 
     //     await component.updateComplete; // Wait for the component to render
 
-    //     expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"Sarah\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"Mark\"></gcl-data-row><!--_$em_-->");
+    //     expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\" record=\"{&quot;name&quot;:&quot;Sarah&quot;,&quot;age&quot;:19,&quot;description&quot;:&quot;Smart and beautiful&quot;}\" key=\"Sarah\"></gcl-data-row><gcl-data-row fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\" record=\"{&quot;name&quot;:&quot;Mark&quot;,&quot;age&quot;:31,&quot;description&quot;:&quot;Hard worker&quot;}\" key=\"Mark\"></gcl-data-row><!--_$em_-->");
 
     //     component.data = [
     //         {
@@ -171,6 +171,6 @@ describe("Data list tests", () => {
 
     //     await component.updateComplete; // Wait for the component to render
 
-    //     expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Mark&#x22;,&#x22;age&#x22;:31,&#x22;description&#x22;:&#x22;Hard worker&#x22;}\" key=\"Mark\"></gcl-data-row><gcl-data-row fields=\"[&#x22;name&#x22;,&#x22;age&#x22;,&#x22;description&#x22;]\" record=\"{&#x22;name&#x22;:&#x22;Sarah&#x22;,&#x22;age&#x22;:19,&#x22;description&#x22;:&#x22;Smart and beautiful&#x22;}\" key=\"Sarah\"></gcl-data-row><!--_$em_-->");
+    //     expect(component.shadowRoot.innerHTML).toBe("<style>[object Object]</style><!--_$bm_--><gcl-data-header fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\"></gcl-data-header><!--_$em_--><!--_$bm_--><gcl-data-row fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\" record=\"{&quot;name&quot;:&quot;Mark&quot;,&quot;age&quot;:31,&quot;description&quot;:&quot;Hard worker&quot;}\" key=\"Mark\"></gcl-data-row><gcl-data-row fields=\"[&quot;name&quot;,&quot;age&quot;,&quot;description&quot;]\" record=\"{&quot;name&quot;:&quot;Sarah&quot;,&quot;age&quot;:19,&quot;description&quot;:&quot;Smart and beautiful&quot;}\" key=\"Sarah\"></gcl-data-row><!--_$em_-->");
     // });
 });
