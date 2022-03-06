@@ -24,6 +24,9 @@ export default abstract class Field extends
     // Since it is not the final one there is no need to refresh
     private _tempValue: any = undefined;
 
+    // Marker to mark the field as such so it can be filtered out from other components
+    isField = true;
+
     static get styles(): string {
 
         return mergeStyles(super.styles, styles);
@@ -113,6 +116,11 @@ export default abstract class Field extends
     didAdoptChildCallback(parent, child) {
 
         super.didAdoptChildCallback?.(parent, child);
+
+        if (child !== this) { // Not a field
+
+            return;
+        }
 
         this.dispatchCustomEvent(fieldAddedEvent, {
             field: child

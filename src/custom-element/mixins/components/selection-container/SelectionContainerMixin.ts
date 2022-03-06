@@ -114,9 +114,7 @@ const SelectionContainerMixin = Base =>
                 }
                 else { // Remove the value from the selection
 
-                    const index = selection.indexOf(value);
-
-                    this.selection.splice(index, 1);
+                    this.selection = selection.filter(item => item.id !== value.id);
                 }
             }
             else { // Replace the old selection with the new one

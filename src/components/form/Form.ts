@@ -230,7 +230,7 @@ export default class Form extends
             value
         });
 
-        field.dataField = dataField; // Set the data field in the field so it "knows" if tis value changed from the initial one
+        field.dataField = dataField; // Set the data field in the field so it "knows" if its value changed from the initial one
 
         event.stopPropagation();
     }

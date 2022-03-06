@@ -42,13 +42,12 @@
 
     <script>
 
-        window.addEventListener('change', event => alert(
-            `
-        Event type: 'change'
-        Field name: '${event.detail.name}'
-        Field old value: '${event.detail.oldValue}'
-        Field new value: '${event.detail.newValue}'
-`));
+        window.addEventListener('change', event => alert(`
+            Event type: 'change'
+            Field name: '${event.detail.name}'
+            Field old value: '${event.detail.oldValue}'
+            Field new value: '${event.detail.newValue}'
+        `));
 
     </script>
 
@@ -100,21 +99,26 @@
 
             <gcl-form-field required help="This is the gender of the person">
                 <gcl-localized-text slot="label">Gender</gcl-localized-text>
-                <!-- <span slot="tools">!</span> -->
                 <gcl-combo-box slot="field" name="gender">
-                    <span slot="header">Click me</span>
-                    <div slot="content">This is the content</div>
-                    <!-- <gcl-data-list slot="content" 
-                        load-url="http://localhost:60314/api/genders"
-                        value-field="code" 
-                        display-field="description">
-                    </gcl-data-list> -->
+                    <div slot="content">
+                        <gcl-data-list data='[
+                            {
+                                "code": "M",
+                                "description": "Male"
+                            },
+                            {
+                                "code": "F",
+                                "description": "Female"
+                            }
+                        ]' id-field="code" display-field="description">
+                        </gcl-data-list>
+                    </div>
                 </gcl-combo-box>
             </gcl-form-field>
 
-            <gcl-combo-box label="Gender" name="gender" required load-url="http://localhost:60314/api/genders"
+            <!-- <gcl-combo-box label="Gender" name="gender" required load-url="http://localhost:60314/api/genders"
                 value-field="code" display-field="description">
-            </gcl-combo-box>
+            </gcl-combo-box> -->
 
             <gcl-form-field required help-resource-key="dateOfBirth">
                 <gcl-localized-text slot="label">Date of Birth</gcl-localized-text>

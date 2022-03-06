@@ -65,39 +65,27 @@ export function createNode(parentNode: Node, patchingData: NodePatchingData): No
  */
 function compileRules(node: Node, rules: NodePatcherRule[]): CompiledNodePatcherRule[] {
 
-    const compiledRules: CompiledNodePatcherRule[] = [];
+    return rules.map(r => {
 
-    const {
-        length
-    } = rules;
-
-    for (let i = 0; i < length; ++i) {
-
-        const {
-            type,
-            path,
-            name
-        } = rules[i];
-
-        compiledRules.push({
-            type,
-            name,
-            node: findNode(node, path)
-        });
-    }
-
-    return compiledRules;
+        return {
+            node: findNode(node, r.path),
+            type: r.type,
+            name: r.name
+        };
+    });
 }
 
+/**
+ * Finds the child node following the path
+ * @param node The parent node
+ * @param path The path to the child node
+ * @returns The child node
+ */
 function findNode(node: Node, path: number[]): HTMLElement | Comment | Text {
 
-    let p = path;
+    for (let i = 0; i < path.length; ++i) {
 
-    for (let i = 0; i < p.length; ++i) {
-
-        const index = p[i];
-
-        node = node.childNodes[index];
+        node = node.childNodes[path[i]];
     }
 
     return node as HTMLElement | Comment | Text;

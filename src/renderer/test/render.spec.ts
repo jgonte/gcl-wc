@@ -1430,7 +1430,6 @@ describe("renderer tests", () => {
         expect(container.outerHTML).toEqual("<div><div style=\"width: 200px; margin: 10px;\">\n            <div style=\"background-color: lightgreen; padding: 5px;\"><!--_$bm_-->Mark<!--_$em_--></div>\n            <div style=\"background-color: yellow;\"><!--_$bm_-->31<!--_$em_--></div>\n            <div style=\"background-color: darkred; color: white; font-weight: bold;\"><!--_$bm_-->Hard worker<!--_$em_--></div>\n            <gcl-data-list id-field=\"id\" data=\"[{&#x22;id&#x22;:1,&#x22;description&#x22;:&#x22;Marketing&#x22;},{&#x22;id&#x22;:2,&#x22;description&#x22;:&#x22;Finance&#x22;}]\"></gcl-data-list>\n        </div></div>");
 
         patchingData = newPatchingData;
-
     });
 
 });

@@ -68,7 +68,7 @@ export default class DataList extends
             const id = record[idField];
 
             return html`<li key=${id} style=${this.getItemStyle()}>
-                <gcl-selectable selectable=${this.selectable} select-value=${id}>${this.renderItem(record)}</gcl-selectable>
+                <gcl-selectable selectable=${this.selectable} select-value=${record}>${this.renderItem(record)}</gcl-selectable>
             </li>`;
         });
     }

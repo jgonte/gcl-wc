@@ -69,9 +69,72 @@ export default class ComboBox extends
         } = this;
 
         switch (selection.length) {
-            case 0: return this.selectTemplate();
-            case 1: return this.singleSelectionTemplate(selection);
-            default: return this.multipleSelectionTemplate(selection);
+            case 0: return this.renderSelectTemplate();
+            case 1: return this.renderSingleSelectionTemplate(selection[0]);
+            default: return this.renderMultipleSelectionTemplate(selection);
+        }
+    }
+
+    renderSelectTemplate() : NodePatchingData {
+
+        const {
+            selectTemplate
+        } = this;
+
+        if (selectTemplate !== undefined) {
+
+            return selectTemplate();
+        }
+        else {
+
+            return html`<gcl-localized-text intl-key="please-select">Please select</gcl-localized-text>`;
+        }
+    }
+
+    renderSingleSelectionTemplate(selection) : NodePatchingData {
+
+        const {
+            singleSelectionTemplate,
+            container
+        } = this;
+
+        if (singleSelectionTemplate !== undefined) {
+
+            return singleSelectionTemplate(selection);
+        }
+        else {
+
+            return html`<span>${selection[container.displayField]}</span>`;
+        }
+    }
+
+    renderMultipleSelectionTemplate(selection) : NodePatchingData {
+
+        const {
+            multipleSelectionTemplate,
+            container
+        } = this;
+
+        if (multipleSelectionTemplate !== undefined) {
+
+            return multipleSelectionTemplate(selection);
+        }
+        else {
+
+            const {
+                idField,
+                displayField
+            } = container;
+
+            const data = selection.map(item => {
+                
+                return {
+                    [idField]: item[idField],
+                    [displayField]: item[displayField]
+                };
+            });
+
+            return html`<gcl-data-list data=${data} id-field=${idField} display-field=${displayField} selectable="false"></gcl-data-list>`;
         }
     }
 
@@ -102,6 +165,8 @@ export default class ComboBox extends
                 selectionChangedHandler(selection); // Include the original handler
             }
         }
+
+        this.container = container; // Needed to reference to get idField and displayField
     }
 
 }

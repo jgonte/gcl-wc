@@ -13,6 +13,24 @@
 
     <script>
 
+        function getData() {
+
+            return [
+                {
+                    id: 1,
+                    name: "Sarah",
+                    age: 19,
+                    description: "Smart and beautiful"
+                },
+                {
+                    id: 2,
+                    name: "Mark",
+                    age: 31,
+                    description: "Dedicated and perseverant"
+                }
+            ];
+        }
+
         function getSelectTemplate() {
 
             return html`<gcl-localized-text style="background-color:chartreuse;" intl-key="please-select">Please select</gcl-localized-text>`;
@@ -20,13 +38,13 @@
 
         function getSingleSelectionTemplate(selection) {
 
-            return html`<span style="background-color:pink;">${selection.name || selection}</span>`;
+            return html`<span style="background-color:pink;">${selection.name}</span>`;
         }
 
         function getMultipleSelectionTemplate(selection) {
 
             const data = selection.map(item => {
-                
+
                 return {
                     code: item
                 };
@@ -66,50 +84,39 @@
     <gcl-combo-box id="cb1" name="person" select-template="getSelectTemplate()"
         single-selection-template="getSingleSelectionTemplate()">
         <div slot="content">
-            <gcl-data-list id="dr1" data='[
-            {
-                "name": "Sarah",
-                "age": 19,
-                "description": "Smart and beautiful"
-            },
-            {
-                "name": "Mark",
-                "age": 31,
-                "description": "Dedicated and perseverant"
-            }
-        ]' id-field="name" display-field="name" selection-changed="showSelection()">
+            <gcl-data-list data='getData()' id-field="id" display-field="name" selection-changed="showSelection()">
             </gcl-data-list>
         </div>
     </gcl-combo-box>
 
     <h4>Single selection without selection changed handler</h4>
 
-    <gcl-combo-box id="cb2" name="person" select-template="getSelectTemplate()"
-        single-selection-template="getSingleSelectionTemplate()">
+    <gcl-combo-box id="cb2" name="person" select-template="getSelectTemplate()">
         <div slot="content">
             <gcl-data-list id="dr1" data='[
             {
+                "id": 1,
                 "name": "Sarah",
                 "age": 19,
                 "description": "Smart and beautiful"
             },
             {
+                "id": 2,
                 "name": "Mark",
                 "age": 31,
                 "description": "Dedicated and perseverant"
             }
-        ]' id-field="name" display-field="name">
+        ]' id-field="id" display-field="name">
             </gcl-data-list>
         </div>
     </gcl-combo-box>
 
     <h4>Single selection with remote data</h4>
 
-    <gcl-combo-box id="cb3" name="person" select-template="getSelectTemplate()"
-        single-selection-template="getSingleSelectionTemplate()">
+    <gcl-combo-box id="cb3" name="person" single-selection-template="getSingleSelectionTemplate()">
         <div slot="content">
             <gcl-loader load-url="http://localhost:60314/api/contacts/">
-                <gcl-data-list id-field="name" display-field="name" item-template="getTemplate()"></gcl-data-list>
+                <gcl-data-list id-field="id" display-field="name" item-template="getTemplate()"></gcl-data-list>
             </gcl-loader>
             </gcl-data-list>
         </div>
@@ -117,13 +124,13 @@
 
     <h4>Multiple selection with remote data</h4>
 
+    <!-- multiple-selection-template="getMultipleSelectionTemplate()" -->
+
     <gcl-combo-box id="cb4" name="person" select-template="getSelectTemplate()"
-        single-selection-template="getSingleSelectionTemplate()"
-        multiple-selection-template="getMultipleSelectionTemplate()">
-        <!-- <span slot="header">Please click me</span> -->
+        single-selection-template="getSingleSelectionTemplate()">
         <div slot="content">
             <gcl-loader load-url="http://localhost:60314/api/contacts/">
-                <gcl-data-list id-field="name" display-field="name" item-template="getTemplate()" multiple>
+                <gcl-data-list id-field="id" display-field="name" item-template="getTemplate()" multiple>
                 </gcl-data-list>
             </gcl-loader>
             </gcl-data-list>
