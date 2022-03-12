@@ -1,6 +1,6 @@
 import { isPrimitive } from "../../utils/shared";
 import areEquivalentValues from "../areEquivalentValues";
-import { createNode } from "../createNode";
+import { createNodes } from "../createNodes";
 import { endMarker } from "../createTemplate";
 
 export function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
@@ -88,7 +88,7 @@ export function replaceChild(markerNode: Node, newChild: Node, oldChild: Node) {
                 parentNode
             } = oldChildNode;
 
-            const newChildNode = createNode(parentNode, newChild as any);
+            const newChildNode = createNodes(newChild as any);
 
             parentNode.replaceChild(newChildNode, oldChildNode);
         }

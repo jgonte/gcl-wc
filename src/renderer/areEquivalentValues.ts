@@ -28,6 +28,7 @@ export default function areEquivalentValues(v1: any = null, v2: any = null): boo
         }
     }
 
+    // If both values are array
     if (Array.isArray(v1) &&
         Array.isArray(v2)) {
 
@@ -49,4 +50,34 @@ export default function areEquivalentValues(v1: any = null, v2: any = null): boo
         }
     }
 
+    // If both values are objects
+    if (typeof v1 === 'object' &&
+        typeof v2 === 'object') {
+
+        const k1 = Object.keys(v1);
+
+        const k2 = Object.keys(v2);
+
+        if (k1.length !== k2.length) {
+
+            return false;
+        }
+        else {
+
+            for (let i = 0; i < k1.length; ++i) {
+
+                const k = k1[i];
+
+                if (!areEquivalentValues(v1[k], v2[k])) {
+
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
+    // Types do not match
+    return false;
 }

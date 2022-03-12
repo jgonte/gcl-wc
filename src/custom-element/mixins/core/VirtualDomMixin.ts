@@ -1,6 +1,6 @@
 import { NodePatchingData } from "../../../renderer/NodePatcher";
-import { mountChildren, mountNode } from "../../../renderer/mount";
-import { updateChildren, updateNode } from "../../../renderer/update";
+import { mountNodes } from "../../../renderer/mountNodes";
+import { updateNodes } from "../../../renderer/updateNodes";
 
 /**
  * Updates the element using a virtual DOM approach
@@ -42,14 +42,7 @@ const VirtualDomMixin = Base =>
 
                 if (newPatchingData !== null) { // Mount
 
-                    if (Array.isArray(newPatchingData)) {
-
-                        mountChildren(document, newPatchingData);
-                    }
-                    else {
-
-                        mountNode(document, newPatchingData);
-                    }
+                    mountNodes(document, newPatchingData);
 
                     this._waitForChildrenToMount();
                 }
@@ -61,14 +54,7 @@ const VirtualDomMixin = Base =>
 
                     this.willUpdateCallback();
 
-                    if (Array.isArray(newPatchingData)) {
-
-                        updateChildren(document, _oldPatchingData as NodePatchingData[], newPatchingData);
-                    }
-                    else {
-
-                        updateNode(document, _oldPatchingData as NodePatchingData, newPatchingData);
-                    }
+                    updateNodes(document, _oldPatchingData, newPatchingData);
 
                     this._waitForChildrenToUpdate();
                 }

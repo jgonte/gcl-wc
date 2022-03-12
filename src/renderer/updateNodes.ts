@@ -1,9 +1,61 @@
 import areEquivalentValues from "./areEquivalentValues";
-import { createNode } from "./createNode";
-import { mountNode } from "./mount";
-import { NodePatchingData } from "./NodePatcher"
+import { createNodes } from "./createNodes";
+import { mountNodes } from "./mountNodes";
+import { NodePatchingData } from "./NodePatcher";
 
-export function updateChildren(container: Node, oldPatchingData: NodePatchingData[], newPatchingData: NodePatchingData[]) {
+export function updateNodes(container: Node, oldPatchingData: NodePatchingData | NodePatchingData[], newPatchingData: NodePatchingData | NodePatchingData[]) {
+
+    if (Array.isArray(newPatchingData)) {
+
+        updateArrayNodes(container, oldPatchingData as NodePatchingData[], newPatchingData);
+    }
+    else {
+
+        let {
+            node
+        } = oldPatchingData as NodePatchingData;
+
+        if (node === undefined) {
+
+            throw new Error('There must be an existing node');
+        }
+
+        const {
+            patcher: oldPatcher,
+            values: oldValues,
+            rules
+        } = oldPatchingData as NodePatchingData;
+
+        const {
+            patcher,
+            values
+        } = newPatchingData;
+
+        if (oldPatcher === patcher) {
+
+            newPatchingData.rules = rules; // Set the compiled rules in the new patched data
+
+            newPatchingData.node = node; // Set the node in the new patching data
+
+            if (areEquivalentValues(oldPatchingData.values, newPatchingData.values)) {
+
+                return; // Same patcher and same vales mean no changes to apply
+            }
+
+            oldPatcher.patchNode(node, rules, oldValues, values);
+
+            (node as any)._$patchingData = newPatchingData;
+        }
+        else { // Different type of node, replace it with a new one
+
+            const newNode = createNodes(newPatchingData);
+
+            container.replaceChild(newNode, node);
+        }
+    }
+}
+
+function updateArrayNodes(container: Node, oldPatchingData: NodePatchingData[], newPatchingData: NodePatchingData[]) {
 
     let { length: oldCount } = oldPatchingData;
 
@@ -39,7 +91,7 @@ export function updateChildren(container: Node, oldPatchingData: NodePatchingDat
 
         if (oldChild === undefined) { // Mount the child
 
-            mountNode(container, newPatchingData[i]);
+            mountNodes(container, newPatchingData[i]);
         }
         else { // oldChild !== undefined
 
@@ -62,7 +114,7 @@ export function updateChildren(container: Node, oldPatchingData: NodePatchingDat
 
             if (oldChildKey === valueKey) { // If the keys are the same patch the node with that patching data    
 
-                updateNode(oldChild, oldPatchingData[i], newChildPatchingData);
+                updateNodes(oldChild, oldPatchingData[i], newChildPatchingData);
             }
             else { // oldChildKey !== valueKey - Find the node that corresponds with the keyed patching data
 
@@ -77,21 +129,32 @@ export function updateChildren(container: Node, oldPatchingData: NodePatchingDat
 
                             container.appendChild(keyedNode);
                         }
-                        else {
+                        else { // Replace the node
 
-                            container.insertBefore(keyedNode, container.childNodes[i]); // Notice oldNode is not being used since its position might have changed
+                            container.childNodes[i].replaceWith(keyedNode);
+
+                            --oldCount; // It removes the child from the existing children
                         }
 
                         newChildPatchingData.node = keyedNode; // Set the node of the new patching data
+
+                        const {
+                            rules,
+                            values
+                        } = (keyedNode as any)._$patchingData;
+
+                        newChildPatchingData.rules = rules;
+
+                        newChildPatchingData.values = values; // Ensure we pass the child values with the attached nodes if any
                     }
                     else { // Some value has changed, patch the existing node
 
-                        updateNode(oldChild, oldPatchingData[i], (keyedNode as any)._$patchingData);
+                        updateNodes(oldChild, oldPatchingData[i], (keyedNode as any)._$patchingData);
                     }
                 }
                 else { // No keyed node found, set the new child
 
-                    updateNode(oldChild, oldPatchingData[i], newChildPatchingData);
+                    updateNodes(oldChild, oldPatchingData[i], newChildPatchingData);
                 }
             }
         }
@@ -101,50 +164,5 @@ export function updateChildren(container: Node, oldPatchingData: NodePatchingDat
     for (let i = oldCount - 1; i >= newCount; --i) {
 
         (oldPatchingData[i].node as HTMLElement).remove();
-    }
-}
-
-export function updateNode(container: Node, oldPatchingData: NodePatchingData, newPatchingData: NodePatchingData) {
-
-    let {
-        node
-    } = oldPatchingData;
-
-    if (node === undefined) {
-
-        throw new Error('There must be an existing node');
-    }
-
-    const {
-        patcher: oldPatcher,
-        values: oldValues,
-        rules
-    } = oldPatchingData;
-
-    const {
-        patcher,
-        values
-    } = newPatchingData;
-
-    if (oldPatcher === patcher) {
-
-        newPatchingData.rules = rules; // Set the compiled rules in the new patched data
-
-        newPatchingData.node = node; // Set the node in the new patching data
-
-        if (areEquivalentValues(oldPatchingData.values, newPatchingData.values)) {
-
-            return; // Same patcher and same vales mean no changes to apply
-        }
-
-        oldPatcher.patchNode(node, rules, oldValues, values);
-
-        (node as any)._$patchingData = newPatchingData;
-    }
-    else { // Different type of node, replace it with a new one
-
-        const newNode = createNode(container, newPatchingData);
-
-        container.replaceChild(newNode, node);
     }
 }

@@ -57,4 +57,21 @@ describe("areEquivalentValues tests", () => {
         expect(result).toBeTruthy();
     });
 
+    it('should return true when the values of the node patching data are equivalent ', () => {
+
+        const value1 = {
+            id: 2,
+            description: 'Item 2'
+        };
+
+        const value2 = {
+            id: 2,
+            description: 'Item 2'
+        };
+
+        const result = areEquivalentValues(value1, value2);
+
+        expect(result).toBeTruthy();
+    });
+
 });

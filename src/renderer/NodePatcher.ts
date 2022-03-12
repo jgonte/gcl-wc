@@ -1,15 +1,15 @@
 import { isPrimitive } from "../utils/shared";
 import createTemplate, { NodePatcherRuleTypes } from "./createTemplate";
-import { createNode } from "./createNode";
 import areEquivalentValues from "./areEquivalentValues";
 import getGlobalFunction from "../custom-element/helpers/getGlobalFunction";
-import { mountNode } from "./mount";
-import { updateNode } from "./update";
 import createNodePatcherRules, { NodePatcherRule } from "./createNodePatcherRules";
 import { setAttribute } from "./dom/setAttribute";
 import { removeLeftSiblings } from "./dom/removeLeftSiblings";
 import { removeLeftSibling } from "./dom/removeLeftSibling";
 import { replaceChild } from "./dom/replaceChild";
+import { mountNodes } from "./mountNodes";
+import { createNodes } from "./createNodes";
+import { updateNodes } from "./updateNodes";
 
 export interface CompiledNodePatcherRule {
 
@@ -143,7 +143,7 @@ export class NodePatcher {
                                 }
                                 else {
 
-                                    mountNode(df, v);
+                                    mountNodes(df, v);
                                 }
                             });
 
@@ -159,7 +159,7 @@ export class NodePatcher {
                             }
                             else if ((value as NodePatchingData).patcher !== undefined) {
 
-                                n = createNode(parentNode, value as NodePatchingData);
+                                n = createNodes(value as NodePatchingData);
                             }
 
                             parentNode.insertBefore(n, node);
@@ -246,7 +246,7 @@ export class NodePatcher {
                                     if (oldValue.patcher !== undefined &&
                                         oldValue.patcher === newValue.patcher) {
 
-                                        updateNode(node, oldValue, newValue);
+                                        updateNodes(node, oldValue, newValue);
                                     }
                                     else {
 
@@ -259,12 +259,12 @@ export class NodePatcher {
                                 if (oldValue !== undefined &&
                                     oldValue !== null) {
 
-                                    if (Array.isArray(oldValue) ||
+                                    if (Array.isArray(oldValue) || // Several nodes to remove
                                         oldValue.patcher !== undefined) {
 
                                         removeLeftSiblings(node);
                                     }
-                                    else {
+                                    else { // Only one node to remove
 
                                         removeLeftSibling(node);
                                     }
@@ -323,7 +323,7 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
 
     for (let i = 0; i < oldChildrenCount; ++i) {
 
-        const oldChild = oldChildren[i] as HTMLElement;
+        const oldChild = oldChildren[i];
 
         let key = getKey(oldChild);
 
@@ -337,9 +337,9 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
 
     for (let i = 0; i < newChildrenCount; ++i) {
 
-        const newChild = newChildren[i] as HTMLElement;
+        const newChild = newChildren[i];
 
-        const oldChild = oldChildren[i] as HTMLElement;
+        const oldChild = oldChildren[i];
 
         if (oldChild === undefined) {
 
@@ -359,7 +359,7 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
                 }
                 else {
 
-                    updateNode((oldChild as any).node, oldChild as any, newChild as any);
+                    updateNodes((oldChild as any).node, oldChild as any, newChild as any);
                 }
             }
             else { // newChildKey !== oldChildKey
@@ -379,11 +379,31 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
                         ++oldChildrenCount; // The newNode is added to the container
                     }
                 }
-                else { // No keyed node found, set the new child
+                else { // No keyed node found, set the new child at the current index
 
-                    insertBefore(markerNode, newChild, null);
+                    const { parentNode } = markerNode;
 
-                    ++oldChildrenCount; // Update the count of extra nodes to remove
+                    let newNode: Node;
+
+                    if (isPrimitive(newChild)) {
+
+                        newNode = document.createTextNode(newChild.toString());
+                    }
+                    else if ((newChild as NodePatchingData).patcher !== undefined) {
+
+                        newNode = createNodes(newChild as NodePatchingData);
+                    }
+                    // else { newChild is never an actual node?
+
+                    //     newNode = newChild;
+                    // }
+
+                    const existingChild = parentNode.childNodes[i + 1]; // Skip the begin marker node
+
+                    existingChild.replaceWith(newNode);
+                    // insertBefore(existingChild, newChild, null);
+
+                    // ++oldChildrenCount; // Update the count of extra nodes to remove
                 }
             }
         }
@@ -396,27 +416,25 @@ function patchChildren(markerNode: Node, oldChildren: any = [], newChildren: any
     }
 }
 
-function getKey(node: Node | NodePatchingData) {
+/**
+ * Retrieves the key from the patching data
+ * @param patchingData 
+ * @returns 
+ */
+function getKey(patchingData: NodePatchingData) {
 
     const {
         patcher,
         values
-    } = node as NodePatchingData;
+    } = patchingData as NodePatchingData;
 
-    if (patcher !== undefined) {
+    const {
+        keyIndex
+    } = patcher;
 
-        const {
-            keyIndex
-        } = patcher;
-
-        return keyIndex !== undefined ?
-            values[keyIndex] :
-            null;
-    }
-    else {
-
-        return (node as HTMLElement).getAttribute?.('key') || null;
-    }
+    return keyIndex !== undefined ?
+        values[keyIndex] :
+        null;
 }
 
 function insertBefore(markerNode: Node, newChild: Node | NodePatchingData, rules: CompiledNodePatcherRule[]): void {
@@ -429,7 +447,7 @@ function insertBefore(markerNode: Node, newChild: Node | NodePatchingData, rules
     }
     else if ((newChild as NodePatchingData).patcher !== undefined) {
 
-        newChild = createNode(parentNode, newChild as NodePatchingData);
+        newChild = createNodes(newChild as NodePatchingData);
     }
 
     parentNode.insertBefore(newChild as Node, markerNode);
