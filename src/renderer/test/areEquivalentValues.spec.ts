@@ -57,7 +57,7 @@ describe("areEquivalentValues tests", () => {
         expect(result).toBeTruthy();
     });
 
-    it('should return true when the values of the node patching data are equivalent ', () => {
+    it('should return true when the values data are equivalent ', () => {
 
         const value1 = {
             id: 2,
@@ -72,6 +72,84 @@ describe("areEquivalentValues tests", () => {
         const result = areEquivalentValues(value1, value2);
 
         expect(result).toBeTruthy();
+    });
+
+    it('should return false when the first value is null ', () => {
+
+        const value1 = null;
+
+        const value2 = {
+            id: 2,
+            description: 'Item 2'
+        };
+
+        const result = areEquivalentValues(value1, value2);
+
+        expect(result).toBeFalsy();
+    });
+
+    it('should return false when the second value is null ', () => {
+
+        const value1 = {
+            id: 2,
+            description: 'Item 2'
+        };
+
+        const value2 = null;
+
+        const result = areEquivalentValues(value1, value2);
+
+        expect(result).toBeFalsy();
+    });
+
+    it('should return false when the one values have an extra property', () => {
+
+        const value1 = {
+            id: 2,
+            description: 'Item 2'
+        };
+
+        const value2 = {
+            id: 2,
+            description: 'Item 2',
+            checked: true
+        };
+
+        const result = areEquivalentValues(value1, value2);
+
+        expect(result).toBeFalsy();
+    });
+
+    it('should return true when the values have same patcher properties ', () => {
+
+        const patcher = {};
+
+        const value1 = {
+            patcher
+        };
+
+        const value2 = {
+            patcher
+        };
+
+        const result = areEquivalentValues(value1, value2);
+
+        expect(result).toBeTruthy();
+    });
+
+    it('should return false when the values have different patcher properties ', () => {
+
+        const value1 = {
+            patcher: {}
+        };
+
+        const value2 = {
+            patcher: {}
+        };
+
+        const result = areEquivalentValues(value1, value2);
+
+        expect(result).toBeFalsy();
     });
 
 });

@@ -5,15 +5,27 @@ export default function areEquivalentValues(v1: any = null, v2: any = null): boo
         return true;
     }
 
+    if (v1 === null &&
+        v2 !== null) {
+
+        return false;
+    }
+
+    if (v1 !== null &&
+        v2 === null) {
+
+        return false;
+    }
+
     const {
         patcher: patcher1,
         values: values1
-    } = v1 || {};
+    } = v1;
 
     const {
         patcher: patcher2,
         values: values2
-    } = v2 || {};
+    } = v2;
 
     if (patcher1 !== undefined &&
         patcher2 !== undefined) {
