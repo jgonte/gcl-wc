@@ -206,6 +206,28 @@ describe("render nodes tests", () => {
 
         expect(container.outerHTML).toEqual("<div><ul><!--_$bm_--><!--_$em_--></ul></div>");
 
+        // Add the items again
+        data = [
+            {
+                id: 1,
+                description: "Item 1"
+            },
+            {
+                id: 2,
+                description: "Item 2"
+            }
+        ];
+
+        oldPatchingData = patchingData;
+
+        patchingData = html`<ul>
+            ${renderItems(data)}
+        </ul>`;
+
+        updateNodes(container, oldPatchingData, patchingData);
+
+        expect(container.outerHTML).toEqual("<div><ul><!--_$bm_--><li key=\"1\">\n                    <gcl-selectable select-value=\"{&quot;id&quot;:1,&quot;description&quot;:&quot;Item 1&quot;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n                </li><li key=\"2\">\n                    <gcl-selectable select-value=\"{&quot;id&quot;:2,&quot;description&quot;:&quot;Item 2&quot;}\"><!--_$bm_--><!--_$bm_-->Item 2<!--_$em_--><!--_$em_--></gcl-selectable>\n                </li><!--_$em_--></ul></div>");
+
     });
 
     it('should render an array of components', () => {
@@ -312,6 +334,38 @@ describe("render nodes tests", () => {
         updateNodes(container, oldPatchingData, patchingData);
 
         expect(container.outerHTML).toEqual("<div><span key=\"1\">\n                    <gcl-selectable select-value=\"{&quot;id&quot;:1,&quot;description&quot;:&quot;Item 1&quot;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n                </span><span key=\"2\">\n                    <gcl-selectable select-value=\"{&quot;id&quot;:2,&quot;description&quot;:&quot;Item 2&quot;}\"><!--_$bm_--><!--_$bm_-->Item 2<!--_$em_--><!--_$em_--></gcl-selectable>\n                </span></div>");
+
+        // Remove all the items
+        data = [];
+
+        oldPatchingData = patchingData;
+
+        patchingData = renderItems(data);
+
+        updateNodes(container, oldPatchingData, patchingData);
+
+        expect(container.outerHTML).toEqual("<div></div>");
+
+        // Add the items again
+        data = [
+            {
+                id: 1,
+                description: "Item 1"
+            },
+            {
+                id: 2,
+                description: "Item 2"
+            }
+        ];
+
+        oldPatchingData = patchingData;
+
+        patchingData = renderItems(data);
+
+        updateNodes(container, oldPatchingData, patchingData);
+
+        expect(container.outerHTML).toEqual("<div><span key=\"1\">\n                    <gcl-selectable select-value=\"{&quot;id&quot;:1,&quot;description&quot;:&quot;Item 1&quot;}\"><!--_$bm_--><!--_$bm_-->Item 1<!--_$em_--><!--_$em_--></gcl-selectable>\n                </span><span key=\"2\">\n                    <gcl-selectable select-value=\"{&quot;id&quot;:2,&quot;description&quot;:&quot;Item 2&quot;}\"><!--_$bm_--><!--_$bm_-->Item 2<!--_$em_--><!--_$em_--></gcl-selectable>\n                </span></div>");
+
     });
 
     it('should render a collection of non-keyed nodes', () => {
