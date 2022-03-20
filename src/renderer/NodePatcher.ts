@@ -149,7 +149,8 @@ export class NodePatcher {
 
                             parentNode.insertBefore(df, node);
                         }
-                        else if (value !== null) {
+                        else if (value !== undefined &&
+                            value !== null) {
 
                             let n = value;
 
@@ -234,7 +235,8 @@ export class NodePatcher {
                         }
                         else { // Single node
 
-                            if (newValue !== null) {
+                            if (newValue !== undefined &&
+                                newValue !== null) {
 
                                 if (oldValue === undefined ||
                                     oldValue === null) {

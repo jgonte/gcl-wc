@@ -1,5 +1,6 @@
 import areEquivalentValues from "./areEquivalentValues";
 import { createNodes } from "./createNodes";
+import { beginMarker } from "./createTemplate";
 import { mountNodes } from "./mountNodes";
 import { NodePatchingData } from "./NodePatcher";
 
@@ -50,7 +51,12 @@ export function updateNodes(container: Node, oldPatchingData: NodePatchingData |
 
             const newNode = createNodes(newPatchingData);
 
-            container.replaceChild(newNode, node);
+            if ((node as Comment).data === beginMarker) {
+
+                node.nextSibling.remove(); // Remove the end marker as well
+            }
+
+            container.replaceChild(newNode, node); // Replace the end marker with the node      
         }
     }
 }
@@ -115,6 +121,11 @@ function updateArrayNodes(container: Node, oldPatchingData: NodePatchingData[], 
             if (oldChildKey === valueKey) { // If the keys are the same patch the node with that patching data    
 
                 updateNodes(oldChild, oldPatchingData[i], newChildPatchingData);
+
+                if (i >= container.childNodes.length) { // The child was removed when replacing the nodes
+
+                    container.appendChild(oldChild);
+                }
             }
             else { // oldChildKey !== valueKey - Find the node that corresponds with the keyed patching data
 
