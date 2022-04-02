@@ -1,4 +1,4 @@
-import { createNodes } from "../createNodes";
+import createNodes from "../createNodes";
 import { beginMarker, endMarker } from "../createTemplate";
 import html from "../html";
 

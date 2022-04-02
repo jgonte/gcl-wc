@@ -1,7 +1,7 @@
 import { NodePatcherRuleTypes } from "../createTemplate";
 import html from "../html";
-import { mountNodes } from "../mountNodes";
-import { updateNodes } from "../updateNodes";
+import mountNodes from "../mountNodes";
+import updateNodes from "../updateNodes";
 
 describe("render nodes tests", () => {
 

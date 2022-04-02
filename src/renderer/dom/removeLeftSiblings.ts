@@ -1,6 +1,6 @@
 import { beginMarker, endMarker } from "../createTemplate";
 
-export function removeLeftSiblings(markerNode: Node) {
+export default function removeLeftSiblings(markerNode: Node) {
 
     const {
         parentNode

@@ -1,4 +1,4 @@
-export function removeLeftSibling(markerNode: Node) {
+export default function removeLeftSibling(markerNode: Node) {
 
     const {
         parentNode,

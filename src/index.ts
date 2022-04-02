@@ -1,5 +1,7 @@
 import html from "./renderer/html";
 import getStyle from "./custom-element/helpers/css/style/getStyle";
+import createNodes from "./renderer/createNodes";
+
 import defineCustomElement from "./custom-element/helpers/defineCustomElement";
 import CustomElement from "./custom-element/CustomElement";
 import Icon from "./components/icon/Icon";
@@ -16,6 +18,8 @@ import Badge from "./components/badge/Badge";
 import Button from "./components/button/Button";
 import Row from "./components/row/Row";
 import Selectable from "./components/selectable/Selectable";
+import Draggable from "./components/draggable/Draggable";
+import Droppable from "./components/droppable/Droppable";
 import DataHeaderCell from "./components/data-grid/header/cell/DataHeaderCell";
 import DataHeader from "./components/data-grid/header/DataHeader";
 import DataCell from "./components/data-grid/body/row/cell/DataCell";
@@ -40,6 +44,7 @@ import App from "./components/app/App";
 // Make it available in the global object of the browser
 (window as any).html = html;
 (window as any).getStyle = getStyle;
+(window as any).createNodes = createNodes;
 
 export {
     defineCustomElement,
@@ -61,18 +66,20 @@ export {
     Row,
     // Wrappers
     Selectable,
-    // Data grid components
+    // Drag an drop
+    Draggable,
+    Droppable,
+     // Data grid components
     DataHeaderCell,
     DataHeader,
     DataCell,
     DataRow,
-    DataGrid,
+    DataGrid,   
     // Data list
     DataList,
     DropDown,
     ToolTip,
-    // Fields
-    
+    // Fields 
     TextField,
     DateField,
     FileField,

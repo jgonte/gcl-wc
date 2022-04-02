@@ -6,7 +6,7 @@ import { CompiledNodePatcherRule, NodePatchingData } from "./NodePatcher";
  * @param patchingData The patching data to create the nodes from
  * @returns The list of the created nodes
  */
- export function createNodes(patchingData: NodePatchingData): Node {
+ export default function createNodes(patchingData: NodePatchingData): Node {
 
     const {
         patcher,

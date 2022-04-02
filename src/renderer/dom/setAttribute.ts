@@ -1,4 +1,4 @@
-export function setAttribute(node: HTMLElement, key: string, value: string) {
+export default function setAttribute(node: HTMLElement, key: string, value: string) {
 
     if (value === undefined ||
         value === 'undefined' ||

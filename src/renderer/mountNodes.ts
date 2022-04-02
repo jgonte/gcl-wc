@@ -1,7 +1,7 @@
-import { createNodes } from "./createNodes";
+import createNodes from "./createNodes";
 import { NodePatchingData } from "./NodePatcher";
 
-export function mountNodes(container: Node, patchingData: NodePatchingData | NodePatchingData[]) {
+export default function mountNodes(container: Node, patchingData: NodePatchingData | NodePatchingData[]) {
 
     if (Array.isArray(patchingData)) {
 

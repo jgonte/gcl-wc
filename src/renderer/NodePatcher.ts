@@ -3,13 +3,13 @@ import createTemplate, { NodePatcherRuleTypes } from "./createTemplate";
 import areEquivalentValues from "./areEquivalentValues";
 import getGlobalFunction from "../custom-element/helpers/getGlobalFunction";
 import createNodePatcherRules, { NodePatcherRule } from "./createNodePatcherRules";
-import { setAttribute } from "./dom/setAttribute";
-import { removeLeftSiblings } from "./dom/removeLeftSiblings";
-import { removeLeftSibling } from "./dom/removeLeftSibling";
-import { replaceChild } from "./dom/replaceChild";
-import { mountNodes } from "./mountNodes";
-import { createNodes } from "./createNodes";
-import { updateNodes } from "./updateNodes";
+import setAttribute from "./dom/setAttribute";
+import removeLeftSiblings from "./dom/removeLeftSiblings";
+import removeLeftSibling from "./dom/removeLeftSibling";
+import replaceChild from "./dom/replaceChild";
+import mountNodes from "./mountNodes";
+import createNodes from "./createNodes";
+import updateNodes from "./updateNodes";
 
 export interface CompiledNodePatcherRule {
 

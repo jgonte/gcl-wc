@@ -1,6 +1,6 @@
 import { NodePatchingData } from "../../../renderer/NodePatcher";
-import { mountNodes } from "../../../renderer/mountNodes";
-import { updateNodes } from "../../../renderer/updateNodes";
+import mountNodes from "../../../renderer/mountNodes";
+import updateNodes from "../../../renderer/updateNodes";
 
 /**
  * Updates the element using a virtual DOM approach

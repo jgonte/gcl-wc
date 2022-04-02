@@ -1,10 +1,10 @@
 import areEquivalentValues from "./areEquivalentValues";
-import { createNodes } from "./createNodes";
+import createNodes from "./createNodes";
 import { beginMarker } from "./createTemplate";
-import { mountNodes } from "./mountNodes";
+import mountNodes from "./mountNodes";
 import { NodePatchingData } from "./NodePatcher";
 
-export function updateNodes(container: Node, oldPatchingData: NodePatchingData | NodePatchingData[], newPatchingData: NodePatchingData | NodePatchingData[]) {
+export default function updateNodes(container: Node, oldPatchingData: NodePatchingData | NodePatchingData[], newPatchingData: NodePatchingData | NodePatchingData[]) {
 
     if (Array.isArray(newPatchingData)) {
 
