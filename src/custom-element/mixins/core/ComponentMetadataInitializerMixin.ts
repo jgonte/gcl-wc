@@ -1,8 +1,8 @@
 import { CustomElementComponentMetadata, CustomElementMetadata } from "../../interfaces";
 
-const ComponentMetadataInitializerMixin = Base =>
+export default function ComponentMetadataInitializerMixin(Base): any {
 
-    class ComponentMetadataInitializer extends Base {
+    return class ComponentMetadataInitializer extends Base {
 
         /**
          * The styles to track in the class
@@ -22,8 +22,7 @@ const ComponentMetadataInitializerMixin = Base =>
                 return;
             }
 
-            metadata.shadow = (component as CustomElementComponentMetadata).shadow;       
+            metadata.shadow = (component as CustomElementComponentMetadata).shadow;
         }
     }
-
-export default ComponentMetadataInitializerMixin;
+}

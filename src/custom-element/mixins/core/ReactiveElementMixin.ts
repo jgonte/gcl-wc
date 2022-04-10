@@ -3,9 +3,9 @@
  * @param Base 
  * @returns 
  */
-const ReactiveElementMixin = Base =>
+export default function ReactiveElementMixin(Base): any {
 
-    class ReactiveElement extends Base {
+    return class ReactiveElement extends Base {
 
         /**
          * Flag that tests if there is an update in progress so no other updates are requested
@@ -99,5 +99,4 @@ const ReactiveElementMixin = Base =>
         }
 
     }
-
-export default ReactiveElementMixin;
+}

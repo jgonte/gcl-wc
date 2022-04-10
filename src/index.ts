@@ -1,9 +1,10 @@
 import html from "./renderer/html";
 import getStyle from "./custom-element/helpers/css/style/getStyle";
 import createNodes from "./renderer/createNodes";
-
 import defineCustomElement from "./custom-element/helpers/defineCustomElement";
 import CustomElement from "./custom-element/CustomElement";
+import { CustomElementComponentMetadata, CustomElementPropertyMetadata } from "./custom-element/interfaces";
+import { NodePatchingData } from "./renderer/NodePatcher";
 import Icon from "./components/icon/Icon";
 import Text from "./components/localized-text/LocalizedText";
 import Tool from "./components/tools/Tool";
@@ -49,6 +50,9 @@ import App from "./components/app/App";
 export {
     defineCustomElement,
     CustomElement,
+    CustomElementComponentMetadata,
+    CustomElementPropertyMetadata,
+    NodePatchingData,
     Icon,
     Text,
     TemplatedItem,

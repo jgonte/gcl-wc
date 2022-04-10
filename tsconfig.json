@@ -1,23 +1,22 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "allowUnreachableCode": false,
-    "declaration": false,
+    "noEmit": false,
+    "declaration": true,
+    "declarationDir": "dist/types",
+    "sourceMap": true,
+    "declarationMap": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "moduleResolution": "node",
-    "module": "ESNext",
-    "target": "ES2019",
-    "outDir": "lib",
+    "module": "esnext",
+    "target": "esnext",
+    "outDir": "dist/js",
     "noUnusedLocals": true,
     //"noUnusedParameters": true,
-    "jsx": "react",
-    "jsxFactory": "h",
-    "jsxFragmentFactory": "Fragment"
   },
   "include": [
-    "src"
+    "./src"
   ],
   "exclude": [
     "node_modules"

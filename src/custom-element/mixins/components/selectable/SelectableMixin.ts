@@ -8,9 +8,9 @@ export const selectionChanged = 'selectionChanged';
 /**
  * Allows a component to be selected when clicked
  */
-const SelectableMixin = Base =>
+export default function SelectableMixin(Base): any {
 
-    class Selectable extends
+    return class Selectable extends
         HoverableMixin( // Selectable items are also hoverable by default
             Base
         ) {
@@ -126,6 +126,5 @@ const SelectableMixin = Base =>
                 composed: true
             }));
         }
-    };
-
-export default SelectableMixin;
+    }
+}

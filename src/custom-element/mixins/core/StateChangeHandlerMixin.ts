@@ -1,9 +1,9 @@
 import { CustomElementStateMetadata } from "../../interfaces";
 import StateMetadataInitializerMixin from "./StateMetadataInitializerMixin";
 
-const StateChangeHandlerMixin = Base =>
+export default function StateChangeHandlerMixin(Base): any {
 
-    class StateChangeHandler extends StateMetadataInitializerMixin(Base) { // This mixin requires an implementation of setState
+    return class StateChangeHandler extends StateMetadataInitializerMixin(Base) { // This mixin requires an implementation of setState
 
         /**
          * The state of the instance
@@ -13,7 +13,7 @@ const StateChangeHandlerMixin = Base =>
         constructor() {
 
             super();
-            
+
             this._initializeStateWithDefaultValues((this.constructor as any).metadata.state);
         }
         /**
@@ -57,5 +57,4 @@ const StateChangeHandlerMixin = Base =>
         }
 
     }
-
-export default StateChangeHandlerMixin;
+}

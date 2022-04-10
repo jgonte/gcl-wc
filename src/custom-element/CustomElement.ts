@@ -4,8 +4,9 @@ import StylePatcherMixin from "./mixins/core/StylePatcherMixin";
 import VirtualDomMixin from "./mixins/core/VirtualDomMixin";
 import ShadowRootMixin from "./mixins/core/ShadowRootMixin";
 import MetadataInitializerMixin from "./mixins/core/MetadataInitializerMixin";
+import { NodePatchingData } from "../renderer/NodePatcher";
 
-export default class CustomElement extends
+export default abstract class CustomElement extends
     ParentChildMixin(
         ReactiveElementMixin(
             StylePatcherMixin(
@@ -32,4 +33,6 @@ export default class CustomElement extends
 
         }, 0);  
     }
+
+    abstract render() : NodePatchingData | NodePatchingData[];
 }

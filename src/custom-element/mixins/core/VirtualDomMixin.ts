@@ -7,9 +7,9 @@ import updateNodes from "../../../renderer/updateNodes";
  * @param Base 
  * @returns 
  */
-const VirtualDomMixin = Base =>
+export default function VirtualDomMixin(Base) : any {
 
-    class VirtualDom extends Base {
+    return class VirtualDom extends Base {
 
         didMountCallback() { }
 
@@ -101,5 +101,4 @@ const VirtualDomMixin = Base =>
             this.didUpdateCallback();
         }
     }
-
-export default VirtualDomMixin;
+}

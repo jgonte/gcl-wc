@@ -133,3 +133,5 @@ export interface CustomElementMetadata {
 }
 
 export function Callback() {}
+
+export type Constructor<T> = new (...args: any[]) => T;

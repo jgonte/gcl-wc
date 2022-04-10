@@ -1,6 +1,7 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 beforeEach(() => {
 
@@ -11,8 +12,13 @@ describe("custom element shadow root tests", () => {
 
     it('should create a shadow root by default', () => {
 
-        //@ts-ignore
-        class A extends CustomElement {}
+        class A extends CustomElement {
+
+            render() : NodePatchingData {
+
+                return null;
+            }
+        }
 
         defineCustomElement('test-a', A);
 
@@ -27,7 +33,6 @@ describe("custom element shadow root tests", () => {
 
     it('should not create a shadow root when the shadow configuration property is set to false', () => {
 
-        //@ts-ignore
         class A extends CustomElement {
 
             static get component() {
@@ -35,8 +40,12 @@ describe("custom element shadow root tests", () => {
                 return {
 
                     shadow: false
-                };
-                
+                };              
+            }
+
+            render() : NodePatchingData {
+
+                return null;
             }
         }
 

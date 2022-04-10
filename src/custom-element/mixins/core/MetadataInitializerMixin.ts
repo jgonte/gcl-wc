@@ -12,7 +12,6 @@ import StylesMetadataInitializerMixin from "./StylesMetadataInitializerMixin";
  */
 const MetadataInitializerMixin = Base =>
 
-    //@ts-ignore
     class MetadataInitializer extends
         StylesMetadataInitializerMixin(
             StateChangeHandlerMixin( // This one extends from StateMetadataInitializer

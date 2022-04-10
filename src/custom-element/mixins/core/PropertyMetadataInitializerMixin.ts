@@ -5,9 +5,9 @@ import { CustomElementMetadata, CustomElementPropertyMetadata } from "../../inte
  * @param Base The base class to extend
  * @returns The mixin class
  */
-const PropertyMetadataInitializerMixin = Base =>
+export default function PropertyMetadataInitializerMixin(Base): any {
 
-    class PropertyMetadataInitializer extends Base {
+    return class PropertyMetadataInitializer extends Base {
 
         /**
          * The properties to track in the class
@@ -128,5 +128,4 @@ const PropertyMetadataInitializerMixin = Base =>
             return properties;
         }
     }
-
-export default PropertyMetadataInitializerMixin;
+}

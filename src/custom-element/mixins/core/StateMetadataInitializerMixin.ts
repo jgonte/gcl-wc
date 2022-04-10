@@ -1,8 +1,8 @@
 import { CustomElementMetadata, CustomElementStateMetadata } from "../../interfaces";
 
-const StateMetadataInitializerMixin = Base =>
+export default function StateMetadataInitializerMixin(Base): any {
 
-    class StateMetadataInitializer extends Base {
+    return class StateMetadataInitializer extends Base {
 
         static readonly _isMetadataInitializer = true;
 
@@ -78,5 +78,4 @@ const StateMetadataInitializerMixin = Base =>
             return state;
         }
     }
-
-export default StateMetadataInitializerMixin;
+}

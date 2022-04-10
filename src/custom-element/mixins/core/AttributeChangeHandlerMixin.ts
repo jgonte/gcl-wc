@@ -4,9 +4,9 @@ import valueConverter from "../../helpers/valueConverter";
 import { CustomElementPropertyMetadata } from "../../interfaces";
 import PropertyMetadataInitializerMixin from "./PropertyMetadataInitializerMixin";
 
-const AttributeChangeHandlerMixin = Base =>
+export default function AttributeChangeHandlerMixin(Base) : any {
 
-    class AttributeChangeHandler extends PropertyMetadataInitializerMixin(Base) { // This mixin requires an implementation of setProperty
+    return class AttributeChangeHandler extends PropertyMetadataInitializerMixin(Base) { // This mixin requires an implementation of setProperty
 
         /**
          * The properties of the instance
@@ -280,5 +280,4 @@ const AttributeChangeHandlerMixin = Base =>
         }
 
     }
-
-export default AttributeChangeHandlerMixin;
+}

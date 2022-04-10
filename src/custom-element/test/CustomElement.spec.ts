@@ -2,6 +2,7 @@ import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
 import { CustomElementPropertyMetadata, CustomElementStateMetadata } from "../interfaces";
+import { NodePatchingData } from "../../renderer/NodePatcher";
 
 beforeEach(() => {
 
@@ -23,6 +24,11 @@ describe("custom element tests", () => {
                         value: "a" // Options: "a" | "b" | "c",
                     }
                 };
+            }
+
+            render(): NodePatchingData {
+
+                return null;
             }
         };
 
@@ -52,6 +58,11 @@ describe("custom element tests", () => {
                         value: "a" // Options: "a" | "b" | "c"
                     }
                 };
+            }
+
+            render(): NodePatchingData {
+
+                return null;
             }
         }
 

@@ -472,7 +472,7 @@ describe("create template tests", () => {
 
         const strings = extractTemplateStringArrays`
             Header: ${header}
-            <x-item class="item" />
+            <x-item class="item"></x-item>
             Footer: ${footer}
         `;
 
@@ -482,7 +482,7 @@ describe("create template tests", () => {
             keyIndex
         } = createTemplate(strings);
 
-        expect(templateString).toEqual("\n            Header: <!--_$bm_--><!--_$em_--><x-item class=\"item\" />\n            Footer: <!--_$bm_--><!--_$em_-->");
+        expect(templateString).toEqual("\n            Header: <!--_$bm_--><!--_$em_--><x-item class=\"item\"></x-item>\n            Footer: <!--_$bm_--><!--_$em_-->");
 
         const {
             childNodes

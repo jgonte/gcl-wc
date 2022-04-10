@@ -5,9 +5,9 @@ import { NodePatchingData } from "../../../renderer/NodePatcher";
  * @param Base 
  * @returns 
  */
-const StylePatcherMixin = Base =>
+export default function StylePatcherMixin(Base):any {
 
-    class StylePatcher extends Base {
+    return class StylePatcher extends Base {
 
         /**
          * Whether the styles were already added to the document
@@ -62,6 +62,4 @@ const StylePatcherMixin = Base =>
             return node;
         }
     }
-
-
-export default StylePatcherMixin;
+}

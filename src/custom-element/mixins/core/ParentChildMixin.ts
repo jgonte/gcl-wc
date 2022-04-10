@@ -4,9 +4,9 @@
  * @param Base 
  * @returns 
  */
-const ParentChildMixin = Base =>
+export default function ParentChildMixin(Base): any {
 
-    class ParentChild extends Base {
+    return class ParentChild extends Base {
 
         static readonly _isCustomElement: boolean = true;
 
@@ -124,5 +124,4 @@ const ParentChildMixin = Base =>
             return this._adoptingParent;
         }
     }
-
-export default ParentChildMixin;
+}

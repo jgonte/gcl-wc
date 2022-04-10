@@ -1,8 +1,8 @@
 import { CustomElementMetadata } from "../../interfaces";
 
-const StylesMetadataInitializerMixin = Base =>
+export default function StylesMetadataInitializerMixin(Base): any {
 
-    class StylesMetadataInitializer extends Base {
+    return class StylesMetadataInitializer extends Base {
 
         /**
          * The styles to track in the class
@@ -29,5 +29,4 @@ const StylesMetadataInitializerMixin = Base =>
             // Do not inherit the styles of the base custom element by default             
         }
     }
-
-export default StylesMetadataInitializerMixin;
+}
