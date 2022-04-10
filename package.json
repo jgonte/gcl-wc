@@ -1,6 +1,6 @@
 {
   "name": "gcl-wc",
-  "version": "2.2.16",
+  "version": "2.2.18",
   "description": "Web components library",
   "main": "./dist/js/bundle.js",
   "typings": "./dist/gcl-wc.d.ts",
@@ -9,7 +9,7 @@
     "apiDoc": "yarn api-extractor run --local",
     "build": "tsc && npm run copyCss && npm run copyAssets && rollup -c && npm run apiDoc",
     "copyCss": "copyfiles --up 1 --verbose ./src/**/*.css ./dist/js",
-    "copyAssets": "copyfiles --up 1 --verbose ./src/assets/**/*.* ./dist/js",
+    "copyAssets": "copyfiles --up 1 --verbose ./src/assets/**/*.* ./dist",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
     "test:prod": "npm run lint && npm run test -- --no-cache"
