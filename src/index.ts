@@ -1,3 +1,4 @@
+import { toCamelCase } from "./utils/string";
 import getStyle from "./custom-element/helpers/css/style/getStyle";
 import createNodes from "./renderer/createNodes";
 import defineCustomElement from "./custom-element/helpers/defineCustomElement";
@@ -48,6 +49,7 @@ import App from "./components/app/App";
 (window as any).createNodes = createNodes;
 
 export {
+    toCamelCase,
     defineCustomElement,
     CustomElement,
     CustomElementComponentMetadata,

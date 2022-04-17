@@ -10,6 +10,7 @@ import replaceChild from "./dom/replaceChild";
 import mountNodes from "./mountNodes";
 import createNodes from "./createNodes";
 import updateNodes from "./updateNodes";
+import { toCamelCase } from "../utils/string";
 
 export interface CompiledNodePatcherRule {
 
@@ -169,7 +170,7 @@ export class NodePatcher {
                     break;
                 case NodePatcherRuleTypes.PATCH_ATTRIBUTE:
                     {
-                        setAttribute(node as HTMLElement, name, value);
+                        setAttribute(node as HTMLElement, name, toCamelCase(name), value);
                     }
                     break;
                 case NodePatcherRuleTypes.PATCH_EVENT:
@@ -277,7 +278,7 @@ export class NodePatcher {
                     break;
                 case NodePatcherRuleTypes.PATCH_ATTRIBUTE:
                     {
-                        setAttribute(node as HTMLElement, name, newValue);
+                        setAttribute(node as HTMLElement, name, toCamelCase(name), newValue);
                     }
                     break;
                 case NodePatcherRuleTypes.PATCH_EVENT:

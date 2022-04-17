@@ -1,4 +1,4 @@
-export default function setAttribute(node: HTMLElement, key: string, value: string) {
+export default function setAttribute(node: HTMLElement | Record<string, any>, attributeName: string, propertyName: string, value: string): void {
 
     if (value === undefined ||
         value === 'undefined' ||
@@ -6,23 +6,23 @@ export default function setAttribute(node: HTMLElement, key: string, value: stri
         value === '' ||
         value === 'false') {
 
-        node.removeAttribute(key);
+        node.removeAttribute(attributeName);
 
         // Reset the value in any case
-        if (key === 'value' && value === undefined) { // It fails with undefined for a text field value
+        if (attributeName === 'value' && value === undefined) { // It fails with undefined for a text field value
 
-            (node as any)[key] = '';
+            node[propertyName] = '';
         }
         else {
 
-            (node as any)[key] = value;
+            node[propertyName] = value;
         }
     }
     else {
 
         if (value === 'true') {
 
-            node.setAttribute(key, '');
+            node.setAttribute(attributeName, '');
         }
         else {
 
@@ -30,24 +30,24 @@ export default function setAttribute(node: HTMLElement, key: string, value: stri
 
             if (type === 'function') {
 
-                node.removeAttribute(key); // It is similar to an event. Do not show as attribute
+                node.removeAttribute(attributeName); // It is similar to an event. Do not show as attribute
 
-                (node as any)[key] = value; // Bypass the stringification of the attribute
+                node[propertyName] = value; // Bypass the stringification of the attribute
             }
             else if (type === 'object') {
 
                 value = JSON.stringify(value);
 
-                node.setAttribute(key, value);
+                node.setAttribute(attributeName, value);
             }
             else { // Any other type
 
-                if (key === 'value') { // Set the value besides setting the attribute
+                if (attributeName === 'value') { // Set the value besides setting the attribute
 
                     (node as HTMLInputElement).value = value;
                 }
 
-                node.setAttribute(key, value);
+                node.setAttribute(attributeName, value);
             }
         }
     }

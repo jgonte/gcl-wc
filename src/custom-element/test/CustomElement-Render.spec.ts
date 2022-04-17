@@ -1,7 +1,7 @@
 import clearCustomElements from "./utils/clearCustomElements";
 import CustomElement from "../CustomElement";
 import defineCustomElement from "../helpers/defineCustomElement";
-import html  from "../../renderer/html";
+import html from "../../renderer/html";
 import { CustomElementPropertyMetadata } from "../interfaces";
 import { NodePatchingData } from "../../renderer/NodePatcher";
 
@@ -201,6 +201,74 @@ describe("custom element render tests", () => {
         await component.updateComplete; // Wait for the component to render
 
         expect(component.shadowRoot.innerHTML).toBe("<style>:host { background-color: yellowgreen; }</style><span>Hello, my name is <!--_$bm_-->Mark<!--_$em_--></span>\n                    <span>My age is <!--_$bm_-->31<!--_$em_--></span>");
+    });
+
+    it('should remove the function from the attribute but keep its reference in the property. Attribute name and property names are different', async () => {
+
+        class A extends CustomElement {
+
+            static get properties(): Record<string, CustomElementPropertyMetadata> {
+
+                return {
+
+                    /**
+                     * The template to render the item
+                     */
+                    itemTemplate: {
+                        attribute: 'item-template',
+                        type: Function,
+                        defer: true // Store the function itself instead of executing it to get its return value when initializing the property
+                    }
+                };
+            }
+
+            render(): NodePatchingData {
+
+                const {
+                    itemTemplate
+                } = this;
+                
+                return itemTemplate();
+            }
+        };
+
+        defineCustomElement('test-a', A);
+
+        class B extends CustomElement {
+
+            render(): NodePatchingData {
+
+                return html`
+                    <test-a item-template=${this.renderTemplate}></test-a>
+                `;
+            }
+
+            renderTemplate() {
+
+                return html`
+                    <span>Hello!!!</span>
+                `;
+
+            }
+        };
+
+        defineCustomElement('test-b', B);
+
+        // Attach it to the DOM
+        document.body.innerHTML = '<test-b></test-b>"';
+
+        // Test the element
+        const component: any = document.querySelector('test-b');
+
+        await component.updateComplete; // Wait for the component to render
+
+        expect(component.shadowRoot.innerHTML).toBe("<test-a></test-a>");
+
+        const childNode = component.shadowRoot.childNodes[0];
+
+        expect(childNode.shadowRoot.innerHTML).toBe("\n                    <span>Hello!!!</span>\n                ");
+
+        expect(childNode.itemTemplate).toBeDefined();
     });
 
 });
